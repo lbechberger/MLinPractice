@@ -6,13 +6,14 @@ As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) 
 ## Virtual Environment
 
 In order to install all dependencies, please make sure that you have a local [Conda](https://docs.conda.io/en/latest/) distribution (e.g., Anaconda or miniconda) installed. Begin by creating a new environment called "MLinPractice" that has Python 3.6 installed:
+
 ```conda create --name MLinPractice python=3.6```
 
-TODO: further instructions
+**TODO:** further instructions
 
 ## Overall Pipeline
 
-TODO:
+**TODO:**
 - Overall script
 - downloading data
 - preprocessing
