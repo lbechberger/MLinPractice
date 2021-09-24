@@ -16,6 +16,7 @@ conda install -y -q -c conda-forge scikit-learn=0.24.2
 conda install -y -q -c conda-forge matplotlib=3.3.4
 conda install -y -q -c conda-forge nltk=3.6.3
 conda install -y -q -c conda-forge gensim=4.1.2
+conda install -y -q -c conda-forge spyder=5.1.5
 ```
 
 You can double-check that all of these packages have been installed by running `conda list` inside of your virtual environment.
