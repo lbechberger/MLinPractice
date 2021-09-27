@@ -19,7 +19,9 @@ conda install -y -q -c conda-forge gensim=4.1.2
 conda install -y -q -c conda-forge spyder=5.1.5
 ```
 
-You can double-check that all of these packages have been installed by running `conda list` inside of your virtual environment.
+You can double-check that all of these packages have been installed by running `conda list` inside of your virtual environment. The Spyder IDE can be started by typing `~/miniconda/envs/MLinPractice/bin/spyder` in your terminal window (assuming you use miniconda, which is installed right in your home directory).
+
+In order to save some space on your local machine, you can run `conda clean -y -q --all` afterwards to remove any temporary files.
 
 ## Overall Pipeline
 
