@@ -9,7 +9,7 @@ Created on Tue Sep 28 15:55:44 2021
 @author: lbechberger
 """
 
-import os, argparse
+import os, argparse, csv
 import pandas as pd
 
 # setting up CLI
@@ -32,7 +32,7 @@ file_paths = [args.data_directory + f for f in os.listdir(args.data_directory) i
 # load all csv files
 dfs = []
 for file_path in file_paths:
-    dfs.append(pd.read_csv(file_path))
+    dfs.append(pd.read_csv(file_path, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n"))
 
 # join all data into a single DataFrame
 df = pd.concat(dfs)
@@ -43,7 +43,7 @@ df[COLUMN_LABEL] = (args.likes_weight * df[COLUMN_LIKES] + args.retweet_weight *
 # print statistics
 print("Number of tweets: {0}".format(len(df)))
 print("Label distribution:")
-print(df[COLUMN_LABEL].value_counts(normalize=True))
+print(df[COLUMN_LABEL].value_counts(normalize = True))
 
 # store the DataFrame into a csv file
-df.to_csv(args.output_file)
+df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")

@@ -8,7 +8,7 @@ Created on Tue Sep 28 16:43:18 2021
 @author: lbechberger
 """
 
-import argparse
+import argparse, csv
 import pandas as pd
 
 # setting up CLI
@@ -18,11 +18,9 @@ parser.add_argument("output_file", help = "path to the output csv file")
 args = parser.parse_args()
 
 # load data
-df = pd.read_csv(args.input_file)
-
+df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
 # TODO: call all preprocessing steps
 
-
 # store the results
-df.to_csv(args.output_file)
+df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
