@@ -40,5 +40,10 @@ df = pd.concat(dfs)
 # compute new column "label" based on likes and retweets
 df[COLUMN_LABEL] = (args.likes_weight * df[COLUMN_LIKES] + args.retweet_weight * df[COLUMN_RETWEETS]) > args.threshold
 
+# print statistics
+print("Number of tweets: {0}".format(len(df)))
+print("Label distribution:")
+print(df[COLUMN_LABEL].value_counts(normalize=True))
+
 # store the DataFrame into a pickle file
 df.to_csv(args.output_file)
