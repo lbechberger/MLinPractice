@@ -28,18 +28,29 @@ The installed libraries are used for machine learning (`scikit-learn`), visualiz
 
 ## Overall Pipeline
 
-The script `code/load_data.sh` downloads the raw csv files containing the tweets and their metadata. They are stored in the folder `data/raw/` (which will be created if it does not yet exist).
-
+The overall pipeline can be executed with the script `code/pipeline.sh`, which executes all of the following shell scripts:
+- The script `code/load_data.sh` downloads the raw csv files containing the tweets and their metadata. They are stored in the folder `data/raw/` (which will be created if it does not yet exist).
+- The script `code/preprocessing.sh` executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
+- The script `code/feature_extraction.sh` takes care of feature extraction.
+- The script `code/dimensionality_reduction.sh` takes care of dimensionality reduction.
 
 **TODO:**
-- Overall script
-- preprocessing
-- feature extraction
-- dimensionality reduction
 - training & hyperparameter optimization
 - application
 
 ## Preprocessing
+
+All python scripts for the preprocessing of the input data can be found in `code/preprocessing/`.
+
+### Creating Labels
+
+The script `create_labels.py` assigns labels to the raw data points based on a threshold on a linear combination of the number of likes and retweets. It is executed as follows:
+```python -m code.preprocessing.create_labels path/to/input_dir path/to/output.csv```
+Here, `input_dir` is the directory containing the original raw csv files, while `output.csv` is the single csv file where the output will be written.
+The script takes the following optional parameters:
+- `-l` or `--likes_weight` determines the relative weight of the number of likes a tweet has received. Defaults to 1.
+- `-r` or `--retweet_weight` determines the relative weight of the number of retweets a tweet has received. Defaults to 1.
+- `-t` or `--threshold` determines the threshold a data point needs to surpass in order to count as a "viral" tweet. Defaults to 50.
 
 ## Feature Extraction
 

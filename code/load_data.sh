@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# create directory if not yet existant
+# create directory if not yet existing
 mkdir -p data/raw/
 
 # download the three csv files
