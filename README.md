@@ -24,9 +24,12 @@ You can double-check that all of these packages have been installed by running `
 
 In order to save some space on your local machine, you can run `conda clean -y -q --all` afterwards to remove any temporary files.
 
+The installed libraries are used for machine learning (`scikit-learn`), visualizations (`matplotlib`), NLP (`nltk`), word embeddings (`gensim`), and IDE (`spyder`), and data handling (`pandas`)
+
 ## Overall Pipeline
 
 The script `code/load_data.sh` downloads the raw csv files containing the tweets and their metadata. They are stored in the folder `data/raw/` (which will be created if it does not yet exist).
+
 
 **TODO:**
 - Overall script
