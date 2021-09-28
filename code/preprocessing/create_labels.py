@@ -6,7 +6,7 @@ Stores the result as a single pandas DataFrame in a pickle file.
 
 Created on Tue Sep 28 15:55:44 2021
 
-@author: ml
+@author: lbechberger
 """
 
 import os, argparse
@@ -16,9 +16,9 @@ import pandas as pd
 parser = argparse.ArgumentParser(description = "Creation of Labels")
 parser.add_argument("data_directory", help = "directory where the original csv files reside")
 parser.add_argument("output_file", help = "path to the output csv file")
-parser.add_argument("-l", '--likes_weight', help = "weight of likes", default = 1)
-parser.add_argument("-r", '--retweet_weight', help = "weight of retweets", default = 1)
-parser.add_argument("-t", '--threshold', help = "threshold to surpass for positive class", default = 50)
+parser.add_argument("-l", '--likes_weight', type = int, help = "weight of likes", default = 1)
+parser.add_argument("-r", '--retweet_weight', type = int, help = "weight of retweets", default = 1)
+parser.add_argument("-t", '--threshold', type = int, help = "threshold to surpass for positive class", default = 50)
 args = parser.parse_args()
 
 # constants for relevant column names
@@ -45,5 +45,5 @@ print("Number of tweets: {0}".format(len(df)))
 print("Label distribution:")
 print(df[COLUMN_LABEL].value_counts(normalize=True))
 
-# store the DataFrame into a pickle file
+# store the DataFrame into a csv file
 df.to_csv(args.output_file)
