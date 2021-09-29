@@ -27,7 +27,7 @@ class PunctuationRemover(Preprocessor):
         self._punctuation = "[{}]".format(string.punctuation)
     
     # get preprocessed column based on data frame and internal variables
-    def _get_values(self, df):
+    def _get_values(self, inputs):
         # replace punctuation with empty string
-        column = df[self._input_columns[0]].str.replace(self._punctuation, "")
+        column = inputs[0].str.replace(self._punctuation, "")
         return column

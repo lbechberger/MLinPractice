@@ -39,13 +39,20 @@ class Preprocessor(BaseEstimator,TransformerMixin):
         
         return self
     
-    # get preprocessed column based on data frame and internal variables
+    # get preprocessed column based on the inputs from the DataFrame and internal variables
     # to be implemented by subclass!
-    def _get_values(self, df):
+    def _get_values(self, inputs):
         pass
         
     # transform function: transforms pandas DataFrame based on any internal variables
     def transform(self, df):
+        
+        inputs = []
+        # collect all input columns from df
+        for input_col in self._input_columns:
+            inputs.append(df[input_col])
+        
+        # add to copy of DataFrame
         df_copy = df.copy()
-        df_copy[self._output_column] = self._get_values(df)
+        df_copy[self._output_column] = self._get_values(inputs)   
         return df_copy
