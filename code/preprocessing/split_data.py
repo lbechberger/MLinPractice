@@ -36,3 +36,5 @@ X_train, X_val = train_test_split(X, test_size = relative_validation_size, rando
 X_train.to_csv(os.path.join(args.output_folder, "training.csv"), index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
 X_val.to_csv(os.path.join(args.output_folder, "validation.csv"), index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
 X_test.to_csv(os.path.join(args.output_folder, "test.csv"), index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
+
+print("Training: {0} examples, Validation: {1} examples, Test: {2} examples".format(len(X_train), len(X_val), len(X_test)))
