@@ -17,7 +17,7 @@ from code.util import COLUMN_TWEET, COLUMN_LABEL
 
 
 # setting up CLI
-parser = argparse.ArgumentParser(description = "Various preprocessing steps")
+parser = argparse.ArgumentParser(description = "Feature Extraction")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
