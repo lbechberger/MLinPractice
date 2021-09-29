@@ -11,6 +11,7 @@ Created on Tue Sep 28 16:45:51 2021
 import os, argparse, csv
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from code.util import COLUMN_LABEL
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Splitting the data set")
@@ -25,11 +26,11 @@ args = parser.parse_args()
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
 # split into (training & validation) and test set
-X, X_test = train_test_split(df, test_size = args.test_size, random_state = args.seed, shuffle = True, stratify = df["label"])
+X, X_test = train_test_split(df, test_size = args.test_size, random_state = args.seed, shuffle = True, stratify = df[COLUMN_LABEL])
 
 # split remainder into training and validation
 relative_validation_size = args.validation_size / (1 - args.test_size)
-X_train, X_val = train_test_split(X, test_size = relative_validation_size, random_state = args.seed, shuffle = True, stratify = X["label"])
+X_train, X_val = train_test_split(X, test_size = relative_validation_size, random_state = args.seed, shuffle = True, stratify = X[COLUMN_LABEL])
 
 # store the three data sets separately
 X_train.to_csv(os.path.join(args.output_folder, "training.csv"), index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")

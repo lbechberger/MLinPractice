@@ -11,6 +11,7 @@ Created on Tue Sep 28 15:55:44 2021
 
 import os, argparse, csv
 import pandas as pd
+from code.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_LABEL
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Creation of Labels")
@@ -20,11 +21,6 @@ parser.add_argument("-l", '--likes_weight', type = int, help = "weight of likes"
 parser.add_argument("-r", '--retweet_weight', type = int, help = "weight of retweets", default = 1)
 parser.add_argument("-t", '--threshold', type = int, help = "threshold to surpass for positive class", default = 50)
 args = parser.parse_args()
-
-# constants for relevant column names
-COLUMN_LIKES = "likes_count"
-COLUMN_RETWEETS = "retweets_count"
-COLUMN_LABEL = "label"
 
 # get all csv files in data_directory
 file_paths = [args.data_directory + f for f in os.listdir(args.data_directory) if f.endswith(".csv")]
