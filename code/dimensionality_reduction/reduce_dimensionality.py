@@ -52,10 +52,10 @@ else: # need to set things up manually
             return result
         
         if args.verbose:
-            print("SelectKBest with Mutual Information and k = {0}".format(args.mutual_information))
-            print(feature_names)
-            print(dim_red.scores_)
-            print(get_feature_names(dim_red, feature_names))
+            print("    SelectKBest with Mutual Information and k = {0}".format(args.mutual_information))
+            print("    {0}".format(feature_names))
+            print("    " + str(dim_red.scores_))
+            print("    " + str(get_feature_names(dim_red, feature_names)))
     pass
 
 # apply the dimensionality reduction to the given features
