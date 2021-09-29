@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
-parser.add_argument("-e", "--export", help = "create a pipeline and export to the given location", default = None)
+parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
 
 # load data
@@ -37,7 +37,7 @@ for preprocessor in preprocessors:
 df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
 
 # create a pipeline if necessary and store it as pickle file
-if args.export is not None:
+if args.export_file is not None:
     pipeline = make_pipeline(*preprocessors)
-    with open(args.export, 'wb') as f_out:
+    with open(args.export_file, 'wb') as f_out:
         pickle.dump(pipeline, f_out)

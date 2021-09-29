@@ -16,8 +16,8 @@ class Preprocessor(BaseEstimator,TransformerMixin):
     
     # constructor
     def __init__(self, input_columns, output_column):
-        # super(BaseEstimator, self).__init__()
-        # super(TransformerMixin, self).__init__()
+        super(BaseEstimator, self).__init__()
+        super(TransformerMixin, self).__init__()
         self._output_column = output_column
         self._input_columns = input_columns
     
