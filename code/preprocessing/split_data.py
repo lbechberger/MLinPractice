@@ -16,7 +16,6 @@ from sklearn.model_selection import train_test_split
 parser = argparse.ArgumentParser(description = "Splitting the data set")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_folder", help = "path to the output folder")
-parser.add_argument("-r", '--retweet_weight', help = "weight of retweets", default = 1)
 parser.add_argument("-s", '--seed', type = int, help = "seed for the random number generator", default = None)
 parser.add_argument("-t", '--test_size', type = float, help = "relative size of the test set", default = 0.2)
 parser.add_argument("-v", '--validation_size', type = float, help = "relative size of the validation set", default = 0.2)

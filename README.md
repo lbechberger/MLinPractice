@@ -52,6 +52,28 @@ The script takes the following optional parameters:
 - `-r` or `--retweet_weight` determines the relative weight of the number of retweets a tweet has received. Defaults to 1.
 - `-t` or `--threshold` determines the threshold a data point needs to surpass in order to count as a "viral" tweet. Defaults to 50.
 
+### Classical Preprocessing
+
+The script `run_preprocessing.py` is used to run various preprocessing steps on the raw data, producing additional columns in the csv file. It is executed as follows:
+```python -m code.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv```
+Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
+The preprocessing steps to take can be configured with the following flags:
+- `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
+
+Moreover, the script accepts the following optional parameters:
+- `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
+
+### Splitting the Data Set
+
+The script `split_data.py` splits the overall preprocessed data into training, validation, and test set. It can be invoked as follows:
+```python -m code.preprocessing.split_data path/to/input.csv path/to/output_dir```
+Here, `input.csv` is the input csv file to split (containing a column "label" with the label information, i.e., `create_labels.py` needs to be run beforehand) and `output_dir` is the directory where three individual csv files `training.csv`, `validation.csv`, and `test.csv` will be stored.
+The script takes the following optional parameters:
+- `-t` or `--test_size` determines the relative size of the test set and defaults to 0.2 (i.e., 20 % of the data).
+- `-v` or `--validation_size` determines the relative size of the validation set and defaults to 0.2 (i.e., 20 % of the data).
+- `-s` or `--seed` determines the seed for intializing the random number generator used for creating the randomized spit. Using the same seed across multiple runs ensures that the same split is generated. If no seed is set, the current system time will be used.
+
+
 ## Feature Extraction
 
 ## Dimensionality Reduction
