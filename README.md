@@ -94,6 +94,23 @@ Moreover, the script support importing and exporting fitted feature extractors w
 
 ## Dimensionality Reduction
 
+All python scripts and classes for dimensionality reduction can be found in `code/dimensionality_reduction/`.
+
+The script `reduce_dimensionality.py` takes care of the overall dimensionality reduction procedure and can be invoked as follows:
+
+```python -m code.dimensionality_reduction.reduce_dimensionality path/to/input.pickle path/to/output.pickle```
+Here, `input.pickle` is the respective training, validation, or test set file created by `extract_features.py`. 
+The file `output.pickle` will be used to store the results of the dimensionality reduction process, containing `"features"` (which are the selected/projected ones) and `"labels"` (same as in the input file).
+
+The dimensionality reduction method to be applied can be configured with the following optional parameters:
+- `-m` or `--mutual_information`: Select the `k` best features (where `k` is given as argument) with the Mutual Information criterion
+
+Moreover, the script support importing and exporting fitted dimensionality reduction techniques with the following optional arguments:
+- `-i` or `--import_file`: Load a configured and fitted dimensionality reduction technique from the given pickle file. Ignore all parameters that configure the dimensionality reduction technique.
+- `-e` or `--export_file`: Export the configured and fitted dimensionality reduction technique into the given pickle file.
+
+Finally, if the flag `--verbose` is set, the script outputs some additional information about the dimensionality reduction process.
+
 ## Classifier
 
 ## Application
