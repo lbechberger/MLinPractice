@@ -33,10 +33,8 @@ The overall pipeline can be executed with the script `code/pipeline.sh`, which e
 - The script `code/preprocessing.sh` executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
 - The script `code/feature_extraction.sh` takes care of feature extraction.
 - The script `code/dimensionality_reduction.sh` takes care of dimensionality reduction.
-
-**TODO:**
-- training & hyperparameter optimization
-- application
+- The script `code/classification.sh` takes care of training and evaluating a classifier.
+- The script `code/application.sh` launches the application example.
 
 ## Preprocessing
 
@@ -71,7 +69,7 @@ Here, `input.csv` is the input csv file to split (containing a column "label" wi
 The script takes the following optional parameters:
 - `-t` or `--test_size` determines the relative size of the test set and defaults to 0.2 (i.e., 20 % of the data).
 - `-v` or `--validation_size` determines the relative size of the validation set and defaults to 0.2 (i.e., 20 % of the data).
-- `-s` or `--seed` determines the seed for intializing the random number generator used for creating the randomized spit. Using the same seed across multiple runs ensures that the same split is generated. If no seed is set, the current system time will be used.
+- `-s` or `--seed` determines the seed for intializing the random number generator used for creating the randomized split. Using the same seed across multiple runs ensures that the same split is generated. If no seed is set, the current system time will be used.
 
 
 ## Feature Extraction
@@ -111,6 +109,35 @@ Moreover, the script support importing and exporting fitted dimensionality reduc
 
 Finally, if the flag `--verbose` is set, the script outputs some additional information about the dimensionality reduction process.
 
-## Classifier
+## Classification
+
+All python scripts and classes for classification can be found in `code/classification/`.
+
+### Train and Evaluate a Single Classifier
+
+The script `run_classifier.py` can be used to train and/or evaluate a given classifier. It can be executed as follows:
+```python -m code.classification.run_classifier path/to/input.pickle```
+Here, `input.pickle` is a pickle file of the respective data subset, produced by either `extract_features.py` or `reduce_dimensionality.py`. 
+
+By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
+- `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
+
+The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
+- `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
+
+
+Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
+- `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
+- `-e` or `--export_file`: Export the trained classifier into the given pickle file.
+
+Finally, the optional argument `-s` or `--seed` determines the seed for intializing the random number generator (which may be important for some classifiers). 
+Using the same seed across multiple runs ensures reproducibility of the results. If no seed is set, the current system time will be used.
 
 ## Application
+
+All python code for the application demo can be found in `code/application/`.
+
+The script `application.py` provides a simple command line interface, where the user is asked to type in their prospective tweet, which is then analyzed using the trained ML pipeline.
+The script can be invoked as follows:
+```python -m code.application.application path/to/preprocessing.pickle path/to/feature_extraction.pickle path/to/dimensionality_reduction.pickle path/to/classifier.pickle```
+The four pickle files correspond to the exported versions for the different pipeline steps as created by `run_preprocessing.py`, `extract_features.py`, `reduce_dimensionality.py`, and `run_classifier.py`, respectively, with the `-e` option.
