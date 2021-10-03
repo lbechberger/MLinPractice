@@ -130,3 +130,6 @@ dmypy.json
 
 # exclude /data directory entirely
 /data/
+
+# PyCharm
+/.idea/
