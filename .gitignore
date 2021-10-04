@@ -130,3 +130,7 @@ dmypy.json
 
 # exclude /data directory entirely
 /data/
+
+# exlcude OSX specific files
+.DS_Store
+**/.DS_Store
