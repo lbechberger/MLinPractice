@@ -1,6 +1,10 @@
-Testing the commit
+<<<<<<< HEAD
 # ML in Practice
-Source code for the Seminar "Machine Learning in Practice", taught at OsnabrÃ¼ck University in the winter term 2021/2022.
+Source code for the Seminar "Machine Learning in Practice", taught at Osnabrueck University in the winter term 2021/2022.
+=======
+# Machine Learning in Practice
+Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrück University in the winter term 2021/2022 at the Insitute of Cognitive Science.
+>>>>>>> 1a15cc7c40b299c734e626c4764aa2992a0c9e0c
 
 As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) by Ruchi Bhatia from [Kaggle](https://www.kaggle.com/ruchi798/data-science-tweets). The goal of our example project is to predict which tweets will go viral, i.e., receive many likes and retweets.
 
@@ -141,4 +145,4 @@ All python code for the application demo can be found in `code/application/`.
 The script `application.py` provides a simple command line interface, where the user is asked to type in their prospective tweet, which is then analyzed using the trained ML pipeline.
 The script can be invoked as follows:
 ```python -m code.application.application path/to/preprocessing.pickle path/to/feature_extraction.pickle path/to/dimensionality_reduction.pickle path/to/classifier.pickle```
-The four pickle files correspond to the exported versions for the different pipeline steps as created by `run_preprocessing.py`, `extract_features.py`, `reduce_dimensionality.py`, and `run_classifier.py`, respectively, with the `-e` option.
+The four pickle files correspond to the exported versions for the different pipeline steps as created by `run_preprocessing.py`, `extract_features.py`, `reduce_dimensionality.py`, and `run_classifier.py`, respectively, with the `-e` option.ting the commit
