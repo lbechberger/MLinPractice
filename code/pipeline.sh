@@ -1,4 +1,5 @@
 #!/bin/bash
+# overall pipeline for the ML experiments
 
 echo "loading data"
 code/load_data.sh
