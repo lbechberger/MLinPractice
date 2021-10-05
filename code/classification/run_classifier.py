@@ -47,7 +47,7 @@ prediction = classifier.predict(data["features"])
 evaluation_metrics = []
 if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
-if args.cohen_kappa_score:
+if args.kappa:
     evaluation_metrics.append(("Cohen's kappa score", cohen_kappa_score))
 
 # compute and print them
