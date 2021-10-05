@@ -20,6 +20,7 @@ parser.add_argument("-e", "--export_file", help = "export the trained classifier
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
+parser.add_argument("-n", "--informedness", action = "store_true", help = "evaluate using informedness")
 parser.add_argument("-b", "--balanced_accuracy", action = "store_true", help = "evaluate using balanced accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 args = parser.parse_args()
@@ -53,6 +54,9 @@ if args.kappa:
 
 if args.balanced_accuracy:
     evaluation_metrics.append(("balanced_accuracy", balanced_accuracy_score))
+
+if args.informedness:
+    evaluation_metrics.append(("informedness", lambda x,y: balanced_accuracy_score(x,y, adjusted=True)))
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:
