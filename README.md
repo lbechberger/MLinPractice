@@ -124,6 +124,7 @@ By default, this data is used to train a classifier, which is specified by one o
 
 The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
 - `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
+- `--mcc`: Mathew's Correlation Coefficient (A coefficient of +1 represents a perfect prediction, 0 no better than random prediction and −1 indicates total disagreement between prediction and observation.)
 - `-n` or `--informedness`: Youden’s J statistic (zero means no gain wrt random classification)
 - `-k`or `--kappa`: Cohen's Kappa (https://en.wikipedia.org/wiki/Cohen%27s_kappa)
 - `-b` or `--balanced_accuracy`: Balanced accuracy (arithmetic mean between true positive rate and true negative rate)
