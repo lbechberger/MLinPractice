@@ -1,11 +1,11 @@
 # Machine Learning in Practice
-Source code for the practical Seminar "Machine Learning in Practice", taught at OsnabrÃ¼ck University in the winter term 2021/2022.
+Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrück University in the winter term 2021/2022 at the Insitute of Cognitive Science.
 
 As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) by Ruchi Bhatia from [Kaggle](https://www.kaggle.com/ruchi798/data-science-tweets). The goal of our example project is to predict which tweets will go viral, i.e., receive many likes and retweets.
 
 ## Virtual Environment
 
-In order to install all dependencies, please make sure that you have a local [Conda](https://docs.conda.io/en/latest/) distribution (e.g., Anaconda or miniconda) installed. Begin by creating a new environment called "MLinPractice" that has Python 3.6 installed:
+In order to install all necessary dependencies, please make sure that you have a local [Conda](https://docs.conda.io/en/latest/) distribution (e.g., Anaconda or miniconda) installed. Begin by creating a new environment called "MLinPractice" that has Python 3.6 installed:
 
 ```conda create -y -q --name MLinPractice python=3.6```
 
@@ -121,9 +121,11 @@ Here, `input.pickle` is a pickle file of the respective data subset, produced by
 
 By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
 - `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
+- `-f` or `--frequency`: Dummy classifier that makes predictions based on the label frequency in the training data.
 
 The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
-- `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
+- `-a`or `-accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
+- `-k`or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
 
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
