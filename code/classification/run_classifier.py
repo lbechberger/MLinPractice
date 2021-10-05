@@ -10,7 +10,7 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, matthews_corrcoef
+from sklearn.metrics import accuracy_score, cohen_kappa_score, balanced_accuracy_score, matthews_corrcoef
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -21,6 +21,9 @@ parser.add_argument("-i", "--import_file", help = "import a trained classifier f
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("--mcc", action = "store_true", help = "evaluate using Mathews Correlation coefficient")
+parser.add_argument("-n", "--informedness", action = "store_true", help = "evaluate using informedness")
+parser.add_argument("-b", "--balanced_accuracy", action = "store_true", help = "evaluate using balanced accuracy")
+parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 args = parser.parse_args()
 
 # load data
@@ -47,7 +50,12 @@ prediction = classifier.predict(data["features"])
 evaluation_metrics = []
 if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
-
+if args.kappa:
+    evaluation_metrics.append(("Cohen's kappa score", cohen_kappa_score))
+if args.balanced_accuracy:
+    evaluation_metrics.append(("balanced_accuracy", balanced_accuracy_score))
+if args.informedness:
+    evaluation_metrics.append(("informedness", lambda x,y: balanced_accuracy_score(x,y, adjusted=True)))
 if args.mcc:
     # Division by zero may happen in this function, which produces a warning
     # see https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
@@ -61,3 +69,5 @@ for metric_name, metric in evaluation_metrics:
 if args.export_file is not None:
     with open(args.export_file, 'wb') as f_out:
         pickle.dump(classifier, f_out)
+        
+        
