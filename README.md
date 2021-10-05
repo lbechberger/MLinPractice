@@ -1,5 +1,5 @@
 # Machine Learning in Practice
-Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrück University in the winter term 2021/2022 at the Insitute of Cognitive Science.
+Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrï¿½ck University in the winter term 2021/2022 at the Insitute of Cognitive Science.
 
 As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) by Ruchi Bhatia from [Kaggle](https://www.kaggle.com/ruchi798/data-science-tweets). The goal of our example project is to predict which tweets will go viral, i.e., receive many likes and retweets.
 
@@ -126,6 +126,7 @@ By default, this data is used to train a classifier, which is specified by one o
 The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
 - `-a`or `-accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
 - `-k`or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
+- `-f1`or `--fscore`: F-Score (i.e., computes the score using the precision and the recall).
 
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
