@@ -10,7 +10,7 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, matthews_corrcoef
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -20,6 +20,7 @@ parser.add_argument("-e", "--export_file", help = "export the trained classifier
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
+parser.add_argument("--mcc", action = "store_true", help = "evaluate using Mathews Correlation coefficient")
 args = parser.parse_args()
 
 # load data
@@ -46,6 +47,11 @@ prediction = classifier.predict(data["features"])
 evaluation_metrics = []
 if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
+
+if args.mcc:
+    # Division by zero may happen in this function, which produces a warning
+    # see https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
+    evaluation_metrics.append(("mcc", matthews_corrcoef))
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:
