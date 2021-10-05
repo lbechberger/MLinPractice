@@ -10,7 +10,7 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, roc_auc_score, cohen_kappa_score
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -20,6 +20,8 @@ parser.add_argument("-e", "--export_file", help = "export the trained classifier
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
+parser.add_argument("-auc", "--area", action = "store_true", help = "evaluate using area under curve")
+parser.add_argument("-c", "--cohen", action = "store_true", help = "evaluate using cohen kappa score")
 args = parser.parse_args()
 
 # load data
@@ -46,7 +48,12 @@ prediction = classifier.predict(data["features"])
 evaluation_metrics = []
 if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
-
+    
+if args.area:
+    evaluation_metrics.append(("area_under_curve", roc_auc_score))
+    
+if args.cohen:
+    evaluation_metrics.append(("cohen", cohen_kappa_score))
 # compute and print them
 for metric_name, metric in evaluation_metrics:
     print("    {0}: {1}".format(metric_name, metric(data["labels"], prediction)))
