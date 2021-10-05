@@ -10,7 +10,7 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, cohen_kappa_score
+from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, precision_score, recall_score
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -21,12 +21,16 @@ parser.add_argument("-i", "--import_file", help = "import a trained classifier f
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
-parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
+parser.add_argument("-p", "--precision", action = "store_true", help = "evaluate using precision")
+parser.add_argument("-r", "--recall", action = "store_true", help = "evaluate using recall")
+parser.add_argument("-ck", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
+parser.add_argument("-f1", "--fscore", action = "store_true", help = "evaluate using F-score")
 args = parser.parse_args()
 
 # load data
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
+
 
 if args.import_file is not None:
     # import a pre-trained classifier
@@ -47,14 +51,25 @@ else:   # manually set up a classifier
         classifier.fit(data["features"], data["labels"])
 
 # now classify the given data
+
 prediction = classifier.predict(data["features"])
 
 # collect all evaluation metrics
 evaluation_metrics = []
 if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
+
 if args.kappa:
     evaluation_metrics.append(("Cohen's kappa", cohen_kappa_score))
+
+if args.fscore:
+    evaluation_metrics.append(("F1 score",f1_score ))
+
+if args.precision:
+    evaluation_metrics.append(("precision", precision_score))
+
+if args.recall:
+    evaluation_metrics.append(("recall", recall_score))
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:
