@@ -11,6 +11,7 @@ Created on Wed Sep 29 14:23:48 2021
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import balanced_accuracy_score
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -20,6 +21,7 @@ parser.add_argument("-e", "--export_file", help = "export the trained classifier
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
+parser.add_argument("-n", "--informedness", action = "store_true", help = "evaluate using informedness")
 args = parser.parse_args()
 
 # load data
@@ -46,6 +48,9 @@ prediction = classifier.predict(data["features"])
 evaluation_metrics = []
 if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
+
+if args.informedness:
+    evaluation_metrics.append(("informedness", lambda x,y: balanced_accuracy_score(x,y, adjusted=True)))
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:
