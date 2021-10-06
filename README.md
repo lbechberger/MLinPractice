@@ -57,6 +57,8 @@ The script `run_preprocessing.py` is used to run various preprocessing steps on 
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
 The preprocessing steps to take can be configured with the following flags:
 - `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
+- `-t`or `--tokenize`: Takes a column (default is COLUMN_TWEET) and tokenizes it into individual words. Stores result in new column with suffix SUFFIX_TOKENIZED. (See `code/preprocessing/tokenizer.py` for more details)
+- `--tokenize_input`: Used to specify which column to tokenize
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
