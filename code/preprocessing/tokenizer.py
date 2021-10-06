@@ -18,4 +18,20 @@ class Tokenizer(Preprocessor):
         """Initialize the Tokenizer with the given input and output column."""
         super().__init__([input_column], output_column)
     
+    # don't need to implement _set_variables(), since no variables to set
     
+    def _get_values(self, inputs):
+        """Tokenize the tweet."""
+        
+        tokenized = []
+        
+        for tweet in inputs[0]:
+            sentences = nltk.sent_tokenize(tweet)
+            tokenized_tweet = []
+            for sentence in sentences:
+                words = nltk.word_tokenize(sentence)
+                tokenized_tweet += words
+            
+            tokenized.append(str(tokenized_tweet))
+        
+        return tokenized
