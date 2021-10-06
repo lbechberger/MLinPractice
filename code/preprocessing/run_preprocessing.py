@@ -14,7 +14,8 @@ from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.lowercase import Lowercase
-from code.util import SUFFIX_PUNCTUATION, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED
+from code.preprocessing.regex_replacer import RegexReplacer
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -23,7 +24,7 @@ parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
                                                                    "Available preprocessors: punctuation, "
-                                                                   "tokenize, lowercase")
+                                                                   "tokenize, lowercase, numbers")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
 
@@ -45,6 +46,11 @@ if args.pipeline:
             elif preprocessor == 'lowercase':
                 preprocessors.append(Lowercase(current_column, current_column + SUFFIX_LOWERCASED))
                 current_column = current_column + SUFFIX_LOWERCASED
+            elif preprocessor == 'numbers':
+                preprocessors.append(
+                    RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER)
+                )
+                current_column = current_column + SUFFIX_NUMBERS_REPLACED
             else:
                 # first argument in pipeline is column
                 current_column = preprocessor
