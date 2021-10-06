@@ -14,7 +14,7 @@ from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.lowercase import Lowercase
-from code.util import SUFFIX_PUNCTUATION, SUFFIX_TOKENIZED
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -42,6 +42,9 @@ if args.pipeline:
             elif preprocessor == 'tokenize':
                 preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
                 current_column = current_column + SUFFIX_TOKENIZED
+            elif preprocessor == 'lowercase':
+                preprocessors.append(Lowercase(current_column, current_column + SUFFIX_LOWERCASED))
+                current_column = current_column + SUFFIX_LOWERCASED
             else:
                 # first argument in pipeline is column
                 current_column = preprocessor
