@@ -19,7 +19,7 @@ parser.add_argument("-s", '--seed', type = int, help = "seed for the random numb
 parser.add_argument("-e", "--export_file", help = "export the trained classifier to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier", default = None)
-parser.add_argument("-f", "--frequency", action = "store_true", help = "label-frequency class classifier")
+parser.add_argument("-q", "--frequency", action = "store_true", help = "label-frequency class classifier")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 args = parser.parse_args()
 
