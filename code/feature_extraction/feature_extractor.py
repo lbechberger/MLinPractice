@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Base class for all of our feature extractors.
-
-Created on Wed Sep 29 12:22:13 2021
-
-@author: lbechberger
 """
 
 from sklearn.base import BaseEstimator, TransformerMixin

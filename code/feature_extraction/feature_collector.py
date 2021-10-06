@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Collects the feature values from many different feature extractors.
-
-Created on Wed Sep 29 12:36:01 2021
-
-@author: lbechberger
 """
 
 import numpy as np

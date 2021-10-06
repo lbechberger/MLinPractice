@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Preprocessor that removes punctuation from the original tweet text.
-
-Created on Wed Sep 29 09:45:56 2021
-
-@author: lbechberger
 """
 
 import string

@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Utility file for collecting frequently used constants and helper functions.
-
-Created on Wed Sep 29 10:50:36 2021
-
-@author: lbechberger
 """
 
 # column names for the original data frame

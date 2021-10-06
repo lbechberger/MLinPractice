@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Superclass for all preprocessors.
-
-Created on Tue Sep 28 17:06:35 2021
-
-@author: lbechberger
 """
 
 from sklearn.base import BaseEstimator, TransformerMixin
