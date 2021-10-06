@@ -9,20 +9,24 @@ Created on Tue Sep 28 16:43:18 2021
 """
 
 import argparse, csv, pickle
+from re import L
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
-from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED
+from code.preprocessing.lemmatizer import Lemmatizer
+from code.preprocessing.stopword_remover import Stopword_remover
+from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
-parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
-parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
-parser.add_argument("--tokenize_input", help = "input column to tokenize", default = COLUMN_TWEET)
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
+parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
+                                                                   "<column> preprocessor1 preprocessor 2 ... "
+                                                                   "Available preprocessors: punctuation, "
+                                                                   "tokenize, lowercase, numbers, stopword_remover, lemmatizer")
 args = parser.parse_args()
 
 # load data
@@ -30,10 +34,22 @@ df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator
 
 # collect all preprocessors
 preprocessors = []
-if args.punctuation:
-    preprocessors.append(PunctuationRemover())
-if args.tokenize:
-    preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
+if args.pipeline:
+    for pipeline in args.pipeline:
+        current_column = ''
+        for preprocessor in pipeline:
+            if preprocessor == 'tokenize':
+                preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
+                current_column = current_column + SUFFIX_TOKENIZED
+            elif preprocessor == 'lemmatize':
+                preprocessors.append(Lemmatizer(current_column, current_column+SUFFIX_LEMMATIZED))
+                current_column = current_column + SUFFIX_LEMMATIZED
+            elif preprocessor == 'stopword_remover':
+                preprocessors.append(Stopword_remover(current_column, current_column+SUFFIX_REMOVED_STOPWORDS))
+                current_column = current_column + SUFFIX_REMOVED_STOPWORDS
+            else:
+                # first argument in pipeline is column
+                current_column = preprocessor
 
 # call all preprocessing steps
 for preprocessor in preprocessors:
