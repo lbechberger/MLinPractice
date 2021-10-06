@@ -3,9 +3,6 @@
 # create directory if not yet existing
 mkdir -p data/preprocessing/split/
 
-# install all NLTK models
-python -m nltk.downloader all
-
 # add labels
 echo "  creating labels"
 python -m code.preprocessing.create_labels data/raw/ data/preprocessing/labeled.csv
