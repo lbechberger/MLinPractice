@@ -10,7 +10,7 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, cohen_kappa_score
+from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -20,8 +20,10 @@ parser.add_argument("-e", "--export_file", help = "export the trained classifier
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
+parser.add_argument("-u", "--uniform", action = "store_true", help = "uniform (random) classifier")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
+parser.add_argument("-f1", "--f1_score", action = "store_true", help = "evaluate using F1 score")
 args = parser.parse_args()
 
 # load data
@@ -45,6 +47,11 @@ else:   # manually set up a classifier
         print("    label frequency classifier")
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
         classifier.fit(data["features"], data["labels"])
+    elif args.uniform:
+        # uniform classifier
+        print("    uniform classifier")
+        classifier = DummyClassifier(strategy = "uniform", random_state = args.seed)
+        classifier.fit(data["features"], data["labels"])
 
 # now classify the given data
 prediction = classifier.predict(data["features"])
@@ -55,6 +62,8 @@ if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
 if args.kappa:
     evaluation_metrics.append(("Cohen's kappa", cohen_kappa_score))
+if args.f1_score:
+    evaluation_metrics.append(("F1 score", f1_score))
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:
