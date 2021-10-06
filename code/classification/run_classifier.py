@@ -10,7 +10,7 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, cohen_kappa_score, balanced_accuracy_score, matthews_corrcoef
+from sklearn.metrics import accuracy_score, cohen_kappa_score, balanced_accuracy_score, matthews_corrcoef, f1_score
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -24,6 +24,7 @@ parser.add_argument("--mcc", action = "store_true", help = "evaluate using Mathe
 parser.add_argument("-n", "--informedness", action = "store_true", help = "evaluate using informedness")
 parser.add_argument("-b", "--balanced_accuracy", action = "store_true", help = "evaluate using balanced accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
+parser.add_argument("-f", "--f1_score", action = "store_true", help = "evaluate using the F1 score (or F-measure)")
 args = parser.parse_args()
 
 # load data
@@ -49,17 +50,19 @@ prediction = classifier.predict(data["features"])
 # collect all evaluation metrics
 evaluation_metrics = []
 if args.accuracy:
-    evaluation_metrics.append(("accuracy", accuracy_score))
+    evaluation_metrics.append(("Accuracy", accuracy_score))
+if args.balanced_accuracy:
+    evaluation_metrics.append(("Balanced accuracy", balanced_accuracy_score))
+if args.informedness:
+    evaluation_metrics.append(("Informedness", lambda x,y: balanced_accuracy_score(x,y, adjusted=True)))
 if args.kappa:
     evaluation_metrics.append(("Cohen's kappa score", cohen_kappa_score))
-if args.balanced_accuracy:
-    evaluation_metrics.append(("balanced_accuracy", balanced_accuracy_score))
-if args.informedness:
-    evaluation_metrics.append(("informedness", lambda x,y: balanced_accuracy_score(x,y, adjusted=True)))
+if args.f1_score:
+    evaluation_metrics.append(("F1 score", f1_score))
 if args.mcc:
     # Division by zero may happen in this function, which produces a warning
     # see https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
-    evaluation_metrics.append(("mcc", matthews_corrcoef))
+    evaluation_metrics.append(("MCC", matthews_corrcoef))
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:

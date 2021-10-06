@@ -128,6 +128,7 @@ The classifier is then evaluated, using the evaluation metrics as specified thro
 - `-n` or `--informedness`: Youden’s J statistic (zero means no gain wrt random classification)
 - `-k`or `--kappa`: Cohen's Kappa (https://en.wikipedia.org/wiki/Cohen%27s_kappa)
 - `-b` or `--balanced_accuracy`: Balanced accuracy (arithmetic mean between true positive rate and true negative rate)
+- `-f` or `--f1_score`: F1 Score (weighted average of precision and recall)
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
 - `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
