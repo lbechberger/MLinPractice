@@ -1,5 +1,5 @@
 # Machine Learning in Practice
-Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrück University in the winter term 2021/2022 at the Insitute of Cognitive Science.
+Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrï¿½ck University in the winter term 2021/2022 at the Insitute of Cognitive Science.
 
 As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) by Ruchi Bhatia from [Kaggle](https://www.kaggle.com/ruchi798/data-science-tweets). The goal of our example project is to predict which tweets will go viral, i.e., receive many likes and retweets.
 
@@ -119,16 +119,25 @@ The script `run_classifier.py` can be used to train and/or evaluate a given clas
 ```python -m code.classification.run_classifier path/to/input.pickle```
 Here, `input.pickle` is a pickle file of the respective data subset, produced by either `extract_features.py` or `reduce_dimensionality.py`. 
 
-By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
-- `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
-- `-f` or `--frequency`: Dummy classifier that makes predictions based on the label frequency in the training data.
+By default, this data is used to train a **classifier**, which is specified by one of the following optional arguments:
+- `-c` or `--classifier` followed by either `most_frequent` or `stratified`
+  - `most_frequent` is a [_DummyClassifier_](https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html) which always predicts the most frequently occuring label in the training set.
+  - `stratified` is a [_DummyClassifier_](https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html) that makes predictions based on the label frequency in the training data (respects the training setâ€™s class distribution).
 
-The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
-- `-a`or `-accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
-- `-k`or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
+**Evaluation metrics** are then used by the classifier. Which metrics are used evaluatioon is specified with the following optional arguments:
+- `-m` or `--metrics` followed by another option (default is `none`):
+`none`, `all`, 
 
+  - `accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
+  - `kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
+  - `precision`
+  - `recall`
+  - `f1`
+  - `jaccard`
 
-Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
+For more details on the metrics used, see: https://scikit-learn.org/stable/modules/classes.html#classification-metrics
+
+Moreover, the script support **importing and exporting trained classifiers** with the following optional arguments:
 - `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
 - `-e` or `--export_file`: Export the trained classifier into the given pickle file.
 

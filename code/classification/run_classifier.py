@@ -4,10 +4,19 @@
 Train or evaluate a single classifier with its given set of hyperparameters.
 """
 
-import argparse, pickle
+import argparse, pickle, os
+from pathlib import Path
+from sys import float_info
+from typing import Any, Callable, List, Tuple
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, cohen_kappa_score
+from sklearn.metrics import accuracy_score, cohen_kappa_score, precision_score, recall_score, f1_score, jaccard_score
 
+METR_ACC = "accuracy"
+METR_KAPPA = "kappa"
+METR_PREC = "precision"
+METR_REC = "recall"
+METR_F1 = "f1"
+METR_JAC = "jaccard"
 
 def main():
     # setting up CLI
@@ -16,52 +25,92 @@ def main():
     parser.add_argument("-s", '--seed', type = int, help = "seed for the random number generator", default = None)
     parser.add_argument("-e", "--export_file", help = "export the trained classifier to the given location", default = None)
     parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
-    parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
-    parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
-    parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
-    parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
+    parser.add_argument("-c", '--classifier', choices=['most_frequent', 'stratified'])
+    metrics_choices = ['none', 'all', METR_ACC, METR_KAPPA, METR_PREC, METR_REC, METR_F1, METR_JAC]
+    parser.add_argument("-m", '--metrics', choices=metrics_choices,  default='none')
     args = parser.parse_args()
 
-    # load data
-    with open(args.input_file, 'rb') as f_in:
+    # load input data
+    with open(args.input_file, 'rb') as f_in:        
         data = pickle.load(f_in)
 
+    # import classifier from file
     if args.import_file is not None:
         # import a pre-trained classifier
         with open(args.import_file, 'rb') as f_in:
             classifier = pickle.load(f_in)
 
-    else:   # manually set up a classifier
-        
-        if args.majority:
-            # majority vote classifier
-            print("    majority vote classifier")
+    else:   
+        # manually set up a classifier        
+        if args.classifier == "most_frequent":
+            print("    always most_frequent label (Dummy Classifier)")
             classifier = DummyClassifier(strategy = "most_frequent", random_state = args.seed)
             classifier.fit(data["features"], data["labels"])
-        elif args.frequency:
-            # label frequency classifier
-            print("    label frequency classifier")
+        
+        elif args.classifier == "stratified":
+            print("    stratified DummyClassifier")
             classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
             classifier.fit(data["features"], data["labels"])
-
-    # now classify the given data
-    prediction = classifier.predict(data["features"])
-
-    # collect all evaluation metrics
-    evaluation_metrics = []
-    if args.accuracy:
-        evaluation_metrics.append(("accuracy", accuracy_score))
-    if args.kappa:
-        evaluation_metrics.append(("Cohen's kappa", cohen_kappa_score))
-
-    # compute and print them
-    for metric_name, metric in evaluation_metrics:
-        print("    {0}: {1}".format(metric_name, metric(data["labels"], prediction)))
         
-    # export the trained classifier if the user wants us to do so
-    if args.export_file is not None:
-        with open(args.export_file, 'wb') as f_out:
-            pickle.dump(classifier, f_out)
+        # export the trained classifier if the user wants us to do so
+        if args.export_file is not None:
+            with open(args.export_file, 'wb') as f_out:
+                pickle.dump(classifier, f_out)
+
+
+    prediction = classifier.predict(data["features"])
+    
+    evaluation_metrics = select_metrics_based_on_args(args)
+    computed_metrics = compute_metrics(evaluation_metrics, data, prediction)
+    
+    print_input_file_name(args.input_file) # eg training set
+    print_formatted_metrics(computed_metrics) # eg Accuracy: 0.908
+
+
+def print_input_file_name(input_file):
+    print("      " + Path(input_file).stem + " set");        
+
+
+def select_metrics_based_on_args(args):
+    evaluation_metrics: List[Tuple[str, Callable[[Any, Any], float] ]] = []
+
+    if args.metrics == METR_ACC or args.metrics == "all":
+        evaluation_metrics.append(("Accuracy", accuracy_score))
+
+    if args.metrics == METR_KAPPA or args.metrics == "all":
+        evaluation_metrics.append(("Cohen's k.", cohen_kappa_score))
+
+    if args.metrics == METR_PREC or args.metrics == "all":
+        evaluation_metrics.append(("Precision", precision_score))
+
+    if args.metrics == METR_REC or args.metrics == "all":
+        evaluation_metrics.append(("Recall", recall_score))
+
+    if args.metrics == METR_F1 or args.metrics == "all":
+        evaluation_metrics.append(("F1-Score", f1_score))
+
+    if args.metrics == METR_JAC or args.metrics == "all":
+        evaluation_metrics.append(("Jaccard", jaccard_score))
+
+    return evaluation_metrics
+
+
+def compute_metrics(evaluation_metrics, data, prediction):
+    computed_metrics: List[Tuple[str, float]] = []
+
+    for metric_name, metric in evaluation_metrics:
+        metric_score = metric(data["labels"], prediction)
+        computed_metrics.append((metric_name, metric_score))
+
+    return computed_metrics
+
+
+def print_formatted_metrics(computed_metrics):
+    for metric_name, metric_score in computed_metrics:
+        number_of_decimals = 3
+        rounded_score = round(metric_score, number_of_decimals)
+        print(f"\t{metric_name}: {rounded_score}")
+
 
 if __name__ == "__main__":
     main()
