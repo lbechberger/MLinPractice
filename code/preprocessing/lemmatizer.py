@@ -24,7 +24,7 @@ class Lemmatizer(Preprocessor):
         
         lemmatized = []
         lemmatizer = WordNetLemmatizer()
-        for token, tag in pos_tag(inputs):
+        for token, tag in pos_tag(inputs[0]):
             
             pos = tag[0].lower()
             # Check the token's Part-of-Speech Tag for better lemmatization
