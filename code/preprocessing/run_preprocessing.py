@@ -59,7 +59,7 @@ if args.pipeline:
                 preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
                 current_column = current_column + SUFFIX_TOKENIZED
             elif preprocessor == 'numbers':
-                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER))
+                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'(?<=\W)\d+(?=\W)|\d+(?=\W)|(?<=\W)\d+', TOKEN_NUMBER))
                 current_column = current_column + SUFFIX_NUMBERS_REPLACED
             elif preprocessor == 'standardize':
                 preprocessors.append(Standardizer(current_column, current_column + SUFFIX_STANDARDIZED))
