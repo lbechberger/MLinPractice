@@ -9,6 +9,7 @@ Created on Thu Oct  7 14:30:41 2021
 import unittest
 import pandas as pd
 from code.preprocessing.tokenizer import Tokenizer
+from code.util import fm
 
 class TokenizerTest(unittest.TestCase):
     
@@ -27,15 +28,17 @@ class TokenizerTest(unittest.TestCase):
         self.assertEqual(self.tokenizer._output_column, self.OUTPUT_COLUMN)
 
     def test_tokenization_single_sentence(self):
-        input_text = "This is an example sentence"
-        output_text = "['This', 'is', 'an', 'example', 'sentence']"
+        input_sentence = "This is an example sentence"
+        expected_output_text = "['This', 'is', 'an', 'example', 'sentence']"
         
         input_df = pd.DataFrame()
-        input_df[self.INPUT_COLUMN] = [input_text]
+        input_df[self.INPUT_COLUMN] = [input_sentence]
         
         tokenized = self.tokenizer.fit_transform(input_df)
-        self.assertEqual(tokenized[self.OUTPUT_COLUMN][0], output_text)
-    
+
+        msg = fm("a sentence as a string", "return a list of words as a string")
+        self.assertEqual(tokenized[self.OUTPUT_COLUMN][0], expected_output_text, msg)        
+
 
 if __name__ == '__main__':
     unittest.main()
