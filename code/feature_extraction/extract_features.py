@@ -11,6 +11,7 @@ Created on Wed Sep 29 11:00:24 2021
 import argparse, csv, pickle
 import pandas as pd
 import numpy as np
+from code.feature_extraction.daytime import Daytime
 from code.feature_extraction.month import Month
 from code.feature_extraction.season import Season
 from code.feature_extraction.weekday import Weekday
@@ -29,6 +30,7 @@ parser.add_argument("-c", "--char_length", action = "store_true", help = "comput
 parser.add_argument("-w", "--weekday", action = "store_true", help = "compute the day of the week the tweet was posted", default = None)
 parser.add_argument("-b", "--month", action = "store_true", help = "compute the month the tweet was posted", default = None)
 parser.add_argument("-s", "--season", action = "store_true", help = "compute the season the tweet was posted", default = None)
+parser.add_argument("-d", "--daytime", action = "store_true", help = "compute the time of day the tweet was posted", default = True)
 
 args = parser.parse_args()
 
@@ -53,6 +55,8 @@ else:    # need to create FeatureCollector manually
         features.append(Month("date"))
     if args.season:
         features.append(Season("date"))
+    if args.daytime:
+        features.append(Daytime("time"))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
