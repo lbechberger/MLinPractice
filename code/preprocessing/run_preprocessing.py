@@ -14,8 +14,9 @@ from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.lowercase import Lowercase
+from code.preprocessing.expand import Expander
 from code.preprocessing.regex_replacer import RegexReplacer
-from code.util import SUFFIX_PUNCTUATION, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, SUFFIX_CONTRACTIONS
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -24,7 +25,7 @@ parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
                                                                    "Available preprocessors: punctuation, "
-                                                                   "tokenize, lowercase, numbers")
+                                                                   "tokenize, lowercase, numbers, expand")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
 
@@ -47,10 +48,11 @@ if args.pipeline:
                 preprocessors.append(Lowercase(current_column, current_column + SUFFIX_LOWERCASED))
                 current_column = current_column + SUFFIX_LOWERCASED
             elif preprocessor == 'numbers':
-                preprocessors.append(
-                    RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER)
-                )
+                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER))
                 current_column = current_column + SUFFIX_NUMBERS_REPLACED
+            elif preprocessor == 'expand':
+                preprocessors.append(Expander(current_column, current_column + SUFFIX_CONTRACTIONS,))
+                current_column = current_column + SUFFIX_CONTRACTIONS
             else:
                 # first argument in pipeline is column
                 current_column = preprocessor

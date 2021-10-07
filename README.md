@@ -66,6 +66,7 @@ Available preprocessors are:
 - `tokenize`: Tokenize the current column and create new column with suffix "_tokenized" containing tokenized tweet.
 - `lowercase` Lowercase the current column and create a new column with suffix "_lowercased" containing the lowercased text.
 - `numbers` Replace numbers with a generic number token and create a new column with suffix "_numbers_replaced"
+- `expand` Expand contractions to their long form and create a new column with suffix "_expanded"
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
