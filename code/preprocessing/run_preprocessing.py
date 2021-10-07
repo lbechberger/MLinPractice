@@ -14,9 +14,14 @@ import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
+from code.preprocessing.lowercase import Lowercase
+from code.preprocessing.standardize import Standardizer
+from code.preprocessing.expand import Expander
+from code.preprocessing.regex_replacer import RegexReplacer
 from code.preprocessing.lemmatizer import Lemmatizer
 from code.preprocessing.stopword_remover import Stopword_remover
-from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, SUFFIX_CONTRACTIONS, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
+
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -32,15 +37,33 @@ args = parser.parse_args()
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
+# Comment in for testing
+df = df.drop(labels = range(1000, df.shape[0]), axis = 0)
+
 # collect all preprocessors
 preprocessors = []
 if args.pipeline:
     for pipeline in args.pipeline:
         current_column = ''
         for preprocessor in pipeline:
-            if preprocessor == 'tokenize':
+            if preprocessor == 'punctuation':
+                preprocessors.append(PunctuationRemover(current_column, current_column+SUFFIX_PUNCTUATION))
+                current_column = current_column+SUFFIX_PUNCTUATION
+            elif preprocessor == 'lowercase':
+                preprocessors.append(Lowercase(current_column, current_column + SUFFIX_LOWERCASED))
+                current_column = current_column + SUFFIX_LOWERCASED
+            elif preprocessor == 'expand':
+                preprocessors.append(Expander(current_column, current_column + SUFFIX_CONTRACTIONS,))
+                current_column = current_column + SUFFIX_CONTRACTIONS
+            elif preprocessor == 'tokenize':
                 preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
                 current_column = current_column + SUFFIX_TOKENIZED
+            elif preprocessor == 'numbers':
+                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER))
+                current_column = current_column + SUFFIX_NUMBERS_REPLACED
+            elif preprocessor == 'standardize':
+                preprocessors.append(Standardizer(current_column, current_column + SUFFIX_STANDARDIZED))
+                current_column = current_column + SUFFIX_STANDARDIZED
             elif preprocessor == 'lemmatize':
                 preprocessors.append(Lemmatizer(current_column, current_column+SUFFIX_LEMMATIZED))
                 current_column = current_column + SUFFIX_LEMMATIZED
