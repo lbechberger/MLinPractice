@@ -63,9 +63,10 @@ The preprocessing steps to take can be configured with the `--pipeline` flag:
 
 Available preprocessors are:
 - `punctuation` A new column "xxx_no_punctuation" is created, where all punctuation is removed from the original column. (See `code/preprocessing/punctuation_remover.py` for more details)
-- `tokenize`: Tokenize the current column and create new column with suffix "_tokenized" containing tokenized tweet.
+- `tokenize` Tokenize the current column and create new column with suffix "_tokenized" containing tokenized tweet.
 - `lowercase` Lowercase the current column and create a new column with suffix "_lowercased" containing the lowercased text.
 - `numbers` Replace numbers with a generic number token and create a new column with suffix "_numbers_replaced"
+- `standardize` Standardize UK and US spelling variations to US spelling and create a new column with suffix "_standardized"
 - `expand` Expand contractions to their long form and create a new column with suffix "_expanded"
 
 Moreover, the script accepts the following optional parameters:

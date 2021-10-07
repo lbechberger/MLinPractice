@@ -20,6 +20,7 @@ SUFFIX_PUNCTUATION = "_no_punctuation"
 SUFFIX_TOKENIZED = "_tokenized"
 SUFFIX_LOWERCASED = "_lowercased"
 SUFFIX_NUMBERS_REPLACED = "_numbers_replaced"
+SUFFIX_STANDARDIZED = "_standardized"
 SUFFIX_CONTRACTIONS = "_expanded"
 
 #Special tokens
