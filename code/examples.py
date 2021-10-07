@@ -1,10 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct  7 09:20:09 2021
-
-@author: ml
+Some examples for feature extraction
+- parsing a double quoted list of strings
+- tiny example for exploratory data visualizuation with pandas and matplotlib
+- bigrams
+- TF-IDF
+- WordNet synonyms
+- word embeddings from gensim word2vec-google-news-300 model
+- one hot encoding of categorical data
+  - day and night are similar in nature, but on the opposite ends of the array)
 """
+
+
+"""
+string of list of strings to list of strings
+"""
+import csv
+import ast
+
+df = pd.read_csv("data/preprocessing/preprocessed.csv", quoting=csv.QUOTE_NONNUMERIC, lineterminator="\n")
+tokenized_string = df["tweet_tokenized"][0]
+tokenized_list = ast.literal_eval(tokenized_string)
+
+
 
 # plotting with pandas
 import csv
