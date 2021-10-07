@@ -26,11 +26,15 @@ In order to save some space on your local machine, you can run `conda clean -y -
 
 The installed libraries are used for machine learning (`scikit-learn`), visualizations (`matplotlib`), NLP (`nltk`), word embeddings (`gensim`), and IDE (`spyder`), and data handling (`pandas`)
 
-## Setup & Overall Pipeline
+## Setup & Overall Pipeline & Tests
+
+### Setup
 
 The shell script `code/setup.sh` needs to be run once before the actual `code/pipeline.sh` script or any other shell scripts can be executed. It downloads necessary data by running the scripts `code/load_data.sh` and `code/load_nltk_data.sh`.  
 - The former script `code/load_data.sh` downloads the Data Science Tweets as raw csv files containing the tweets and their metadata. They are stored in the folder `data/raw/` (which will be created if it does not yet exist).
 - The latter script `code/load_nltk_data.sh` downloads necessary NLTK data sets, corpora and models (see more: https://www.nltk.org/data.html)
+
+### Pipeline
 
 The overall pipeline can be executed with the script `code/pipeline.sh`, which executes all of the following shell scripts except `setup.py`:
 - The script `code/preprocessing.sh` executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
@@ -38,6 +42,14 @@ The overall pipeline can be executed with the script `code/pipeline.sh`, which e
 - The script `code/dimensionality_reduction.sh` takes care of dimensionality reduction.
 - The script `code/classification.sh` takes care of training and evaluating a classifier.
 - The script `code/application.sh` launches the application example.
+
+### Tests 
+
+For running unit tests use the following line of code:
+
+```shell
+python -m unittest discover -s code -p '*_test.py'
+```
 
 ## Preprocessing
 
