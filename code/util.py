@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Utility file for collecting frequently used constants and helper functions.
+Utility file for collecting frequently used constants and helper function.
 """
 
 # column names for the original data frame
