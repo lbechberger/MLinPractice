@@ -68,7 +68,7 @@ Available preprocessors are:
 - `lowercase` Lowercase the current column and create a new column with suffix "_lowercased" containing the lowercased text.
 - `numbers` Replace numbers with a generic number token and create a new column with suffix "_numbers_replaced"
 - `lemmatize` Replace words with their lemma and create a new column with suffix "_lemmatized"
-- `stopword_remover` Remove stopwords and create a new column with suffix "_removed_stopwords"
+- `remove_stopwords` Remove stopwords and create a new column with suffix "_removed_stopwords"
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.

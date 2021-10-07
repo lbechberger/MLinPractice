@@ -10,7 +10,7 @@ from nltk.corpus import stopwords
 
 
 class Stopword_remover(Preprocessor):
-    """Removes stopwords."""
+    """Removes very common words (= stopwords)."""
 
     def __init__(self, input_col, output_col):
         """Initialize the Stopword_remover with the given input and output column."""
@@ -21,9 +21,11 @@ class Stopword_remover(Preprocessor):
     def _get_values(self, inputs):
         """Remove the stopwords."""
         
+        filtered_tokens = []
         stops = set(stopwords.words('english'))
-        
-        if inputs[0] not in stops:
-            column = inputs[0]
 
-        return column
+        for w in inputs:
+            if w not in stops:
+                filtered_tokens.append(w)
+
+        return filtered_tokens

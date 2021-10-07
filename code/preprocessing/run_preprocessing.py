@@ -26,7 +26,7 @@ parser.add_argument("-e", "--export_file", help = "create a pipeline and export 
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
                                                                    "Available preprocessors: punctuation, "
-                                                                   "tokenize, lowercase, numbers, stopword_remover, lemmatizer")
+                                                                   "tokenize, lowercase, numbers, lemmatize, remove_stopwords")
 args = parser.parse_args()
 
 # load data
@@ -44,7 +44,7 @@ if args.pipeline:
             elif preprocessor == 'lemmatize':
                 preprocessors.append(Lemmatizer(current_column, current_column+SUFFIX_LEMMATIZED))
                 current_column = current_column + SUFFIX_LEMMATIZED
-            elif preprocessor == 'stopword_remover':
+            elif preprocessor == 'remove_stopwords':
                 preprocessors.append(Stopword_remover(current_column, current_column+SUFFIX_REMOVED_STOPWORDS))
                 current_column = current_column + SUFFIX_REMOVED_STOPWORDS
             else:

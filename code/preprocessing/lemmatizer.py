@@ -7,6 +7,7 @@ Preprocessor that reduces words to their lemmas.
 
 from code.preprocessing.preprocessor import Preprocessor
 from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
 
 
 class Lemmatizer(Preprocessor):
@@ -21,7 +22,16 @@ class Lemmatizer(Preprocessor):
     def _get_values(self, inputs):
         """Lemmatize the words."""
         
+        lemmatized = []
         lemmatizer = WordNetLemmatizer()
-        column = lemmatizer.lemmatize(inputs[0])
+        for token, tag in pos_tag(inputs):
+            
+            pos = tag[0].lower()
+            # Check the token's Part-of-Speech Tag for better lemmatization
+            if pos not in ['a' , 'r' , 'n' , 'v']:
+                pos = 'n' # Default is 'Noun'
+    
+            lemma = lemmatizer.lemmatize(token,pos)
+            lemmatized.append(lemma)
         
-        return column
+        return lemmatized
