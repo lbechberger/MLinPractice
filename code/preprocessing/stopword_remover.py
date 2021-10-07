@@ -24,7 +24,7 @@ class Stopword_remover(Preprocessor):
         filtered_tokens = []
         stops = set(stopwords.words('english'))
 
-        for w in inputs:
+        for w in inputs[0]:
             if w not in stops:
                 filtered_tokens.append(w)
 
