@@ -55,9 +55,17 @@ The script takes the following optional parameters:
 The script `run_preprocessing.py` is used to run various preprocessing steps on the raw data, producing additional columns in the csv file. It is executed as follows:
 ```python -m code.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv```
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
-The preprocessing steps to take can be configured with the following flags:
-- `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
-- `-t`or `--tokenize`: Tokenize the given column (can be specified by `--tokenize_input`, default = "tweet"), and create new column with suffix "_tokenized" containing tokenized tweet.
+The preprocessing steps to take can be configured with the `--pipeline` flag:
+
+```
+--pipeline <column> <preprocessor1> <preprocessor2> ...
+```
+
+Available preprocessors are:
+- `punctuation` A new column "xxx_no_punctuation" is created, where all punctuation is removed from the original column. (See `code/preprocessing/punctuation_remover.py` for more details)
+- `tokenize`: Tokenize the current column and create new column with suffix "_tokenized" containing tokenized tweet.
+- `lowercase` Lowercase the current column and create a new column with suffix "_lowercased" containing the lowercased text.
+- `numbers` Replace numbers with a generic number token and create a new column with suffix "_numbers_replaced"
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
