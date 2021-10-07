@@ -19,7 +19,7 @@ from code.preprocessing.expand import Expander
 from code.preprocessing.regex_replacer import RegexReplacer
 from code.preprocessing.lemmatizer import Lemmatizer
 from code.preprocessing.stopword_remover import Stopword_remover
-from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, SUFFIX_CONTRACTIONS, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_URLS_REPLACED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, TOKEN_URL, SUFFIX_CONTRACTIONS, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
 
 
 # setting up CLI
@@ -29,7 +29,8 @@ parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
                                                                    "Available preprocessors: punctuation, "
-                                                                   "tokenize, lowercase, numbers, standardize, expand")
+                                                                   "lowercase, expand, tokenize, replace_urls, "
+                                                                   "numbers, standardize, lemmatize, remove_stopwords")
 parser.add_argument("--fast", action = "store_true", help = "only run preprocessing on a subset of the data set")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
@@ -59,6 +60,9 @@ if args.pipeline:
             elif preprocessor == 'tokenize':
                 preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
                 current_column = current_column + SUFFIX_TOKENIZED
+            elif preprocessor == 'replace_urls':
+                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_URLS_REPLACED, r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)', TOKEN_URL))
+                current_column = current_column + SUFFIX_URLS_REPLACED
             elif preprocessor == 'numbers':
                 preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'(?<=\W)\d+(?=\W)|^\d+(?=\W)|(?<=\W)\d+$', TOKEN_NUMBER))
                 current_column = current_column + SUFFIX_NUMBERS_REPLACED
@@ -78,6 +82,13 @@ if args.pipeline:
 # call all preprocessing steps
 for preprocessor in preprocessors:
     df = preprocessor.fit_transform(df)
+
+# Code Testing by Louis
+col = df.loc[:,current_column]
+for row in col:
+    for i in row:
+        if i == TOKEN_URL:
+            print("SUCCESS")
 
 # store the results
 df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
