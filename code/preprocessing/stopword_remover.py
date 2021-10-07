@@ -21,13 +21,14 @@ class StopwordRemover(Preprocessor):
         super().__init__([input_column], output_column)
         
         
-    def _set_variables(self, stopwords):
+    def _set_variables(self, inputs):
         """Store stopwords for later reference"""
-        self._stopwords = "[{}]".format(stopwords.words("english"))
+        self._stopwords = "[{}]".format(set(stopwords.words("english")))
     
     
     def _get_values(self, inputs):
         """Remove stopwords from given column."""
-        column = inputs[0].str.replace(self._stopwords, "")
-        return column
+        stopwords_removed = [word for word in inputs[0] if not word.lower() in self._stopwords]
+        #column = inputs[0].str.replace(self._stopwords, "")
+        return stopwords_removed
     
