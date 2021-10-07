@@ -11,6 +11,7 @@ Created on Wed Sep 29 11:00:24 2021
 import argparse, csv, pickle
 import pandas as pd
 import numpy as np
+from code.feature_extraction.month import Month
 from code.feature_extraction.weekday import Weekday
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.feature_collector import FeatureCollector
@@ -25,6 +26,8 @@ parser.add_argument("-e", "--export_file", help = "create a pipeline and export 
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
 parser.add_argument("-w", "--weekday", action = "store_true", help = "compute the day of the week the tweet was posted", default = None)
+parser.add_argument("-b", "--month", action = "store_true", help = "compute the month the tweet was posted", default = True)
+
 args = parser.parse_args()
 
 # load data
@@ -44,6 +47,8 @@ else:    # need to create FeatureCollector manually
         features.append(CharacterLength(COLUMN_TWEET))
     if args.weekday:
         features.append(Weekday("date"))
+    if args.month:
+        features.append(Month("date"))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)

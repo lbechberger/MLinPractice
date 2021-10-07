@@ -10,7 +10,7 @@ import datetime as dt
 from time import mktime, strptime
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
-class Weekday(FeatureExtractor):
+class Month(FeatureExtractor):
     
     # constructor
     def __init__(self, input_column):
@@ -26,7 +26,7 @@ class Weekday(FeatureExtractor):
         for date in inputs[0]:
             date = strptime(date, '%Y-%m-%d')
             date = dt.datetime.fromtimestamp(mktime(date))
-            dates.append(date.weekday())
+            dates.append(date.month)
 
         result = np.asarray(dates)
         result = result.reshape(-1,1)
