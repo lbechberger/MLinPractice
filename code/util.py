@@ -22,6 +22,9 @@ SUFFIX_LOWERCASED = "_lowercased"
 SUFFIX_NUMBERS_REPLACED = "_numbers_replaced"
 SUFFIX_STANDARDIZED = "_standardized"
 SUFFIX_CONTRACTIONS = "_expanded"
+SUFFIX_REMOVED_STOPWORDS = "_removed_stopwords"
+SUFFIX_TOKENIZED = "_tokenized"
+SUFFIX_LEMMATIZED = "_lemmatized"
 
 #Special tokens
 TOKEN_NUMBER = "__NUMBER__"

@@ -9,6 +9,7 @@ Created on Tue Sep 28 16:43:18 2021
 """
 
 import argparse, csv, pickle
+from re import L
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
@@ -17,19 +18,20 @@ from code.preprocessing.lowercase import Lowercase
 from code.preprocessing.standardize import Standardizer
 from code.preprocessing.expand import Expander
 from code.preprocessing.regex_replacer import RegexReplacer
-from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, SUFFIX_CONTRACTIONS
+from code.preprocessing.lemmatizer import Lemmatizer
+from code.preprocessing.stopword_remover import Stopword_remover
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, SUFFIX_CONTRACTIONS, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
 
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
+parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
                                                                    "Available preprocessors: punctuation, "
-                                                                   "tokenize, lowercase, numbers, standardize, expand")
-
-parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
+                                                                   "tokenize, lowercase, numbers, lemmatize, remove_stopwords")
 args = parser.parse_args()
 
 # load data
@@ -47,25 +49,30 @@ if args.pipeline:
             if preprocessor == 'punctuation':
                 preprocessors.append(PunctuationRemover(current_column, current_column+SUFFIX_PUNCTUATION))
                 current_column = current_column+SUFFIX_PUNCTUATION
-            elif preprocessor == 'tokenize':
-                preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
-                current_column = current_column + SUFFIX_TOKENIZED
             elif preprocessor == 'lowercase':
                 preprocessors.append(Lowercase(current_column, current_column + SUFFIX_LOWERCASED))
                 current_column = current_column + SUFFIX_LOWERCASED
+            elif preprocessor == 'expand':
+                preprocessors.append(Expander(current_column, current_column + SUFFIX_CONTRACTIONS,))
+                current_column = current_column + SUFFIX_CONTRACTIONS
+            elif preprocessor == 'tokenize':
+                preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
+                current_column = current_column + SUFFIX_TOKENIZED
             elif preprocessor == 'numbers':
                 preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER))
                 current_column = current_column + SUFFIX_NUMBERS_REPLACED
             elif preprocessor == 'standardize':
                 preprocessors.append(Standardizer(current_column, current_column + SUFFIX_STANDARDIZED))
                 current_column = current_column + SUFFIX_STANDARDIZED
-            elif preprocessor == 'expand':
-                preprocessors.append(Expander(current_column, current_column + SUFFIX_CONTRACTIONS,))
-                current_column = current_column + SUFFIX_CONTRACTIONS
+            elif preprocessor == 'lemmatize':
+                preprocessors.append(Lemmatizer(current_column, current_column+SUFFIX_LEMMATIZED))
+                current_column = current_column + SUFFIX_LEMMATIZED
+            elif preprocessor == 'remove_stopwords':
+                preprocessors.append(Stopword_remover(current_column, current_column+SUFFIX_REMOVED_STOPWORDS))
+                current_column = current_column + SUFFIX_REMOVED_STOPWORDS
             else:
                 # first argument in pipeline is column
                 current_column = preprocessor
-
 
 # call all preprocessing steps
 for preprocessor in preprocessors:
