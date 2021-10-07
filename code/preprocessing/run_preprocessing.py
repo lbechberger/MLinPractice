@@ -9,7 +9,6 @@ Created on Tue Sep 28 16:43:18 2021
 """
 
 import argparse, csv, pickle
-from re import L
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
@@ -27,18 +26,20 @@ from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED,
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
-parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
                                                                    "Available preprocessors: punctuation, "
-                                                                   "tokenize, lowercase, numbers, lemmatize, remove_stopwords")
+                                                                   "tokenize, lowercase, numbers, standardize, expand")
+parser.add_argument("--fast", action = "store_true", help = "only run preprocessing on a subset of the data set")
+parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
 # Comment in for testing
-df = df.drop(labels = range(1000, df.shape[0]), axis = 0)
+if args.fast:
+    df = df.drop(labels = range(1000, df.shape[0]), axis = 0)
 
 # collect all preprocessors
 preprocessors = []
