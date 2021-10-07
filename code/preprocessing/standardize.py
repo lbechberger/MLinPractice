@@ -11,19 +11,18 @@ Created on Wed Oct 6
 import string
 import re
 from code.preprocessing.preprocessor import Preprocessor
-from code.util import COLUMN_TWEET, COLUMN_STANDARD
 from code.preprocessing.util.spellings import SPELLINGS_MAP
 
 
 # substitutes UK spellings with US form
 # credit: http://www.tysto.com/uk-us-spelling-list.html
 
-class Standardiser(Preprocessor):
+class Standardizer(Preprocessor):
 
     # constructor
-    def __init__(self):
+    def __init__(self, input_col, output):
         # input column "tweet", new output column
-        super().__init__([COLUMN_TWEET], COLUMN_STANDARD)
+        super().__init__([input_col], output)
     
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs, spellings=SPELLINGS_MAP):

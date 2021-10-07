@@ -14,8 +14,9 @@ from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.lowercase import Lowercase
+from code.preprocessing.standardize import Standardizer
 from code.preprocessing.regex_replacer import RegexReplacer
-from code.util import SUFFIX_PUNCTUATION, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -24,12 +25,15 @@ parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
                                                                    "Available preprocessors: punctuation, "
-                                                                   "tokenize, lowercase, numbers")
+                                                                   "tokenize, lowercase, numbers, standardize")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
+
+# Comment in for testing
+df = df.drop(labels = range(1000, df.shape[0]), axis = 0)
 
 # collect all preprocessors
 preprocessors = []
@@ -47,10 +51,14 @@ if args.pipeline:
                 preprocessors.append(Lowercase(current_column, current_column + SUFFIX_LOWERCASED))
                 current_column = current_column + SUFFIX_LOWERCASED
             elif preprocessor == 'numbers':
-                preprocessors.append(
-                    RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER)
-                )
+                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER))
                 current_column = current_column + SUFFIX_NUMBERS_REPLACED
+            elif preprocessor == 'numbers':
+                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'\d+', TOKEN_NUMBER))
+                current_column = current_column + SUFFIX_NUMBERS_REPLACED
+            elif preprocessor == 'standardize':
+                preprocessors.append(Standardizer(current_column, current_column + SUFFIX_STANDARDIZED))
+                current_column = current_column + SUFFIX_STANDARDIZED
             else:
                 # first argument in pipeline is column
                 current_column = preprocessor
