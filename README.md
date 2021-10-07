@@ -67,6 +67,7 @@ Available preprocessors are:
 - `lowercase` Lowercase the current column and create a new column with suffix "_lowercased" containing the lowercased text.
 - `numbers` Replace numbers with a generic number token and create a new column with suffix "_numbers_replaced"
 - `standardize` Standardize UK and US spelling variations to US spelling and create a new column with suffix "_standardized"
+- `expand` Expand contractions to their long form and create a new column with suffix "_expanded"
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
