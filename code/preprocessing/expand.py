@@ -38,7 +38,10 @@ class Expander(Preprocessor):
                 expanded_contraction = contraction_mapping.get(match.lower())
 
             return expanded_contraction
-        
+
+        # replace elegant apostrophe with normal one
+        column = inputs[0].str.replace('’', '\'')
+
         # replace contraction with long form
-        column = inputs[0].str.replace(contractions_pattern, expand_match)
+        column = column.str.replace(contractions_pattern, expand_match)
         return column
