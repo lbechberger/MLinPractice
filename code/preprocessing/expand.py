@@ -11,7 +11,6 @@ Created on Wed Oct 6
 import string
 import re
 from code.preprocessing.preprocessor import Preprocessor
-from code.util import COLUMN_TWEET, COLUMN_PUNCTUATION, COLUMN_CONTRACTIONS
 from code.preprocessing.util.contractions import CONTRACTION_MAP
 
 # substitutes a variety of common contractions with their long form
@@ -19,9 +18,9 @@ from code.preprocessing.util.contractions import CONTRACTION_MAP
 class Expander(Preprocessor):
 
     # constructor
-    def __init__(self):
+    def __init__(self, input_col, output):
         # input column "tweet", new output column
-        super().__init__([COLUMN_TWEET], COLUMN_CONTRACTIONS)
+        super().__init__([input_col], output)
     
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs, contraction_mapping=CONTRACTION_MAP):
