@@ -23,12 +23,19 @@ class StopwordRemover(Preprocessor):
         
     def _set_variables(self, inputs):
         """Store stopwords for later reference"""
-        self._stopwords = "[{}]".format(set(stopwords.words("english")))
+        self._stopwords = stopwords.words("english")
     
     
     def _get_values(self, inputs):
         """Remove stopwords from given column."""
-        stopwords_removed = [word for word in inputs[0] if not word.lower() in self._stopwords]
+        # code itself works fine, problem seems to be with accessing the tweet
+        stopwords_removed = []
+        
+        for word in inputs[0]:
+            if not word.lower() in self._stopwords:
+                stopwords_removed.append(word)
+        
+        #stopwords_removed = [w for w in inputs[0] if not w.lower() in self._stopwords]
         #column = inputs[0].str.replace(self._stopwords, "")
         return stopwords_removed
     
