@@ -74,7 +74,7 @@ Available preprocessors are:
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
-
+- `--fast` only runs preprocessors on a small subset of the dataset
 ### Splitting the Data Set
 
 The script `split_data.py` splits the overall preprocessed data into training, validation, and test set. It can be invoked as follows:
