@@ -27,19 +27,14 @@ class Tokenizer(Preprocessor):
         Args:
             inputs -- list of input columns
         """
-        
         tokenized = []
         
         for tweet in inputs[0]:
-            
             sentences = sent_tokenize(tweet)
             tokenized_tweet = []
-            
             for sentence in sentences:
-                
                 words = word_tokenize(sentence)
                 tokenized_tweet += words
-            
             tokenized.append(str(tokenized_tweet))
-        
+            
         return tokenized
