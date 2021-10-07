@@ -15,6 +15,11 @@ COLUMN_RETWEETS = "retweets_count"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
-COLUMN_PUNCTUATION = "tweet_no_punctuation"
 
+SUFFIX_PUNCTUATION = "_no_punctuation"
 SUFFIX_TOKENIZED = "_tokenized"
+SUFFIX_LOWERCASED = "_lowercased"
+SUFFIX_NUMBERS_REPLACED = "_numbers_replaced"
+
+#Special tokens
+TOKEN_NUMBER = "__NUMBER__"
