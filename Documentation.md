@@ -11,6 +11,9 @@ This document contains the documentation for our project.
 <!-- Evaluation section -->
 ## Evaluation
 
+### Cohen's kappa
+Robust against class imbalance
+
 <!-- Preprocessing section -->
 ## Preprocessing
 
