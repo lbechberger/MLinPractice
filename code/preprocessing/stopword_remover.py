@@ -10,7 +10,6 @@ Created on Thu Oct  7 12:21:12 2021
 
 from code.preprocessing.preprocessor import Preprocessor
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 import ast
 
 
@@ -30,10 +29,10 @@ class StopwordRemover(Preprocessor):
     
     def _get_values(self, inputs):
         """Remove stopwords from given column."""
+        # keeps raising invalid syntax error on terminal, works as supposed in jupyter
         stops = set(stopwords.words('english'))
         
         for tweet in inputs[0]:
-            # problem with literal_eval? works fine in jupyter but raises error on terminal exec
             tweet_eval = ast.literal_eval(tweet)
             column = str([_ for _ in tweet_eval if _ not in stops])
         
