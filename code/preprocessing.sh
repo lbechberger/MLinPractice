@@ -12,7 +12,7 @@ python -m code.preprocessing.create_labels data/raw/ data/preprocessing/labeled.
 
 # other preprocessing (removing punctuation etc.)
 echo "  general preprocessing"
-python -m code.preprocessing.run_preprocessing data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv -p -t --tokenize_input "tweet_no_punctuation" -s --stopwords_input "tweet_no_punctuation_tokenized" -e data/preprocessing/pipeline.pickle
+python -m code.preprocessing.run_preprocessing data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv -p -t --tokenize_input "tweet_no_punctuation" -s --stopwords_input "tweet_no_punctuation" -e data/preprocessing/pipeline.pickle
 
 # split the data set
 echo "  splitting the data set"

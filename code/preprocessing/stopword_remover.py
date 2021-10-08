@@ -10,6 +10,8 @@ Created on Thu Oct  7 12:21:12 2021
 
 from code.preprocessing.preprocessor import Preprocessor
 from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+import ast
 
 
 class StopwordRemover(Preprocessor):
@@ -28,14 +30,12 @@ class StopwordRemover(Preprocessor):
     
     def _get_values(self, inputs):
         """Remove stopwords from given column."""
-        # code itself works fine, problem seems to be with accessing the tweet
-        stopwords_removed = []
+        stops = set(stopwords.words('english'))
         
-        for word in inputs[0]:
-            if not word.lower() in self._stopwords:
-                stopwords_removed.append(word)
+        for tweet in inputs[0]:
+            # problem with literal_eval? works fine in jupyter but raises error on terminal exec
+            tweet_eval = ast.literal_eval(tweet)
+            column = str([_ for _ in tweet_eval if _ not in stops])
         
-        #stopwords_removed = [w for w in inputs[0] if not w.lower() in self._stopwords]
-        #column = inputs[0].str.replace(self._stopwords, "")
-        return stopwords_removed
+        return column
     
