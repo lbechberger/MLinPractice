@@ -10,6 +10,7 @@ Created on Tue Sep 28 16:43:18 2021
 
 import argparse, csv, pickle
 import pandas as pd
+import re
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
@@ -19,7 +20,7 @@ from code.preprocessing.expand import Expander
 from code.preprocessing.regex_replacer import RegexReplacer
 from code.preprocessing.lemmatizer import Lemmatizer
 from code.preprocessing.stopword_remover import Stopword_remover
-from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_URLS_REPLACED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, TOKEN_URL, SUFFIX_CONTRACTIONS, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_URLS_REMOVED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, SUFFIX_CONTRACTIONS, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
 
 
 # setting up CLI
@@ -49,20 +50,20 @@ if args.pipeline:
         current_column = ''
         for preprocessor in pipeline:
             if preprocessor == 'replace_urls':
-                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_URLS_REPLACED, r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)', TOKEN_URL))
-                current_column = current_column + SUFFIX_URLS_REPLACED
-            elif preprocessor == 'tokenize':
-                preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
-                current_column = current_column + SUFFIX_TOKENIZED
+                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_URLS_REMOVED, r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)', ""))
+                current_column = current_column + SUFFIX_URLS_REMOVED
             elif preprocessor == 'punctuation':
-                preprocessors.append(PunctuationRemover(current_column, current_column+SUFFIX_PUNCTUATION))
-                current_column = current_column+SUFFIX_PUNCTUATION
+                preprocessors.append(PunctuationRemover(current_column, current_column + SUFFIX_PUNCTUATION))
+                current_column = current_column + SUFFIX_PUNCTUATION
             elif preprocessor == 'lowercase':
                 preprocessors.append(Lowercase(current_column, current_column + SUFFIX_LOWERCASED))
                 current_column = current_column + SUFFIX_LOWERCASED
             elif preprocessor == 'expand':
                 preprocessors.append(Expander(current_column, current_column + SUFFIX_CONTRACTIONS,))
                 current_column = current_column + SUFFIX_CONTRACTIONS
+            elif preprocessor == 'tokenize':
+                preprocessors.append(Tokenizer(current_column, current_column + SUFFIX_TOKENIZED))
+                current_column = current_column + SUFFIX_TOKENIZED
             elif preprocessor == 'numbers':
                 preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_NUMBERS_REPLACED, r'(?<=\W)\d+(?=\W)|^\d+(?=\W)|(?<=\W)\d+$', TOKEN_NUMBER))
                 current_column = current_column + SUFFIX_NUMBERS_REPLACED
