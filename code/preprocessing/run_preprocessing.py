@@ -29,7 +29,8 @@ parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
-                                                                   "Available preprocessors: replace_urls, "
+                                                                   "IMPORTANT: remove_urls has to run before punctuation"
+                                                                   "Available preprocessors: remove_urls, "
                                                                    "lowercase, expand, tokenize, punctuation, "
                                                                    "numbers, standardize, lemmatize, remove_stopwords")
 
@@ -50,7 +51,7 @@ if args.pipeline:
     for pipeline in args.pipeline:
         current_column = ''
         for preprocessor in pipeline:
-            if preprocessor == 'replace_urls':
+            if preprocessor == 'remove_urls':
                 preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_URLS_REMOVED, r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)', ""))
                 current_column = current_column + SUFFIX_URLS_REMOVED
             elif preprocessor == 'punctuation':
