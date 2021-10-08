@@ -17,15 +17,16 @@ from ast import literal_eval
 
 class Lemmatizer(Preprocessor):
     """Lemmatize given input column."""
+    
     def __init__(self, input_column, output_column):
-        """"""
+        """Init with given input and output column"""
         super().__init__([input_column], output_column)
     
     # implementation of _set_variables() not necessary
     
     # inspired by https://www.machinelearningplus.com/nlp/lemmatization-examples-python/    
     def _get_values(self, inputs):
-        """Lemmatize given input based on WordNet"""
+        """Lemmatize given input based on WordNet. Also changes to lowercase."""
         lemmatizer = WordNetLemmatizer()
         # dict to map PoS to arg accepted by lemmatize()
         tag_dict = {"J": wordnet.ADJ,

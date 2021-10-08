@@ -19,3 +19,4 @@ COLUMN_PUNCTUATION = "tweet_no_punctuation"
 
 SUFFIX_TOKENIZED = "_tokenized"
 SUFFIX_STOPWORDS = "_stopwords_removed"
+SUFFIX_LEMMATIZED = "_lemmatized"
