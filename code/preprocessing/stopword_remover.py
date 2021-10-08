@@ -7,6 +7,7 @@ Preprocessor that removes stopwords.
 
 from code.preprocessing.preprocessor import Preprocessor
 from nltk.corpus import stopwords
+import ast
 
 
 class Stopword_remover(Preprocessor):
@@ -21,11 +22,15 @@ class Stopword_remover(Preprocessor):
     def _get_values(self, inputs):
         """Remove the stopwords."""
         
-        filtered_tokens = []
+        filtered_col = []
         stops = set(stopwords.words('english'))
+        stops.update(["'s", "\"", "\'", "“", "”", "´", "`"])
+        
+        for row in inputs[0]:
+            filtered_row = []
+            for w in row:
+                if w not in stops:
+                    filtered_row.append(w)
+            filtered_col.append(filtered_row)
 
-        for w in inputs[0]:
-            if w not in stops:
-                filtered_tokens.append(w)
-
-        return filtered_tokens
+        return filtered_col
