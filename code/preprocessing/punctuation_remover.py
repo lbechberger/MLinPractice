@@ -9,6 +9,7 @@ Created on Wed Sep 29 09:45:56 2021
 """
 
 import string
+import warnings
 from code.preprocessing.preprocessor import Preprocessor
 from code.util import COLUMN_TWEET, COLUMN_PUNCTUATION
 
@@ -29,5 +30,6 @@ class PunctuationRemover(Preprocessor):
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
         # replace punctuation with empty string
+        warnings.simplefilter(action='ignore', category=FutureWarning)
         column = inputs[0].str.replace(self._punctuation, "")
         return column
