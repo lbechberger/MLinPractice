@@ -10,6 +10,7 @@ Created on Tue Sep 28 16:43:18 2021
 
 import argparse, csv, pickle
 import pandas as pd
+import re
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
@@ -19,7 +20,7 @@ from code.preprocessing.expand import Expander
 from code.preprocessing.regex_replacer import RegexReplacer
 from code.preprocessing.lemmatizer import Lemmatizer
 from code.preprocessing.stopword_remover import Stopword_remover
-from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, SUFFIX_CONTRACTIONS, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
+from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED, SUFFIX_LOWERCASED, SUFFIX_URLS_REMOVED, SUFFIX_NUMBERS_REPLACED, TOKEN_NUMBER, SUFFIX_CONTRACTIONS, SUFFIX_LEMMATIZED, SUFFIX_REMOVED_STOPWORDS
 
 
 # setting up CLI
@@ -28,8 +29,11 @@ parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
-                                                                   "Available preprocessors: punctuation, "
-                                                                   "tokenize, lowercase, numbers, standardize, expand, lemmatize, remove_stopwords")
+                                                                   "IMPORTANT: remove_urls has to run before punctuation"
+                                                                   "Available preprocessors: remove_urls, "
+                                                                   "lowercase, expand, tokenize, punctuation, "
+                                                                   "numbers, standardize, lemmatize, remove_stopwords")
+
 parser.add_argument("--fast", action = "store_true", help = "only run preprocessing on a subset of the data set")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
@@ -47,9 +51,12 @@ if args.pipeline:
     for pipeline in args.pipeline:
         current_column = ''
         for preprocessor in pipeline:
-            if preprocessor == 'punctuation':
-                preprocessors.append(PunctuationRemover(current_column, current_column+SUFFIX_PUNCTUATION))
-                current_column = current_column+SUFFIX_PUNCTUATION
+            if preprocessor == 'remove_urls':
+                preprocessors.append(RegexReplacer(current_column, current_column + SUFFIX_URLS_REMOVED, r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)', ""))
+                current_column = current_column + SUFFIX_URLS_REMOVED
+            elif preprocessor == 'punctuation':
+                preprocessors.append(PunctuationRemover(current_column, current_column + SUFFIX_PUNCTUATION))
+                current_column = current_column + SUFFIX_PUNCTUATION
             elif preprocessor == 'lowercase':
                 preprocessors.append(Lowercase(current_column, current_column + SUFFIX_LOWERCASED))
                 current_column = current_column + SUFFIX_LOWERCASED
