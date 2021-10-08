@@ -63,6 +63,7 @@ The preprocessing steps to take can be configured with the `--pipeline` flag:
 ```
 
 Available preprocessors are:
+- `remove_urls` Has to be specified BEFORE --punctuation. Removes all URLs from the tweet and create a new column with the suffix "_urls_removed".
 - `punctuation` A new column "xxx_no_punctuation" is created, where all punctuation is removed from the original column. (See `code/preprocessing/punctuation_remover.py` for more details)
 - `tokenize` Tokenize the current column and create new column with suffix "_tokenized" containing tokenized tweet.
 - `lowercase` Lowercase the current column and create a new column with suffix "_lowercased" containing the lowercased text.
