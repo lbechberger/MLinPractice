@@ -29,9 +29,10 @@ parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
-                                                                   "Available preprocessors: punctuation, "
-                                                                   "lowercase, expand, tokenize, replace_urls, "
+                                                                   "Available preprocessors: replace_urls, "
+                                                                   "lowercase, expand, tokenize, punctuation, "
                                                                    "numbers, standardize, lemmatize, remove_stopwords")
+
 parser.add_argument("--fast", action = "store_true", help = "only run preprocessing on a subset of the data set")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
