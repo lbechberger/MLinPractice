@@ -15,6 +15,8 @@ class BooleanCounter(FeatureExtractor):
     # constructor
     def __init__(self, input_column, count_type = "boolean"):
         super().__init__([input_column], "{0}_{1}".format(input_column, count_type))
+        
+        # specifies if count is absolute or boolean (> 1 or 0)
         self._count_type = count_type
         self._input_column = input_column
     

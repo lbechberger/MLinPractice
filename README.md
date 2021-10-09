@@ -101,6 +101,18 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 The features to be extracted can be configured with the following optional parameters:
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
 
+The following features retrieve a boolean, if tweet has one of the following attributes: 
+- `--hashtag_count`: Count the number of hashtags used in the tweet. (see code/count_boolean)
+- `--mentions_count`: Count the number of mentions in the tweet. (see code/count_boolean)
+- `--reply_to_count`: Count the number of accounts the tweet is in reply to. (see code/count_boolean)
+- `--photos_count`: Count the number of photos used in the tweet. (see code/count_boolean)
+- `--url_count`: Count the number of urls used in the tweet. (see code/count_boolean)
+- `--video_binary`: Convert if the tweet contains a video into binary boolean values. (see code/count_boolean)
+- `--retweet_binary`: Convert if the tweet is a retweet into binary boolean values. (see code/count_boolean)
+- 
+If you wish to retrieve the absolute counts of the above attributes, add the optional flag:
+- `--item_count`: Specify, to retrieve absolute counts of attributes (see code/count_boolean)
+
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
 - `-e` or `--export_file`: Export the configured and fitted feature extraction into the given pickle file.
