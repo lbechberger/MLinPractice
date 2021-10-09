@@ -28,7 +28,7 @@ parser.add_argument("-v", "--svm", action = "store_true", help = "SVM classifier
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 args = parser.parse_args()
-
+#args, unk = parser.parse_known_args()
 # load data
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
