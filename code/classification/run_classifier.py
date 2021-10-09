@@ -59,7 +59,7 @@ else:   # manually set up a classifier
 
     elif args.svm:
         print("    SVM classifier")
-        classifier = make_pipeline(StandardScaler(), SCV())
+        classifier = make_pipeline(StandardScaler(), SVC())
         
 
 
