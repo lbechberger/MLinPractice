@@ -9,9 +9,11 @@ Created on Wed Sep 29 11:00:24 2021
 """
 
 import argparse, csv, pickle
+from typing import Counter
 import pandas as pd
 import numpy as np
 from code.feature_extraction.character_length import CharacterLength
+from code.feature_extraction.count import ItemCounter
 from code.feature_extraction.feature_collector import FeatureCollector
 from code.util import COLUMN_TWEET, COLUMN_LABEL
 
@@ -22,11 +24,24 @@ parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
-parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("--char_length", action = "store_true", help = "compute the length  in the tweet")
+parser.add_argument("--hashtag_count", action = "store_true", help = "compute the number of hashtags in the tweet", default = True)
+parser.add_argument("--mentions_count", action = "store_true", help = "compute the number of mentions in the tweet", default = True)
+parser.add_argument("--reply_to_count", action = "store_true", help = "compute the number of accounts replied to in the tweet", default = True)
+parser.add_argument("--photos_count", action = "store_true", help = "compute the number of photos in the tweet", default = True)
+parser.add_argument("--url_count", action = "store_true", help = "compute the number of URLs used in the tweet", default = True)
+parser.add_argument("--item_count", action = "store_true", help = "compute the absolute count of items, else compute boolean if items > 0")
+
+
 args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
+
+if args.item_count:
+    count_type = "count"
+else:
+    count_type = "boolean"
 
 if args.import_file is not None:
     # simply import an exisiting FeatureCollector
@@ -40,6 +55,21 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
+    if args.hashtag_count:
+        # number (or if) hashtags used
+        features.append(ItemCounter("hashtags", count_type))
+    if args.mentions_count:
+        # number (or if) mentions used
+        features.append(ItemCounter("mentions", count_type))
+    if args.reply_to_count:
+        # number (or if) reply_to used
+        features.append(ItemCounter("reply_to", count_type))
+    if args.photos_count:
+        # number (or if) photos used
+        features.append(ItemCounter("photos", count_type))
+    if args.url_count:
+        # number (or if) URLs used
+        features.append(ItemCounter("urls", count_type))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
