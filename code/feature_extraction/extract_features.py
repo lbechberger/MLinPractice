@@ -13,7 +13,7 @@ from typing import Counter
 import pandas as pd
 import numpy as np
 from code.feature_extraction.character_length import CharacterLength
-from code.feature_extraction.count import ItemCounter
+from code.feature_extraction.count_boolean import BooleanCounter
 from code.feature_extraction.feature_collector import FeatureCollector
 from code.util import COLUMN_TWEET, COLUMN_LABEL
 
@@ -31,6 +31,8 @@ parser.add_argument("--reply_to_count", action = "store_true", help = "compute t
 parser.add_argument("--photos_count", action = "store_true", help = "compute the number of photos in the tweet", default = True)
 parser.add_argument("--url_count", action = "store_true", help = "compute the number of URLs used in the tweet", default = True)
 parser.add_argument("--item_count", action = "store_true", help = "compute the absolute count of items, else compute boolean if items > 0")
+parser.add_argument("--video_binary", action = "store_true", help = "compute the binary of if the tweet is a video", default = True)
+parser.add_argument("--retweet_binary", action = "store_true", help = "compute the binary of if the tweet is a retweet", default = True)
 
 
 args = parser.parse_args()
@@ -57,19 +59,26 @@ else:    # need to create FeatureCollector manually
         features.append(CharacterLength(COLUMN_TWEET))
     if args.hashtag_count:
         # number (or if) hashtags used
-        features.append(ItemCounter("hashtags", count_type))
+        features.append(BooleanCounter("hashtags", count_type))
     if args.mentions_count:
         # number (or if) mentions used
-        features.append(ItemCounter("mentions", count_type))
+        features.append(BooleanCounter("mentions", count_type))
     if args.reply_to_count:
         # number (or if) reply_to used
-        features.append(ItemCounter("reply_to", count_type))
+        features.append(BooleanCounter("reply_to", count_type))
     if args.photos_count:
         # number (or if) photos used
-        features.append(ItemCounter("photos", count_type))
+        features.append(BooleanCounter("photos", count_type))
     if args.url_count:
         # number (or if) URLs used
-        features.append(ItemCounter("urls", count_type))
+        features.append(BooleanCounter("urls", count_type))
+    if args.video_binary:
+        # convert if tweet contains video to boolean
+        features.append(BooleanCounter("video", "boolean"))
+    if args.retweet_binary:
+        # convert if tweet is retweet to boolean
+        features.append(BooleanCounter("retweet", "boolean"))
+    
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)

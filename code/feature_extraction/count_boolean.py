@@ -6,12 +6,11 @@
 """
 
 import numpy as np
-import pandas as pd
 import ast
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
 # class for extracting the character-based length as a feature
-class ItemCounter(FeatureExtractor):
+class BooleanCounter(FeatureExtractor):
     
     # constructor
     def __init__(self, input_column, count_type = "boolean"):
@@ -26,13 +25,13 @@ class ItemCounter(FeatureExtractor):
 
         result = []
 
-        for ls in inputs[0]:
+        for row in inputs[0]:
             if self._count_type == "boolean":
-                result.append(int(bool(ast.literal_eval(ls))))
+                result.append(int(bool(row)))
             elif self._count_type == "count":
-                result.append(len(ast.literal_eval(ls)))
+                result.append(len(ast.literal_eval(row)))
  
         result = np.asarray(result)
-        print("example result of", self._input_column, result)
+
         result = result.reshape(-1,1)
         return result
