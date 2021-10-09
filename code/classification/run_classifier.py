@@ -67,14 +67,14 @@ if args.small is not None:
     # if limit is given
     max_length = len(data['features'])
     limit = min(args.small, max_length)
-    classifier.fit(data["features"][:limit], data["labels"].ravel()[:limit])
-    # now classify the given data
-    prediction = classifier.predict(data["features"][:limit])
-else:
-    #else use all data
-    classifier.fit(data["features"], data["labels"].ravel())
-    # now classify the given data
-    prediction = classifier.predict(data["features"])
+    # go through data and limit it
+    for key, value in data.items():
+        data[key] = value[:limit]
+
+
+classifier.fit(data["features"], data["labels"].ravel())
+# now classify the given data
+prediction = classifier.predict(data["features"])
 
 
 
