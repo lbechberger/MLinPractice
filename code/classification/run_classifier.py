@@ -29,6 +29,7 @@ parser.add_argument("-v", "--svm", action = "store_true", help = "SVM classifier
 parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
+parser.add_argument("--small", type = int, help = "not use all data but just subset", default = None)
 args = parser.parse_args()
 #args, unk = parser.parse_known_args()
 # load data
@@ -62,10 +63,20 @@ else:   # manually set up a classifier
         classifier = make_pipeline(StandardScaler(), SVC())
         
 
+if args.small is not None:
+    # if limit is given
+    max_length = len(data['features'])
+    limit = min(args.small, max_length)
+    classifier.fit(data["features"][:limit], data["labels"].ravel()[:limit])
+    # now classify the given data
+    prediction = classifier.predict(data["features"][:limit])
+else:
+    #else use all data
+    classifier.fit(data["features"], data["labels"].ravel())
+    # now classify the given data
+    prediction = classifier.predict(data["features"])
 
-classifier.fit(data["features"], data["labels"].ravel())
-# now classify the given data
-prediction = classifier.predict(data["features"])
+
 
 # collect all evaluation metrics
 evaluation_metrics = []
