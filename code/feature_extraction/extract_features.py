@@ -9,6 +9,7 @@ Created on Wed Sep 29 11:00:24 2021
 """
 
 import argparse, csv, pickle
+from typing import Collection
 import pandas as pd
 import numpy as np
 from code.feature_extraction.daytime import Daytime
@@ -17,7 +18,7 @@ from code.feature_extraction.season import Season
 from code.feature_extraction.weekday import Weekday
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL
+from code.util import COLUMN_DATE, COLUMN_TIME, COLUMN_TWEET, COLUMN_LABEL
 
 
 # setting up CLI
@@ -50,13 +51,13 @@ else:    # need to create FeatureCollector manually
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
     if args.weekday:
-        features.append(Weekday("date"))
+        features.append(Weekday(COLUMN_DATE))
     if args.month:
-        features.append(Month("date"))
+        features.append(Month(COLUMN_DATE))
     if args.season:
-        features.append(Season("date"))
+        features.append(Season(COLUMN_DATE))
     if args.daytime:
-        features.append(Daytime("time"))
+        features.append(Daytime(COLUMN_TIME))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
