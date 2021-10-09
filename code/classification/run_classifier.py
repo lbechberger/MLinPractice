@@ -46,18 +46,24 @@ else:   # manually set up a classifier
         # majority vote classifier
         print("    majority vote classifier")
         classifier = DummyClassifier(strategy = "most_frequent", random_state = args.seed)
-        classifier.fit(data["features"], data["labels"])
     elif args.frequency:
         # label frequency classifier
         print("    label frequency classifier")
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
-        classifier.fit(data["features"], data["labels"])
+
+    elif args.knn is not None:
+        print("    {0} nearest neighbor classifier".format(args.knn))
+        standardizer = StandardScaler()
+        knn_classifier = KNeighborsClassifier(args.knn)
+        classifier = make_pipeline(standardizer, knn_classifier)
+
     elif args.svm:
         print("    SVM classifier")
         classifier = make_pipeline(StandardScaler(), SCV())
         
-        classifier.fit(data["features"], data["labels"])
 
+
+classifier.fit(data["features"], data["labels"].ravel())
 # now classify the given data
 prediction = classifier.predict(data["features"])
 
