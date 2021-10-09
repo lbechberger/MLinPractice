@@ -50,11 +50,18 @@ else:   # manually set up a classifier
         # label frequency classifier
         print("    label frequency classifier")
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
+
     elif args.knn is not None:
         print("    {0} nearest neighbor classifier".format(args.knn))
         standardizer = StandardScaler()
         knn_classifier = KNeighborsClassifier(args.knn)
         classifier = make_pipeline(standardizer, knn_classifier)
+
+    elif args.svm:
+        print("    SVM classifier")
+        classifier = make_pipeline(StandardScaler(), SCV())
+        
+
 
 classifier.fit(data["features"], data["labels"].ravel())
 # now classify the given data
