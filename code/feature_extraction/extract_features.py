@@ -15,7 +15,7 @@ import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.count_boolean import BooleanCounter
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL
+from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO
 
 
 # setting up CLI
@@ -59,25 +59,25 @@ else:    # need to create FeatureCollector manually
         features.append(CharacterLength(COLUMN_TWEET))
     if args.hashtag_count:
         # number (or if) hashtags used
-        features.append(BooleanCounter("hashtags", count_type))
+        features.append(BooleanCounter(COLUMN_HASHTAGS, count_type))
     if args.mentions_count:
         # number (or if) mentions used
-        features.append(BooleanCounter("mentions", count_type))
+        features.append(BooleanCounter(COLUMN_MENTIONS, count_type))
     if args.reply_to_count:
         # number (or if) reply_to used
-        features.append(BooleanCounter("reply_to", count_type))
+        features.append(BooleanCounter(COLUMN_REPLY_TO, count_type))
     if args.photos_count:
         # number (or if) photos used
-        features.append(BooleanCounter("photos", count_type))
+        features.append(BooleanCounter(COLUMN_PHOTOS, count_type))
     if args.url_count:
         # number (or if) URLs used
-        features.append(BooleanCounter("urls", count_type))
+        features.append(BooleanCounter(COLUMN_URLS, count_type))
     if args.video_binary:
         # convert if tweet contains video to boolean
-        features.append(BooleanCounter("video", "boolean"))
+        features.append(BooleanCounter(COLUMN_VIDEO, "boolean"))
     if args.retweet_binary:
         # convert if tweet is retweet to boolean
-        features.append(BooleanCounter("retweet", "boolean"))
+        features.append(BooleanCounter(COLUMN_RETWEET_BOOL, "boolean"))
     
     
     # create overall FeatureCollector

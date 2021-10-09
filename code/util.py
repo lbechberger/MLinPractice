@@ -12,6 +12,13 @@ Created on Wed Sep 29 10:50:36 2021
 COLUMN_TWEET = "tweet"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
+COLUMN_URLS = "urls"
+COLUMN_HASHTAGS = "hashtags"
+COLUMN_RETWEET_BOOL = "retweet"
+COLUMN_VIDEO = "video"
+COLUMN_REPLY_TO = "reply_to"
+COLUMN_MENTIONS = "mentions"
+COLUMN_PHOTOS = "photos"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
