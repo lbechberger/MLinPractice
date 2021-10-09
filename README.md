@@ -56,9 +56,6 @@ The script `run_preprocessing.py` is used to run various preprocessing steps on 
 ```python -m code.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv```
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
 
-If you wish to remove tweets that are not english:
-- `--prune-lang`: Drop rows of a language other than english 
-
 The preprocessing steps to take can be configured with the `--pipeline` flag:
 
 ```
