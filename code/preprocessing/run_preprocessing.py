@@ -39,10 +39,11 @@ args = parser.parse_args()
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
-# Comment in for testing
+# Comment in for faster testing
 if args.fast:
     df = df.drop(labels = range(1000, df.shape[0]), axis = 0)
 
+# Removes rows in a language other than the one specified to keep
 if args.prune_lang:
 
     language_pruner = LanguagePruner(df)
