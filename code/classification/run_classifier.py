@@ -52,6 +52,11 @@ else:   # manually set up a classifier
         print("    label frequency classifier")
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
         classifier.fit(data["features"], data["labels"])
+    elif args.svm:
+        print("    SVM classifier")
+        classifier = make_pipeline(StandardScaler(), SCV())
+        
+        classifier.fit(data["features"], data["labels"])
 
 # now classify the given data
 prediction = classifier.predict(data["features"])
