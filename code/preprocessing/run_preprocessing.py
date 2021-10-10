@@ -7,9 +7,10 @@ Runs the specified collection of preprocessing steps
 import argparse, csv, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
+from code.preprocessing.preprocessors.mentions_counter import MentionsCounter
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
-from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED
+from code.util import COLUMN_MENTIONS, COLUMN_TWEET, SUFFIX_TOKENIZED
 
 
 def main():
@@ -26,8 +27,27 @@ def main():
     # load data
     df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
+    # TODO create a preprocessor for the dropping of columns
+    drop_cols = [
+        # TODO remove COLUMN_MENTIONS as the last preprocessing step,
+        "id", "conversation_id", "created_at", "timezone", "user_id", "name", "place",
+        "replies_count", "retweets_count", "likes_count",
+        # "cashtag" only few records have this filled. Might be useless
+        # always the same value for all records
+        "retweet", "near","geo","source","user_rt_id","user_rt","retweet_id",
+        "retweet_date","translate","trans_src"
+        # "trans_dest" for some reason there is a line break in the csv after "trans_dest
+        # therefore the column cannot be removed without extra effort
+    ]
+
+    # TODO filter by language
+    # drop language column
+
+    df = df.drop(columns=drop_cols)
+
     # collect all preprocessors
     preprocessors = []
+    preprocessors.append(MentionsCounter())
     if args.punctuation:
         preprocessors.append(PunctuationRemover())
     if args.tokenize:
