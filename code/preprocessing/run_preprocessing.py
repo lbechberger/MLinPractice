@@ -28,7 +28,7 @@ def main():
     df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",converters={'mentions': eval,'photos':eval,'urls':eval})
     #filter by language
     df= df[df.language == 'en']
-    # drop unnecessaryy cloumn including language column
+    # drop unnecessaryy cloumns including language column
     # TODO create a preprocessor for the dropping of columns
     drop_cols = [
         # TODO remove COLUMN_MENTIONS as the last preprocessing step,
