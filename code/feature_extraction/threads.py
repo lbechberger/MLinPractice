@@ -23,6 +23,6 @@ class Threads(FeatureExtractor):
     
     # compute the word length based on the inputs
     def _get_values(self, inputs):
-        result = np.array(inputs[0].str.contains(r'🧵|thread|[0-9]+/\s', flags=re.IGNORECASE, regex=True))
+        result = np.array(inputs[0].str.contains(r'🧵|thread|[0-9]+/([0-9]+|\s)', flags=re.IGNORECASE, regex=True))
         result = result.reshape(-1,1)
         return result
