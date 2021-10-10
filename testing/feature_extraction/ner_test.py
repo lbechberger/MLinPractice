@@ -13,29 +13,13 @@ from code.feature_extraction.ner import NER
 class NERtest(unittest.TestCase):
 
     def setUp(self):
-        self.INPUT_COLUMN = "input"
-        self.OUTPUT_COLUMN = "output"
-        self.ner = NER(self.INPUT_COLUMN)
+        self.ner = NER('tweet')
 
-    def test_boolean(self):
-        self.assertEqual(True, not False)
-
-    def test_input_columns(self):
-        self.assertListEqual(self.tokenizer._input_columns, [self.INPUT_COLUMN])
-
-    def test_output_column(self):
-        self.assertEqual(self.tokenizer._output_column, self.OUTPUT_COLUMN)
-
-    def test_tokenization_single_sentence(self):
-        input_text = "This is an example sentence"
-        output_text = "['This', 'is', 'an', 'example', 'sentence']"
-
-        input_df = pd.DataFrame()
-        input_df[self.INPUT_COLUMN] = [input_text]
-
-        tokenized = self.tokenizer.fit_transform(input_df)
-        self.assertEqual(tokenized[self.OUTPUT_COLUMN][0], output_text)
-
+    def test_fit_transform_positive(self):
+        df = pd.DataFrame()
+        df['tweet'] = ['Lena went to the store and bought clothes.']
+        output = self._ner_extractor.fit_transform(df)
+        # under construction
 
 if __name__ == '__main__':
     unittest.main() 

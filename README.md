@@ -18,6 +18,7 @@ conda install -y -q -c conda-forge nltk=3.6.3
 conda install -y -q -c conda-forge gensim=4.1.2
 conda install -y -q -c conda-forge spyder=5.1.5
 conda install -y -q -c conda-forge pandas=1.1.5
+conda install -y -q -c conda-forge spacy 
 ```
 
 You can double-check that all of these packages have been installed by running `conda list` inside of your virtual environment. The Spyder IDE can be started by typing `~/miniconda/envs/MLinPractice/bin/spyder` in your terminal window (assuming you use miniconda, which is installed right in your home directory).
@@ -100,6 +101,7 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 
 The features to be extracted can be configured with the following optional parameters:
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
+- `-n` or `--ner`: Recognize all named entities in the tweet (see code/feature_extraction/ner.py)
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
