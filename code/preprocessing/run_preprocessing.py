@@ -25,26 +25,23 @@ def main():
     args = parser.parse_args()
 
     # load data
-    df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
-
+    df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",converters={'mentions': eval,'photos':eval,'urls':eval})
+    #filter by language
+    df= df[df.language == 'en']
+    # drop unnecessaryy cloumn including language column
     # TODO create a preprocessor for the dropping of columns
     drop_cols = [
         # TODO remove COLUMN_MENTIONS as the last preprocessing step,
         "id", "conversation_id", "created_at", "timezone", "user_id", "name", "place",
-        "replies_count", "retweets_count", "likes_count",
+        "replies_count", "retweets_count", "likes_count","language",
         # "cashtag" only few records have this filled. Might be useless
         # always the same value for all records
         "retweet", "near","geo","source","user_rt_id","user_rt","retweet_id",
-        "retweet_date","translate","trans_src"
-        # "trans_dest" for some reason there is a line break in the csv after "trans_dest
-        # therefore the column cannot be removed without extra effort
-    ]
+        "retweet_date","translate","trans_src",'trans_dest\r']
 
-    # TODO filter by language
-    # drop language column
 
     df = df.drop(columns=drop_cols)
-
+   
     # collect all preprocessors
     preprocessors = []
     preprocessors.append(MentionsCounter())
