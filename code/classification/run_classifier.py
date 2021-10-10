@@ -60,7 +60,7 @@ def main():
 
     prediction = classifier.predict(data["features"])
     
-    evaluation_metrics = select_metrics_based_on_args(args)
+    evaluation_metrics = select_metrics_based_on_args(args.metrics)
     computed_metrics = compute_metrics(evaluation_metrics, data, prediction)
     
     print_input_file_name(args.input_file) # eg training set
@@ -71,25 +71,25 @@ def print_input_file_name(input_file):
     print("      " + Path(input_file).stem + " set");        
 
 
-def select_metrics_based_on_args(args):
+def select_metrics_based_on_args(metrics: str):
     evaluation_metrics: List[Tuple[str, Callable[[Any, Any], float] ]] = []
 
-    if args.metrics == METR_ACC or args.metrics == "all":
+    if metrics == METR_ACC or metrics == "all":
         evaluation_metrics.append(("Accuracy", accuracy_score))
 
-    if args.metrics == METR_KAPPA or args.metrics == "all":
+    if metrics == METR_KAPPA or metrics == "all":
         evaluation_metrics.append(("Cohen's k.", cohen_kappa_score))
 
-    if args.metrics == METR_PREC or args.metrics == "all":
+    if metrics == METR_PREC or metrics == "all":
         evaluation_metrics.append(("Precision", precision_score))
 
-    if args.metrics == METR_REC or args.metrics == "all":
+    if metrics == METR_REC or metrics == "all":
         evaluation_metrics.append(("Recall", recall_score))
 
-    if args.metrics == METR_F1 or args.metrics == "all":
+    if metrics == METR_F1 or metrics == "all":
         evaluation_metrics.append(("F1-Score", f1_score))
 
-    if args.metrics == METR_JAC or args.metrics == "all":
+    if metrics == METR_JAC or metrics == "all":
         evaluation_metrics.append(("Jaccard", jaccard_score))
 
     return evaluation_metrics
