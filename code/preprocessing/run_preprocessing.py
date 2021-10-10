@@ -5,12 +5,12 @@ Runs the specified collection of preprocessing steps
 """
 
 import argparse, csv, pickle
-from ast import literal_eval
 import pandas as pd
 from sklearn.pipeline import make_pipeline
+from code.preprocessing.preprocessors.mentions_counter import MentionsCounter
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
-from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED
+from code.util import COLUMN_MENTIONS, COLUMN_TWEET, SUFFIX_TOKENIZED
 
 
 def main():
@@ -27,11 +27,9 @@ def main():
     # load data
     df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
-    df["mentions"] = df["mentions"].apply(literal_eval)
-    df["mentions_count"] = df["mentions"].str.len()
-    df = df.drop(columns=["mentions"])
-
+    # TODO create a preprocessor for the dropping of columns
     drop_cols = [
+        # TODO remove COLUMN_MENTIONS as the last preprocessing step,
         "id", "conversation_id", "created_at", "timezone", "user_id", "name", "place",
         "replies_count", "retweets_count", "likes_count",
         # "cashtag" only few records have this filled. Might be useless
@@ -49,6 +47,7 @@ def main():
 
     # collect all preprocessors
     preprocessors = []
+    preprocessors.append(MentionsCounter())
     if args.punctuation:
         preprocessors.append(PunctuationRemover())
     if args.tokenize:
