@@ -11,7 +11,8 @@ Created on Wed Sep 29 12:29:25 2021
 import numpy as np
 from code.feature_extraction.feature_extractor import FeatureExtractor
 from sklearn.feature_extraction.text import HashingVectorizer
-import pdb
+
+from code.util import HASH_VECTOR_N_FEATURES
 
 # class for extracting the character-based length as a feature
 class HashVector(FeatureExtractor):
@@ -27,7 +28,8 @@ class HashVector(FeatureExtractor):
         # inputs is list of text documents
         # create the transform
         #pdb.set_trace()
-        vectorizer = HashingVectorizer(n_features=30)
+        vectorizer = HashingVectorizer(n_features=HASH_VECTOR_N_FEATURES)
         # encode document
         vector = vectorizer.fit_transform(inputs[0])
+
         return vector.toarray()

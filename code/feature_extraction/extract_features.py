@@ -43,14 +43,17 @@ else:    # need to create FeatureCollector manually
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
     if args.hash_vec:
-        # character length of original tweet (without any changes)
+        # hash of original tweet (without any changes)
         features.append(HashVector(COLUMN_TWEET))
+        
+
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
     
     # fit it on the given data set (assumed to be training data)
     feature_collector.fit(df)
 
+    
 
 # apply the given FeatureCollector on the current data set
 # maps the pandas DataFrame to an numpy array
@@ -63,6 +66,7 @@ label_array = label_array.reshape(-1, 1)
 # store the results
 results = {"features": feature_array, "labels": label_array, 
            "feature_names": feature_collector.get_feature_names()}
+
 with open(args.output_file, 'wb') as f_out:
     pickle.dump(results, f_out)
 
