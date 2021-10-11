@@ -17,6 +17,7 @@ from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.lowercase import Lowercase
 from code.preprocessing.standardize import Standardizer
 from code.preprocessing.expand import Expander
+from code.preprocessing.prune_languages import LanguagePruner
 from code.preprocessing.regex_replacer import RegexReplacer
 from code.preprocessing.lemmatizer import Lemmatizer
 from code.preprocessing.stopword_remover import Stopword_remover
@@ -27,6 +28,7 @@ from code.util import SUFFIX_PUNCTUATION, SUFFIX_STANDARDIZED, SUFFIX_TOKENIZED,
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
+parser.add_argument("-l", "--prune_lang", action="store_true")
 parser.add_argument("--pipeline", action='append', nargs='*', help="define a preprocessing pipeline e.g. --pipeline "
                                                                    "<column> preprocessor1 preprocessor 2 ... "
                                                                    "IMPORTANT: remove_urls has to run before punctuation"
@@ -44,6 +46,13 @@ df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator
 # Comment in for testing
 if args.fast:
     df = df.drop(labels = range(1000, df.shape[0]), axis = 0)
+
+# Removes rows in a language other than the one specified to keep
+if args.prune_lang:
+
+    language_pruner = LanguagePruner(df)
+    language_pruner.get_language_counts()
+    df = language_pruner.drop_rows_by_language(language = "en")
 
 # collect all preprocessors
 preprocessors = []
