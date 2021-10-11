@@ -14,6 +14,7 @@ import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
+from code.feature_extraction.sentiment import Sentiment
 from code.util import COLUMN_TWEET, COLUMN_LABEL
 
 
@@ -24,6 +25,7 @@ parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("-s", "--sentiment", action = "store_true", help = "compute the tweet sentiment")
 parser.add_argument("--threads", action = "store_true", help = "match tweets that are part of a thread")
 args = parser.parse_args()
 
@@ -42,7 +44,9 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
-
+    if args.sentiment:
+        # sentiment of original tweet (without any changes)
+        features.append(Sentiment(COLUMN_TWEET))
     if args.threads:
         # character length of original tweet (without any changes)
         features.append(Threads(COLUMN_TWEET))
