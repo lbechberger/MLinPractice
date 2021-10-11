@@ -69,7 +69,7 @@ else:   # manually set up a classifier
         log_param("k", args.knn)
         params = {"classifier": "knn", "k": args.knn}
         standardizer = StandardScaler()
-        knn_classifier = KNeighborsClassifier(args.knn)
+        knn_classifier = KNeighborsClassifier(args.knn, n_jobs = -1)
         classifier = make_pipeline(standardizer, knn_classifier)
     
     classifier.fit(data["features"], data["labels"].ravel())

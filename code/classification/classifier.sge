@@ -8,7 +8,7 @@
 
 
 export PATH="$HOME/miniconda/bin:$PATH"
-source $HOME/miniconda3/etc/profile.d/conda.sh
+eval "$(conda shell.bash hook)"
 conda activate MLinPractice
 # run feature extraction on training set (may need to fit extractors)
 echo "  training set"
