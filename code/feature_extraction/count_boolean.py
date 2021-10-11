@@ -8,6 +8,7 @@
 import numpy as np
 import ast
 from code.feature_extraction.feature_extractor import FeatureExtractor
+from code.util import COLUMN_RETWEET_BOOL, COLUMN_VIDEO
 
 # class for extracting the character-based length as a feature
 class BooleanCounter(FeatureExtractor):
@@ -27,9 +28,11 @@ class BooleanCounter(FeatureExtractor):
 
         result = []
 
-        for row in inputs[0]:
-            if self._count_type == "boolean":
+        for i, row in enumerate(inputs[0]):
+            if self._input_column == COLUMN_VIDEO or self._input_column == COLUMN_RETWEET_BOOL:
                 result.append(int(bool(row)))
+            elif self._count_type == "boolean":
+                result.append(int(bool(ast.literal_eval(row))))
             elif self._count_type == "count":
                 result.append(len(ast.literal_eval(row)))
  
