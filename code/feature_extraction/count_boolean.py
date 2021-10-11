@@ -10,7 +10,7 @@ import ast
 from code.feature_extraction.feature_extractor import FeatureExtractor
 from code.util import COLUMN_RETWEET_BOOL, COLUMN_VIDEO
 
-# class for extracting the character-based length as a feature
+# class for extracting the boolean value or count of a column as a feature
 class BooleanCounter(FeatureExtractor):
     
     # constructor
@@ -23,7 +23,7 @@ class BooleanCounter(FeatureExtractor):
     
     # don't need to fit, so don't overwrite _set_variables()
     
-    # compute the word length based on the inputs
+    # compute the boolean or count based on the inputs
     def _get_values(self, inputs):
 
         result = []
