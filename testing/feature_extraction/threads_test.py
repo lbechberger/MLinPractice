@@ -19,13 +19,17 @@ class ThreadsTest(unittest.TestCase):
             'This is a tweet with a 🧵',
             '1/4 Read on my dear',
             '1/ Read on my dear',
+            'Read on my dear 1/',
+            'Read on my dear 1/4',
         ]
 
         output = self._threads_extractor.fit_transform(df)
 
         self.assertEqual(output[0, 0], False)
-        self.assertEqual(output[1, 0], True)
+        self.assertEqual(output[1, 0], False)
         self.assertEqual(output[2, 0], True)
         self.assertEqual(output[3, 0], True)
-        self.assertEqual(output[3, 0], True)
+        self.assertEqual(output[4, 0], True)
+        self.assertEqual(output[5, 0], True)
+        self.assertEqual(output[6, 0], True)
 
