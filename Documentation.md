@@ -26,5 +26,12 @@ As proposed by @lbechberger, this was done using the nltk library.
 ### Punctuation removal
 A feature for removing punctuation from the raw tweet has already been implemented by @lbechberger.
 
+### Lemmatization
+Lemmatization modifies an inflected or variant form of a word into its lemma or dictionary form. 
+Through lemmatization, we can make sure that words - on a sematical level - get interpreted in the same way, 
+even when inflected: 'walk' and 'walking', for example, stem from the same word and ultimately have the same meaning. 
+Lemmatization, as opposed to stemming, which is computationally more effective, tries to take context into account, 
+which is why we chose to implement it instead of stemming.
+
 <!-- Feature extraction section -->
 ## Feature extraction

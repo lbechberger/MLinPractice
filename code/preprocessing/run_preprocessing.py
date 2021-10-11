@@ -14,17 +14,24 @@ from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.stopword_remover import StopwordRemover
-from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, SUFFIX_STOPWORDS
+from code.preprocessing.lemmatizer import Lemmatizer
+from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, SUFFIX_STOPWORDS, SUFFIX_LEMMATIZED
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
+
+# <--- Preprocessing steps --->
 parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
 parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
 parser.add_argument("--tokenize_input", help = "input column to tokenize", default = COLUMN_TWEET)
 parser.add_argument("-s", "--stopwords", action = "store_true", help = "remove common stopwords")
 parser.add_argument("--stopwords_input", help = "input column to remove stopwords from", default = COLUMN_TWEET)
+parser.add_argument("-l", "--lemmatize", action = "store_true", help = "change words into their lemma based on WordNet")
+parser.add_argument("--lemmatize_input", help = "input column to lemmatize", default = COLUMN_TWEET)
+
+# <--- File export --->
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
 
@@ -39,6 +46,8 @@ if args.tokenize:
     preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
 if args.stopwords:
     preprocessors.append(StopwordRemover(args.stopwords_input, args.stopwords_input + SUFFIX_STOPWORDS))
+if args.lemmatize:
+    preprocessors.append(Lemmatizer(args.lemmatize_input, args.lemmatize_input + SUFFIX_LEMMATIZED))
 
 # call all preprocessing steps
 for preprocessor in preprocessors:
