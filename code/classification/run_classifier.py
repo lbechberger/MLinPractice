@@ -44,6 +44,7 @@ if args.import_file is not None:
     classifier = input_dict['classifier']
     for param, value in input_dict['params'].items():
         log_param(param, value)
+    log_param("dataset", "validation")
 
 else:   # manually set up a classifier
     
@@ -66,12 +67,13 @@ else:   # manually set up a classifier
         print("    {0} nearest neighbor classifier".format(args.knn))
         log_param("classifier", "knn")
         log_param("k", args.knn)
-        params = {"classifier": "majority", "k": args.knn}
+        params = {"classifier": "knn", "k": args.knn}
         standardizer = StandardScaler()
         knn_classifier = KNeighborsClassifier(args.knn)
         classifier = make_pipeline(standardizer, knn_classifier)
     
     classifier.fit(data["features"], data["labels"].ravel())
+    log_param("dataset", "training")
 
 # now classify the given data
 prediction = classifier.predict(data["features"])
