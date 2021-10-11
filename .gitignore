@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # exclude /data directory entirely
-/data/
+data/raw/
+data/preprocessing/
