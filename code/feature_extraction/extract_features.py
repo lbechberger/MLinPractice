@@ -44,7 +44,7 @@ else:    # need to create FeatureCollector manually
         features.append(CharacterLength(COLUMN_TWEET))
 
     if args.tfidf:
-        features.append(TfIdf('tweet_no_punctuation_lowercased_expanded_standardized_lemmatized_removed_stopwords_tokenized_numbers_replaced'))
+        features.append(TfIdf('tweet_urls_removed_no_punctuation_lowercased_expanded_tokenized_numbers_replaced_standardized_lemmatized_removed_stopwords'))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
