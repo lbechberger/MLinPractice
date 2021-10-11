@@ -26,8 +26,7 @@ class LanguagePruner():
     def drop_rows_by_language(self, language = "en"):
         
         output_df = self._df.drop(self._df[self._df.language != language].index)
-        output_df.to_csv('./data/preprocessing/pruned.csv', index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
-
+        
         return output_df
         
 
