@@ -1,5 +1,7 @@
 # Documentation Example
 
+This is the forked repository for Magnus Müller, Maximilian Kalcher and Samuel Hagemann. 
+
 Some introductory sentence(s). Data set and task are relatively fixed, so 
 probably you don't have much to say about them (unless you modifed them).
 If you haven't changed the application much, there's also not much to say about
