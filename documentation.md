@@ -1,1 +1,0 @@
-# Machine Learning in PracticeThis is the forked repository for group "ML freunde" consisting of Magnus Müller, Samuel Hagemann, Maximilian Kalcher.
