@@ -9,6 +9,7 @@ Feature that gives categorical value to datetime of post
 import numpy as np
 import datetime as dt
 from time import mktime, strptime
+from sklearn.preprocessing import OneHotEncoder
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
 # class for extracting a time feature
@@ -78,6 +79,10 @@ class CatTimeExtractor(FeatureExtractor):
                     # posted in evening
                     result.append(3)
 
+        onehot_encoder = OneHotEncoder(sparse=False)
         result = np.asarray(result)
-        result = result.reshape(-1,1)
+        result2 = result
+        result = result.reshape(len(result), 1)
+        result = onehot_encoder.fit_transform(result)
+        
         return result
