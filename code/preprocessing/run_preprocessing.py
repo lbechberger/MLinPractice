@@ -45,7 +45,7 @@ df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator
 
 # Comment in for testing
 if args.fast:
-    df = df.drop(labels = range(1000, df.shape[0]), axis = 0)
+    df = df.drop(labels = range(100, df.shape[0]), axis = 0)
 
 # Removes rows in a language other than the one specified to keep
 if args.prune_lang:

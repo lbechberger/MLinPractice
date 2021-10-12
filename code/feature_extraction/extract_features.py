@@ -9,14 +9,15 @@ Created on Wed Sep 29 11:00:24 2021
 """
 
 import argparse, csv, pickle
-from typing import Counter
 import pandas as pd
 import numpy as np
+from code.feature_extraction.cat_time_extraction import CatTimeExtractor
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.count_boolean import BooleanCounter
 from code.feature_extraction.tf_idf import TfIdf
 from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
+from code.util import COLUMN_DATE, COLUMN_PREPROCESSED_TWEET, COLUMN_TIME, COLUMN_TWEET, COLUMN_LABEL
 from code.feature_extraction.sentiment import Sentiment
 from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO
 
@@ -36,9 +37,14 @@ parser.add_argument("-u", "--url_count", action = "store_true", help = "compute 
 parser.add_argument("--item_count", action = "store_true", help = "compute the absolute count of items, else compute boolean if items > 0")
 parser.add_argument("-v", "--video_binary", action = "store_true", help = "compute the binary of if the tweet is a video")
 parser.add_argument("-r", "--retweet_binary", action = "store_true", help = "compute the binary of if the tweet is a retweet")
+parser.add_argument("-w", "--weekday", action = "store_true", help = "compute the day of the week the tweet was posted")
+parser.add_argument("-b", "--month", action = "store_true", help = "compute the month the tweet was posted")
+parser.add_argument("--season", action = "store_true", help = "compute the season the tweet was posted")
+parser.add_argument("-d", "--daytime", action = "store_true", help = "compute the time of day the tweet was posted")
 parser.add_argument("-t", "--tfidf", action = "store_true", help = "compute word-wise tf-idf")
-parser.add_argument("-s", "--sentiment", action = "store_true", help = "compute the tweet sentiment")
+parser.add_argument("--sentiment", action = "store_true", help = "compute the tweet sentiment")
 parser.add_argument("--threads", action = "store_true", help = "match tweets that are part of a thread")
+
 
 args = parser.parse_args()
 
@@ -83,8 +89,20 @@ else:    # need to create FeatureCollector manually
     if args.retweet_binary:
         # convert if tweet is retweet to boolean
         features.append(BooleanCounter(COLUMN_RETWEET_BOOL, "boolean"))
+    if args.weekday:
+        # weekday of post
+        features.append(CatTimeExtractor(COLUMN_DATE, "weekday"))
+    if args.month:
+        # month of post
+        features.append(CatTimeExtractor(COLUMN_DATE, "month"))
+    if args.season:
+        # season of post (winter, spring, summer, fall)
+        features.append(CatTimeExtractor(COLUMN_DATE, "season"))
+    if args.daytime:
+        # daytime (0-6, 6-12, 12-18, 18-24) of post
+        features.append(CatTimeExtractor(COLUMN_TIME, "daytime"))
     if args.tfidf:
-        features.append(TfIdf('tweet_urls_removed_no_punctuation_lowercased_expanded_tokenized_numbers_replaced_standardized_lemmatized_removed_stopwords'))
+        features.append(TfIdf(COLUMN_PREPROCESSED_TWEET))
     if args.sentiment:
         # sentiment of original tweet (without any changes)
         features.append(Sentiment(COLUMN_TWEET))
