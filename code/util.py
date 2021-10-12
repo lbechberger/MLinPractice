@@ -18,3 +18,6 @@ COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 
 SUFFIX_TOKENIZED = "_tokenized"
+
+# number of features for hash vector
+HASH_VECTOR_N_FEATURES = 20
