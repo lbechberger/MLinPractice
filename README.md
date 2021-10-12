@@ -92,6 +92,7 @@ Moreover, the script support importing and exporting fitted feature extractors w
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
 - `-e` or `--export_file`: Export the configured and fitted feature extraction into the given pickle file.
 
+- `--small 1000`: use just 1000 tweets.
 ## Dimensionality Reduction
 
 All python scripts and classes for dimensionality reduction can be found in `code/dimensionality_reduction/`.
