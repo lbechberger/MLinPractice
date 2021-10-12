@@ -14,8 +14,11 @@ import pandas as pd
 import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.count_boolean import BooleanCounter
+from code.feature_extraction.tf_idf import TfIdf
+from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO
+from code.feature_extraction.sentiment import Sentiment
+from code.util import COLUMN_TWEET, COLUMN_LABEL
 
 
 # setting up CLI
@@ -33,7 +36,10 @@ parser.add_argument("--url_count", action = "store_true", help = "compute the nu
 parser.add_argument("--item_count", action = "store_true", help = "compute the absolute count of items, else compute boolean if items > 0")
 parser.add_argument("--video_binary", action = "store_true", help = "compute the binary of if the tweet is a video")
 parser.add_argument("--retweet_binary", action = "store_true", help = "compute the binary of if the tweet is a retweet")
-
+parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("-t", "--tfidf", action = "store_true", help = "compute word-wise tf-idf")
+parser.add_argument("-s", "--sentiment", action = "store_true", help = "compute the tweet sentiment")
+parser.add_argument("--threads", action = "store_true", help = "match tweets that are part of a thread")
 
 args = parser.parse_args()
 
@@ -78,7 +84,14 @@ else:    # need to create FeatureCollector manually
     if args.retweet_binary:
         # convert if tweet is retweet to boolean
         features.append(BooleanCounter(COLUMN_RETWEET_BOOL, "boolean"))
-    
+    if args.tfidf:
+        features.append(TfIdf('tweet_urls_removed_no_punctuation_lowercased_expanded_tokenized_numbers_replaced_standardized_lemmatized_removed_stopwords'))
+    if args.sentiment:
+        # sentiment of original tweet (without any changes)
+        features.append(Sentiment(COLUMN_TWEET))
+    if args.threads:
+        # character length of original tweet (without any changes)
+        features.append(Threads(COLUMN_TWEET))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)

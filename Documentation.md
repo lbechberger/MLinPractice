@@ -93,9 +93,9 @@ We created the class "Lemmatizer" in lemmatizer.py which accesses the "WordNetLe
 
 ### Stopword removal
 #### Goal
-Our goal was to generalize the form of words down to their lemmas. This enhances comparability between tweets and is an important precondition for stopword removal. 
+Our goal was to get rid of very common english words which are not contributing to the accuracy of our classifier.
 #### Implementation process
-We created the class "Lemmatizer" in lemmatizer.py which accesses the "WordNetLemmatizer" from nltk and used part-of-speech tags to replace the words in tweet by their lemmas.
+We created the class "Stopword_remover" in stopword_remover.py which accesses a corpus from NLTK containing english stopwords. Every word contained in this corpus and some additional meaningless symbols (specified by us) are filtered out.
 #### Discussion
 **TODO**
 
