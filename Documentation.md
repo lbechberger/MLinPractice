@@ -25,10 +25,16 @@ Many tweets had different kind of punctuation, ..., emojis, and some of them eve
 ### Design Decisions
 
 After looking at the dataset closely, we chose to keep the core words of the sentence, ...
+- use just englisch tweets
 
 ### Results
 
 Maybe show a short example what your preprocessing does.
+language summary:
+({'en': 282035, 'it': 4116, 'es': 3272, 'fr': 2781, 'de': 714, 'id': 523, 'nl': 480, 'pt': 364, 'ca': 275, 'ru': 204, 'th': 157, 'ar': 126, 'tl': 108, 'tr': 84, 'hr': 68, 'da': 66, 'ro': 60, 'ja': 58, 'sv': 42, 'et': 29, 'pl': 25, 'bg': 24, 'af': 23, 'no': 21, 'fi': 20, 'so': 16, 'ta': 16, 'hi': 11, 'mk': 11, 'he': 9, 'sw': 9, 'lt': 7, 'uk': 6, 'sl': 6, 'te': 5, 'zh-cn': 5, 'lv': 5, 'ko': 5, 'bn': 4, 'el': 4, 'fa': 3, 'vi': 2, 'mr': 2, 'ml': 2, 'hu': 2, 'kn': 1, 'cs': 1, 'gu': 1, 'sk': 1, 'ur': 1, 'sq': 1})
+Total:
+295811
+English tweets are 95%. So we can delete (maybe later translate) 5% of disrupting data.
 
 ### Interpretation
 
