@@ -62,6 +62,8 @@ Which features did you implement? What's their motivation and how are they compu
 
 We want to try something we didn't hear in the lecture. Therefore, we used the HashingVectorizer from sklearn to create an individual hash for each tweet. For a sentence like 'I love Machine Learning', the output can look like [0.4, 0.3, 0.9, 0, 0.21], with length n representing the number of features. It's not very intuitive to humans why this works, but after a long time of version conflicts and other problems, we enjoyed the simplicity of using sklearn. 
 
+Usage: `--hash_vec` 
+and for number of features for hash vector edit HASH_VECTOR_N_FEATURES in util.py 
 ### Results
 
 Can you say something about how the feature values are distributed? Maybe show some plots?

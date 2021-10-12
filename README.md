@@ -91,8 +91,9 @@ The features to be extracted can be configured with the following optional param
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
 - `-e` or `--export_file`: Export the configured and fitted feature extraction into the given pickle file.
+- `--hash_vec`: use HashingVectorizer from sklearn.
+and for number of features for hash vector edit HASH_VECTOR_N_FEATURES in util.py
 
-- `--small 1000`: use just 1000 tweets.
 ## Dimensionality Reduction
 
 All python scripts and classes for dimensionality reduction can be found in `code/dimensionality_reduction/`.
@@ -129,7 +130,7 @@ By default, this data is used to train a classifier, which is specified by one o
 The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
 - `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
 - `-k`or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
-
+- `--small 1000`: use just 1000 tweets.
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
 - `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
