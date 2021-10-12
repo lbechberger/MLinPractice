@@ -28,8 +28,7 @@ class NER(FeatureExtractor):
 
         for row in inputs[0]:
             
-            tokens = ' '.join(row)
-            doc = nlp(tokens)
+            doc = nlp(row)
             ents = np.zeros(shape=18)
             
             for token in doc:
