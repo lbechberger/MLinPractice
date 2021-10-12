@@ -19,10 +19,9 @@ class NERtest(unittest.TestCase):
         self.ner = NER(self.INPUT_COLUMNS)
         self.df = pd.DataFrame()
         self.df[self.INPUT_COLUMNS] = [
-            ['video', 'lenovo', 'ronald', 'vanloon', 'share', 'innovation', 'come', 'data', 'people', 'use', 'put', 'people', 'center', 'decision', 'making', 'become', 'tail', 'wind', 'help', 'drive', 'measure', 'success', 'think', 'human', 'report', 'datascience'],
-            ['__NUMBER__', 'job', 'field', 'like', 'nurse', 'data', 'science', 'cybersecurity', 'expect', 'high', 'demand', 'online', 'degree', 'certificate', 'program', 'help', 'get'],
-            ['datascience', 'isma', 'l', 'vous', 'parle', 'de', 'origines', 'du', 'feature', 'team', 'store', 'de', 'son', 'architecture', 'et', 'vous', 'donne', 'un', 'exemple', 'concret', 'travers', 'son', 'article', 'le', 'feature', 'store', 'nouvel', 'outil', 'pour', 'le', 'projets', 'data', 'science', '📊', 'l', 'article', 'entier', 'ici', '→']
-            ]
+            "these new data will ultimately help scientists more accurately project the fate of the glacier   how quickly it is melting and retreating inland  and how far it might be from complete collapse   ",
+            "in a video by  lenovo   ronald vanloon shares how  innovation comes from data and how people use it  “putting people at the center of decision making becomes a tail wind that helps drive all other measures of success ” the think human report   datascience  ",
+            "did you know that  datascience is one of the highest paid technology jobs   join our webinar tomorrow evening to learn about our undergraduate course  register here     cao2021"]
 
     def test_input_columns(self):
         self.assertEqual(self.ner._input_columns, [self.INPUT_COLUMNS])
@@ -38,10 +37,36 @@ class NERtest(unittest.TestCase):
         EXPECTED_OUTPUT = np.array([
             [2., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
             [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-            [3., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 2., 0., 0., 0.]
-            ])
+            [3., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 2., 0., 0., 0.]])
         output = self.ner.fit_transform(self.df)
         assert_array_equal(output,EXPECTED_OUTPUT)
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+
+"""def setUp(self):
+        self._sentiment_extractor = Sentiment('tweet')
+
+def test_fit_transform_positive(self):
+    df = pd.DataFrame()
+    df['tweet'] = ['This is a very nice positively good tweet.']
+    output = self._sentiment_extractor.fit_transform(df)
+    self.assertEqual(output.shape[0], 1)
+    self.assertEqual(output.shape[1], 4)
+
+    self.assertEqual(output[0, 0], 0.0)  # negative
+    self.assertGreater(output[0, 1], 0.5)  # positive
+    self.assertLess(output[0, 2], 0.5)  # neutral
+    self.assertGreater(output[0, 3], 0)  # compound
+
+def test_fit_transform_negative(self):
+    df = pd.DataFrame()
+    df['tweet'] = ['This is a very nasty negatively bad tweet.']
+    output = self._sentiment_extractor.fit_transform(df)
+    self.assertGreater(output[0, 0], 0.5)  # negative
+    self.assertEqual(output[0, 1], 0.0)  # positive
+    self.assertLess(output[0, 2], 0.5)  # neutral
+    self.assertLess(output[0, 3], 0)  # compound"""
