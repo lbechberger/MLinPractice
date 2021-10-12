@@ -18,12 +18,12 @@ class MonthExtractor(FeatureExtractor):
     
     
     def __init__(self, input_column):
-        super().__init__([input_column], "{0}_month".format(input_column))
+        super().__init__([input_column], "tweet_month")
         
         
     def _get_values(self, inputs):
         """Extracts the month from a string containing a date."""
-        result = np.array([datetime.datetime.strptime(date, "%Y-%m-%d").month for date in input_column])
+        result = np.array([datetime.datetime.strptime(date, "%Y-%m-%d").month for date in inputs[0]])
         result = result.reshape(-1, 1)
         return result
         
