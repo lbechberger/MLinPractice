@@ -102,6 +102,25 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 The features to be extracted can be configured with the following optional parameters:
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
 - `-n` or `--ner`: Recognize all named entities in the tweet (see code/feature_extraction/ner.py)
+- `-w`or `--weekday`: Extract the day of the week (0-6) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
+- `-b`or `--month`: Extract the month (1-12) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
+- `--season`: Extract the season (winter, spring, summer, fall) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
+- `-d`or `--daytime`: Extract the time of day (night, morning, afternoon, evening) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
+- `-t` or `--tfidf`: Calculate tf-idf for the top words in the dataset
+- `--sentiment`: Analyse the sentiment of the tweet in terms of negativity, positivity, neutrality and overall sentiment.
+- `--threads`: Detect tweets that are part of a thread
+
+The following features retrieve a boolean, if tweet has one of the following attributes: 
+- `--hashtag_count`: Count the number of hashtags used in the tweet. (see code/feature_extraction/count_boolean)
+- `--mentions_count`: Count the number of mentions in the tweet. (see code/feature_extraction/count_boolean)
+- `--reply_to_count`: Count the number of accounts the tweet is in reply to. (see code/feature_extraction/count_boolean)
+- `--photos_count`: Count the number of photos used in the tweet. (see code/feature_extraction/count_boolean)
+- `--url_count`: Count the number of urls used in the tweet. (see code/feature_extraction/count_boolean)
+- `--video_binary`: Convert if the tweet contains a video into binary boolean values. (see code/feature_extraction/count_boolean)
+- `--retweet_binary`: Convert if the tweet is a retweet into binary boolean values. (see code/feature_extraction/count_boolean)
+- 
+If you wish to retrieve the absolute counts of the above attributes, add the optional flag:
+- `--item_count`: Specify, to retrieve absolute counts of attributes (see code/feature_extraction/count_boolean)
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
