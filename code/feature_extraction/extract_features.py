@@ -17,9 +17,9 @@ from code.feature_extraction.count_boolean import BooleanCounter
 from code.feature_extraction.tf_idf import TfIdf
 from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_DATE, COLUMN_PREPROCESSED_TWEET, COLUMN_TIME, COLUMN_TWEET, COLUMN_LABEL
 from code.feature_extraction.sentiment import Sentiment
-from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO, COLUMN_UNTOKENIZED_TWEET
+from code.feature_extraction.ner import NER
+from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO, COLUMN_UNTOKENIZED_TWEET, COLUMN_DATE, COLUMN_PREPROCESSED_TWEET, COLUMN_TIME
 
 
 # setting up CLI
@@ -28,7 +28,8 @@ parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
-parser.add_argument("--char_length", action = "store_true", help = "compute the length  in the tweet")
+parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("-n", "--ner", action = "store_true", help = "Apply Named-Entity-Recognition on the tweet")
 parser.add_argument("--hashtag_count", action = "store_true", help = "compute the number of hashtags in the tweet")
 parser.add_argument("--mentions_count", action = "store_true", help = "compute the number of mentions in the tweet")
 parser.add_argument("--reply_to_count", action = "store_true", help = "compute the number of accounts replied to in the tweet")
@@ -44,7 +45,6 @@ parser.add_argument("-d", "--daytime", action = "store_true", help = "compute th
 parser.add_argument("-t", "--tfidf", action = "store_true", help = "compute word-wise tf-idf")
 parser.add_argument("--sentiment", action = "store_true", help = "compute the tweet sentiment")
 parser.add_argument("--threads", action = "store_true", help = "match tweets that are part of a thread")
-
 
 args = parser.parse_args()
 
@@ -68,6 +68,9 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
+    if args.ner:
+        # List of Named Entities
+        features.append(NER(COLUMN_PREPROCESSED_TWEET))
     if args.hashtag_count:
         # number (or if) hashtags used
         features.append(BooleanCounter(COLUMN_HASHTAGS, count_type))
