@@ -31,10 +31,10 @@ parser.add_argument("-i", "--import_file", help = "import an existing pipeline f
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
 parser.add_argument("-w", "--weekday", action = "store_true", help = "compute the day of the week the tweet was posted")
 parser.add_argument("-b", "--month", action = "store_true", help = "compute the month the tweet was posted")
-parser.add_argument("-s", "--season", action = "store_true", help = "compute the season the tweet was posted")
+parser.add_argument("--season", action = "store_true", help = "compute the season the tweet was posted")
 parser.add_argument("-d", "--daytime", action = "store_true", help = "compute the time of day the tweet was posted")
 parser.add_argument("-t", "--tfidf", action = "store_true", help = "compute word-wise tf-idf")
-parser.add_argument("-s", "--sentiment", action = "store_true", help = "compute the tweet sentiment")
+parser.add_argument("--sentiment", action = "store_true", help = "compute the tweet sentiment")
 parser.add_argument("--threads", action = "store_true", help = "match tweets that are part of a thread")
 
 args = parser.parse_args()
