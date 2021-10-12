@@ -10,7 +10,7 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, cohen_kappa_score
+from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
@@ -22,12 +22,21 @@ parser.add_argument("input_file", help = "path to the input pickle file")
 parser.add_argument("-s", '--seed', type = int, help = "seed for the random number generator", default = None)
 parser.add_argument("-e", "--export_file", help = "export the trained classifier to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
+
+# <--- Classifier --->
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
+parser.add_argument("-u", "--uniform", action = "store_true", help = "uniform (random) classifier")
 parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
+
+# <--- Evaluation metrics --->
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
+parser.add_argument("-f1", "--f1_score", action = "store_true", help = "evaluate using F1 score")
+
+# <--- Param optimization --->
 parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
+
 args = parser.parse_args()
 
 # load data
@@ -63,6 +72,11 @@ else:   # manually set up a classifier
         params = {"classifier": "frequency"}
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
         
+    elif args.uniform:
+        # uniform classifier
+        print("    uniform classifier")
+        classifier = DummyClassifier(strategy = "uniform", random_state = args.seed)
+        classifier.fit(data["features"], data["labels"])
     
     elif args.knn is not None:
         print("    {0} nearest neighbor classifier".format(args.knn))
@@ -85,6 +99,8 @@ if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
 if args.kappa:
     evaluation_metrics.append(("Cohen_kappa", cohen_kappa_score))
+if args.f1_score:
+    evaluation_metrics.append(("F1_score", f1_score))
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:

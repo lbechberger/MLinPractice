@@ -35,3 +35,12 @@ which is why we chose to implement it instead of stemming.
 
 <!-- Feature extraction section -->
 ## Feature extraction
+
+### Character length
+Do shorter or longer tweets potentially go more viral? Character length extraction has been implemented as a first 
+feature by @lbechberger.
+
+### Month
+Does the month in which the tweet was published have an impact on its virality? Are there times of the year in which 
+the potential to go viral is higher, e.g. holiday season? Using the `datetime` module, we extract the month in which a 
+tweet was published from the metadata.
