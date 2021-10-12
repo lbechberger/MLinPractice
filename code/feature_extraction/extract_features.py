@@ -18,7 +18,7 @@ from code.feature_extraction.tf_idf import TfIdf
 from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.sentiment import Sentiment
-from code.util import COLUMN_TWEET, COLUMN_LABEL
+from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO
 
 
 # setting up CLI
@@ -31,12 +31,11 @@ parser.add_argument("--char_length", action = "store_true", help = "compute the 
 parser.add_argument("--hashtag_count", action = "store_true", help = "compute the number of hashtags in the tweet")
 parser.add_argument("--mentions_count", action = "store_true", help = "compute the number of mentions in the tweet")
 parser.add_argument("--reply_to_count", action = "store_true", help = "compute the number of accounts replied to in the tweet")
-parser.add_argument("--photos_count", action = "store_true", help = "compute the number of photos in the tweet")
-parser.add_argument("--url_count", action = "store_true", help = "compute the number of URLs used in the tweet")
+parser.add_argument("-p", "--photos_count", action = "store_true", help = "compute the number of photos in the tweet")
+parser.add_argument("-u", "--url_count", action = "store_true", help = "compute the number of URLs used in the tweet")
 parser.add_argument("--item_count", action = "store_true", help = "compute the absolute count of items, else compute boolean if items > 0")
-parser.add_argument("--video_binary", action = "store_true", help = "compute the binary of if the tweet is a video")
-parser.add_argument("--retweet_binary", action = "store_true", help = "compute the binary of if the tweet is a retweet")
-parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("-v", "--video_binary", action = "store_true", help = "compute the binary of if the tweet is a video")
+parser.add_argument("-r", "--retweet_binary", action = "store_true", help = "compute the binary of if the tweet is a retweet")
 parser.add_argument("-t", "--tfidf", action = "store_true", help = "compute word-wise tf-idf")
 parser.add_argument("-s", "--sentiment", action = "store_true", help = "compute the tweet sentiment")
 parser.add_argument("--threads", action = "store_true", help = "match tweets that are part of a thread")
