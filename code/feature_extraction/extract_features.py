@@ -14,7 +14,7 @@ import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.ner import NER
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_UNTOKENIZED_TWEET
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PREPROCESSED_TWEET
 
 
 # setting up CLI
@@ -44,7 +44,7 @@ else:    # need to create FeatureCollector manually
         features.append(CharacterLength(COLUMN_TWEET))
     if args.ner:
         # List of Named Entities
-        features.append(NER(COLUMN_UNTOKENIZED_TWEET))
+        features.append(NER(COLUMN_PREPROCESSED_TWEET))
 
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)

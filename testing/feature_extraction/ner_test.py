@@ -19,9 +19,10 @@ class NERtest(unittest.TestCase):
         self.ner = NER(self.INPUT_COLUMNS)
         self.df = pd.DataFrame()
         self.df[self.INPUT_COLUMNS] = [
-            "these new data will ultimately help scientists more accurately project the fate of the glacier   how quickly it is melting and retreating inland  and how far it might be from complete collapse   ",
-            "in a video by  lenovo   ronald vanloon shares how  innovation comes from data and how people use it  “putting people at the center of decision making becomes a tail wind that helps drive all other measures of success ” the think human report   datascience  ",
-            "did you know that  datascience is one of the highest paid technology jobs   join our webinar tomorrow evening to learn about our undergraduate course  register here     cao2021"]
+            ['video', 'lenovo', 'ronald', 'vanloon', 'share', 'innovation', 'come', 'data', 'people', 'use', 'put', 'people', 'center', 'decision', 'making', 'become', 'tail', 'wind', 'help', 'drive', 'measure', 'success', 'think', 'human', 'report', 'datascience'],
+            ['__NUMBER__', 'job', 'field', 'like', 'nurse', 'data', 'science', 'cybersecurity', 'expect', 'high', 'demand', 'online', 'degree', 'certificate', 'program', 'help', 'get'],
+            ['datascience', 'isma', 'l', 'vous', 'parle', 'de', 'origines', 'du', 'feature', 'team', 'store', 'de', 'son', 'architecture', 'et', 'vous', 'donne', 'un', 'exemple', 'concret', 'travers', 'son', 'article', 'le', 'feature', 'store', 'nouvel', 'outil', 'pour', 'le', 'projets', 'data', 'science', '📊', 'l', 'article', 'entier', 'ici', '→']
+            ]
 
     def test_input_columns(self):
         self.assertEqual(self.ner._input_columns, [self.INPUT_COLUMNS])
