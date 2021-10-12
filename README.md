@@ -100,8 +100,12 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 
 The features to be extracted can be configured with the following optional parameters:
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
+- `-w`or `--weekday`: Extract the day of the week (0-6) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
+- `-b`or `--month`: Extract the month (1-12) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
+- `--seasons`: Extract the season (winter, spring, summer, fall) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
+- `-d`or `--daytime`: Extract the time of day (night, morning, afternoon, evening) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
 - `-t` or `--tfidf`: Calculate tf-idf for the top words in the dataset
-- `-s` or `--sentiment`: Analyse the sentiment of the tweet in terms of negativity, positivity, neutrality and overall sentiment.
+- `--sentiment`: Analyse the sentiment of the tweet in terms of negativity, positivity, neutrality and overall sentiment.
 - `--threads`: Detect tweets that are part of a thread
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:

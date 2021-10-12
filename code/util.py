@@ -12,6 +12,8 @@ Created on Wed Sep 29 10:50:36 2021
 COLUMN_TWEET = "tweet"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
+COLUMN_DATE = "date"
+COLUMN_TIME = "time"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
