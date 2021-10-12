@@ -63,6 +63,7 @@ The preprocessing steps to take can be configured with the `--pipeline` flag:
 ```
 
 Available preprocessors are:
+- `remove_urls` Has to be specified BEFORE --punctuation. Removes all URLs from the tweet and create a new column with the suffix "_urls_removed".
 - `punctuation` A new column "xxx_no_punctuation" is created, where all punctuation is removed from the original column. (See `code/preprocessing/punctuation_remover.py` for more details)
 - `tokenize` Tokenize the current column and create new column with suffix "_tokenized" containing tokenized tweet.
 - `lowercase` Lowercase the current column and create a new column with suffix "_lowercased" containing the lowercased text.
@@ -103,6 +104,9 @@ The features to be extracted can be configured with the following optional param
 - `-b`or `--month`: Extract the month (1-12) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
 - `-s`or `--seasons`: Extract the season (winter, spring, summer, fall) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
 - `-d`or `--daytime`: Extract the time of day (night, morning, afternoon, evening) that the tweet was posted. (see code/feature_extraction/cat_time_extraction.py)
+- `-t` or `--tfidf`: Calculate tf-idf for the top words in the dataset
+- `-s` or `--sentiment`: Analyse the sentiment of the tweet in terms of negativity, positivity, neutrality and overall sentiment.
+- `--threads`: Detect tweets that are part of a thread
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.

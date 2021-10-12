@@ -14,8 +14,12 @@ import pandas as pd
 import numpy as np
 from code.feature_extraction.cat_time_extraction import CatTimeExtractor
 from code.feature_extraction.character_length import CharacterLength
+from code.feature_extraction.tf_idf import TfIdf
+from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
 from code.util import COLUMN_DATE, COLUMN_TIME, COLUMN_TWEET, COLUMN_LABEL
+from code.feature_extraction.sentiment import Sentiment
+from code.util import COLUMN_TWEET, COLUMN_LABEL
 
 
 # setting up CLI
@@ -29,6 +33,9 @@ parser.add_argument("-w", "--weekday", action = "store_true", help = "compute th
 parser.add_argument("-b", "--month", action = "store_true", help = "compute the month the tweet was posted")
 parser.add_argument("-s", "--season", action = "store_true", help = "compute the season the tweet was posted")
 parser.add_argument("-d", "--daytime", action = "store_true", help = "compute the time of day the tweet was posted")
+parser.add_argument("-t", "--tfidf", action = "store_true", help = "compute word-wise tf-idf")
+parser.add_argument("-s", "--sentiment", action = "store_true", help = "compute the tweet sentiment")
+parser.add_argument("--threads", action = "store_true", help = "match tweets that are part of a thread")
 
 args = parser.parse_args()
 
@@ -59,6 +66,14 @@ else:    # need to create FeatureCollector manually
     if args.daytime:
         # daytime (0-6, 6-12, 12-18, 18-24) of post
         features.append(CatTimeExtractor(COLUMN_TIME, "daytime"))
+    if args.tfidf:
+        features.append(TfIdf('tweet_urls_removed_no_punctuation_lowercased_expanded_tokenized_numbers_replaced_standardized_lemmatized_removed_stopwords'))
+    if args.sentiment:
+        # sentiment of original tweet (without any changes)
+        features.append(Sentiment(COLUMN_TWEET))
+    if args.threads:
+        # character length of original tweet (without any changes)
+        features.append(Threads(COLUMN_TWEET))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
