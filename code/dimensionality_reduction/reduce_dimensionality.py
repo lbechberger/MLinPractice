@@ -10,6 +10,7 @@ Created on Wed Sep 29 13:33:37 2021
 
 import argparse, pickle
 from sklearn.feature_selection import SelectKBest, mutual_info_classif
+from sklearn.decomposition import KernelPCA
 
 
 # setting up CLI
@@ -19,6 +20,7 @@ parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-m", "--mutual_information", type = int, help = "select K best features with Mutual Information", default = None)
+parser.add_argument("--kpca", action = "store_true", help = "find embedding space using Kernel PCA", default = None)
 parser.add_argument("--verbose", action = "store_true", help = "print information about feature selection process")
 args = parser.parse_args()
 
@@ -56,6 +58,11 @@ else: # need to set things up manually
             print("    {0}".format(feature_names))
             print("    " + str(dim_red.scores_))
             print("    " + str(get_feature_names(dim_red, feature_names)))
+
+    elif args.kpca:
+        dim_red = KernelPCA(n_components=25)
+        dim_red.fit(features, labels.ravel())
+
     pass
 
 # apply the dimensionality reduction to the given features
