@@ -128,9 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# exclude /data directory entirely
-/data/
-
-# exlcude OSX specific files
-.DS_Store
-**/.DS_Store
+# exclude csv files from data directory
+data/raw/
+data/preprocessing/
