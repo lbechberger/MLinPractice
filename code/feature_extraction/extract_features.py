@@ -9,17 +9,17 @@ Created on Wed Sep 29 11:00:24 2021
 """
 
 import argparse, csv, pickle
-from typing import Collection
 import pandas as pd
 import numpy as np
 from code.feature_extraction.cat_time_extraction import CatTimeExtractor
 from code.feature_extraction.character_length import CharacterLength
+from code.feature_extraction.count_boolean import BooleanCounter
 from code.feature_extraction.tf_idf import TfIdf
 from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
 from code.util import COLUMN_DATE, COLUMN_PREPROCESSED_TWEET, COLUMN_TIME, COLUMN_TWEET, COLUMN_LABEL
 from code.feature_extraction.sentiment import Sentiment
-from code.util import COLUMN_TWEET, COLUMN_LABEL
+from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO
 
 
 # setting up CLI
@@ -28,7 +28,15 @@ parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
-parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("--char_length", action = "store_true", help = "compute the length  in the tweet")
+parser.add_argument("--hashtag_count", action = "store_true", help = "compute the number of hashtags in the tweet")
+parser.add_argument("--mentions_count", action = "store_true", help = "compute the number of mentions in the tweet")
+parser.add_argument("--reply_to_count", action = "store_true", help = "compute the number of accounts replied to in the tweet")
+parser.add_argument("-p", "--photos_count", action = "store_true", help = "compute the number of photos in the tweet")
+parser.add_argument("-u", "--url_count", action = "store_true", help = "compute the number of URLs used in the tweet")
+parser.add_argument("--item_count", action = "store_true", help = "compute the absolute count of items, else compute boolean if items > 0")
+parser.add_argument("-v", "--video_binary", action = "store_true", help = "compute the binary of if the tweet is a video")
+parser.add_argument("-r", "--retweet_binary", action = "store_true", help = "compute the binary of if the tweet is a retweet")
 parser.add_argument("-w", "--weekday", action = "store_true", help = "compute the day of the week the tweet was posted")
 parser.add_argument("-b", "--month", action = "store_true", help = "compute the month the tweet was posted")
 parser.add_argument("--season", action = "store_true", help = "compute the season the tweet was posted")
@@ -37,10 +45,16 @@ parser.add_argument("-t", "--tfidf", action = "store_true", help = "compute word
 parser.add_argument("--sentiment", action = "store_true", help = "compute the tweet sentiment")
 parser.add_argument("--threads", action = "store_true", help = "match tweets that are part of a thread")
 
+
 args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
+
+if args.item_count:
+    count_type = "count"
+else:
+    count_type = "boolean"
 
 if args.import_file is not None:
     # simply import an exisiting FeatureCollector
@@ -54,6 +68,27 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
+    if args.hashtag_count:
+        # number (or if) hashtags used
+        features.append(BooleanCounter(COLUMN_HASHTAGS, count_type))
+    if args.mentions_count:
+        # number (or if) mentions used
+        features.append(BooleanCounter(COLUMN_MENTIONS, count_type))
+    if args.reply_to_count:
+        # number (or if) reply_to used
+        features.append(BooleanCounter(COLUMN_REPLY_TO, count_type))
+    if args.photos_count:
+        # number (or if) photos used
+        features.append(BooleanCounter(COLUMN_PHOTOS, count_type))
+    if args.url_count:
+        # number (or if) URLs used
+        features.append(BooleanCounter(COLUMN_URLS, count_type))
+    if args.video_binary:
+        # convert if tweet contains video to boolean
+        features.append(BooleanCounter(COLUMN_VIDEO, "boolean"))
+    if args.retweet_binary:
+        # convert if tweet is retweet to boolean
+        features.append(BooleanCounter(COLUMN_RETWEET_BOOL, "boolean"))
     if args.weekday:
         # weekday of post
         features.append(CatTimeExtractor(COLUMN_DATE, "weekday"))
