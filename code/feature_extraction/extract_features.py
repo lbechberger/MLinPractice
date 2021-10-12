@@ -19,7 +19,7 @@ from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
 from code.util import COLUMN_DATE, COLUMN_PREPROCESSED_TWEET, COLUMN_TIME, COLUMN_TWEET, COLUMN_LABEL
 from code.feature_extraction.sentiment import Sentiment
-from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO
+from code.util import COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_REPLY_TO, COLUMN_RETWEET_BOOL, COLUMN_TWEET, COLUMN_LABEL, COLUMN_URLS, COLUMN_VIDEO, COLUMN_UNTOKENIZED_TWEET
 
 
 # setting up CLI
@@ -105,7 +105,7 @@ else:    # need to create FeatureCollector manually
         features.append(TfIdf(COLUMN_PREPROCESSED_TWEET))
     if args.sentiment:
         # sentiment of original tweet (without any changes)
-        features.append(Sentiment(COLUMN_TWEET))
+        features.append(Sentiment(COLUMN_UNTOKENIZED_TWEET))
     if args.threads:
         # character length of original tweet (without any changes)
         features.append(Threads(COLUMN_TWEET))
