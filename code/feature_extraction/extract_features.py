@@ -9,7 +9,6 @@ Created on Wed Sep 29 11:00:24 2021
 """
 
 import argparse, csv, pickle
-from typing import Counter
 import pandas as pd
 import numpy as np
 from code.feature_extraction.character_length import CharacterLength
