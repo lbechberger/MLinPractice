@@ -18,6 +18,5 @@ class MentionsCounter(Preprocessor):
         
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
-        # parses array string as array, then counts length of array
-        column = inputs[0].apply(literal_eval).str.len()
+        column = inputs[0].str.len()
         return column
