@@ -17,7 +17,7 @@ from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.tf_idf import TfIdf
 from code.feature_extraction.threads import Threads
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_DATE, COLUMN_TIME, COLUMN_TWEET, COLUMN_LABEL
+from code.util import COLUMN_DATE, COLUMN_PREPROCESSED_TWEET, COLUMN_TIME, COLUMN_TWEET, COLUMN_LABEL
 from code.feature_extraction.sentiment import Sentiment
 from code.util import COLUMN_TWEET, COLUMN_LABEL
 
@@ -67,7 +67,7 @@ else:    # need to create FeatureCollector manually
         # daytime (0-6, 6-12, 12-18, 18-24) of post
         features.append(CatTimeExtractor(COLUMN_TIME, "daytime"))
     if args.tfidf:
-        features.append(TfIdf('tweet_urls_removed_no_punctuation_lowercased_expanded_tokenized_numbers_replaced_standardized_lemmatized_removed_stopwords'))
+        features.append(TfIdf(COLUMN_PREPROCESSED_TWEET))
     if args.sentiment:
         # sentiment of original tweet (without any changes)
         features.append(Sentiment(COLUMN_TWEET))
