@@ -23,7 +23,7 @@ class NER(FeatureExtractor):
     # compute the named entities based on the inputs
     def _get_values(self, inputs):
         
-        result = np.empty(shape=0)
+        result = np.empty(shape=(0,18))
         nlp = spacy.load("en_core_web_sm")
 
         for row in inputs[0]:
@@ -31,7 +31,7 @@ class NER(FeatureExtractor):
             tokens = ' '.join(row)
             doc = nlp(tokens)
             ents = np.zeros(shape=18)
-
+            
             for token in doc:
                 ent_type = token.ent_type_
                 if ent_type is not '':
@@ -72,6 +72,6 @@ class NER(FeatureExtractor):
                     elif ent_type == 'CARDINAL':
                         ents[17] += 1
             
-            result = np.append(result, ents)
+            result = np.append(result, [ents], axis=0)
                     
         return result
