@@ -40,6 +40,7 @@ else: # need to set things up manually
     if args.mutual_information is not None:
         # select K best based on Mutual Information
         dim_red = SelectKBest(mutual_info_classif, k = args.mutual_information)
+
         dim_red.fit(features, labels.ravel())
         
         # resulting feature names based on support given by SelectKBest
@@ -64,6 +65,7 @@ reduced_features = dim_red.transform(features)
 # store the results
 output_data = {"features": reduced_features, 
                "labels": labels}
+
 with open(args.output_file, 'wb') as f_out:
     pickle.dump(output_data, f_out)
 

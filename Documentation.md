@@ -51,16 +51,25 @@ Is there anything we can learn from these results?
 
 ## Feature Extraction
 
-Again, either structure among decision-result-interpretation or based on feature,
-up to you.
+Again, either structure under decision-result interpretation or based on features,
+is up to you.
+
+
 
 ### Design Decisions
 
 Which features did you implement? What's their motivation and how are they computed?
 
+We want to try something we didn't hear in the lecture. Therefore, we used the HashingVectorizer from sklearn to create an individual hash for each tweet. For a sentence like 'I love Machine Learning', the output can look like [0.4, 0.3, 0.9, 0, 0.21], with length n representing the number of features. It's not very intuitive to humans why this works, but after a long time of version conflicts and other problems, we enjoyed the simplicity of using sklearn. 
+
+Usage: `--hash_vec` 
+and for number of features for hash vector edit HASH_VECTOR_N_FEATURES in util.py 
 ### Results
 
 Can you say something about how the feature values are distributed? Maybe show some plots?
+
+When we finally ran it successfully with 25 features, we tried it with the SVM classifier, but that took too much time (nearly endless), so we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1 and after some tuning (using more data) to 0.3.
+
 
 ### Interpretation
 
@@ -86,12 +95,13 @@ Can we somehow make sense of the dimensionality reduction results?
 Which features are the most important ones and why may that be the case?
 
 ## Classification
-
+First of all we add a new argument: --small 1000 which would just use 1000s tweets.
 ### Design Decisions
 
 Which classifier(s) did you use? Which hyperparameter(s) (with their respective
 candidate values) did you look at? What were your reasons for this?
 
+- SVM
 ### Results
 
 The big finale begins: What are the evaluation results you obtained with your

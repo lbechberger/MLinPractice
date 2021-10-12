@@ -30,6 +30,7 @@ parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier w
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 parser.add_argument("--small", type = int, help = "not use all data but just subset", default = None)
+
 args = parser.parse_args()
 #args, unk = parser.parse_known_args()
 # load data
@@ -51,16 +52,16 @@ else:   # manually set up a classifier
         # label frequency classifier
         print("    label frequency classifier")
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
-
+    elif args.svm:
+        print("    SVM classifier")
+        classifier = make_pipeline(StandardScaler(), SVC(probability=True))
     elif args.knn is not None:
         print("    {0} nearest neighbor classifier".format(args.knn))
         standardizer = StandardScaler()
         knn_classifier = KNeighborsClassifier(args.knn)
         classifier = make_pipeline(standardizer, knn_classifier)
 
-    elif args.svm:
-        print("    SVM classifier")
-        classifier = make_pipeline(StandardScaler(), SVC())
+
         
 
 if args.small is not None:
