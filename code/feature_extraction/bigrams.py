@@ -3,15 +3,16 @@
 """
 Created on Thu Oct  7 14:53:52 2021
 
-@author: ml
+@author: lbechberger
 """
 
 import ast
 import nltk
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
+
 class BigramFeature(FeatureExtractor):
-    
+    """"""
     
     def __init__(self, input_column):
         super().__init__([input_column], "{0}_bigrams".format(input_column))
