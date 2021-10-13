@@ -17,8 +17,8 @@ COLUMN_RETWEETS = "retweets_count"
 COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 COLUMN_LANGUAGE = "language"
-
+COLUMN_PREPROCESS = 'preprocess_col'
 SUFFIX_TOKENIZED = "_tokenized"
 
 # number of features for hash vector
-HASH_VECTOR_N_FEATURES = 20
+HASH_VECTOR_N_FEATURES = 2**10
