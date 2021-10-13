@@ -18,6 +18,7 @@ conda install -y -q -c conda-forge nltk=3.6.3
 conda install -y -q -c conda-forge gensim=4.1.2
 conda install -y -q -c conda-forge spyder=5.1.5
 conda install -y -q -c conda-forge pandas=1.1.5
+conda install -c conda-forge mlflow
 conda install -c conda-forge vadersentiment
 
 ```
