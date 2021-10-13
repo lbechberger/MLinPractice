@@ -11,9 +11,9 @@ Created on Wed Sep 29 11:00:24 2021
 import argparse, csv, pickle
 import pandas as pd
 import numpy as np
-from code.feature_extraction.character_length import CharacterLength
-from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_VIRAL
+from src.feature_extraction.character_length import CharacterLength
+from src.feature_extraction.feature_collector import FeatureCollector
+from src.util import COLUMN_TWEET, COLUMN_VIRAL
 
 
 # setting up CLI

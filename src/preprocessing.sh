@@ -5,7 +5,7 @@ mkdir -p data/preprocessing/split/
 
 # add labels
 echo "  creating labels"
-python -m code.preprocessing.create_labels data/raw/ data/preprocessing/labeled.csv
+python -m src.preprocessing.create_labels data/raw/ data/preprocessing/labeled.csv
 
 # other preprocessing (removing punctuation etc.)
 echo "  general preprocessing"

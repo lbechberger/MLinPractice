@@ -11,7 +11,7 @@ Created on Tue Sep 28 15:55:44 2021
 
 import os, argparse, csv
 import pandas as pd
-from code.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_PHOTOS, COLUMN_VIDEO, COLUMN_VIRAL, COLUMN_MEDIA
+from src.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_PHOTOS, COLUMN_VIDEO, COLUMN_VIRAL, COLUMN_MEDIA
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Creation of Labels")
@@ -39,8 +39,8 @@ df[COLUMN_VIRAL] = (args.likes_weight * df[COLUMN_LIKES] + args.retweet_weight *
 
 # adds new column based on video and photo existence
 df[COLUMN_MEDIA] = "None"
-df[COLUMN_MEDIA][df[COLUMN_VIDEO] == 1] = "Video"
-df[COLUMN_MEDIA][df[COLUMN_PHOTOS] != "[]"] = "Photo"
+df[COLUMN_MEDIA].mask(df[COLUMN_VIDEO] == 1, other="Video", inplace=True)
+df[COLUMN_MEDIA].mask(df[COLUMN_PHOTOS] != "[]", other="Photo", inplace=True)
 
 # print statistics
 print("Number of tweets: {0}".format(len(df)))

@@ -11,7 +11,7 @@ Created on Tue Sep 28 16:43:18 2021
 import argparse, csv, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
-from code.preprocessing.punctuation_remover import PunctuationRemover
+from src.preprocessing.punctuation_remover import PunctuationRemover
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")

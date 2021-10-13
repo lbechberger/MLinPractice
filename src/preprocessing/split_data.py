@@ -11,7 +11,7 @@ Created on Tue Sep 28 16:45:51 2021
 import os, argparse, csv
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from code.util import COLUMN_VIRAL
+from src.util import COLUMN_VIRAL
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Splitting the data set")
