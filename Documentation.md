@@ -25,7 +25,10 @@ Many tweets had different kind of punctuation, ..., emojis, and some of them eve
 ### Design Decisions
 
 After looking at the dataset closely, we chose to keep the core words of the sentence, ...
+- remove stopwords like 'a' or 'is'
+- remove punctation 
 - use just englisch tweets
+- tokenize
 
 ### Results
 
@@ -36,6 +39,10 @@ Total:
 295811
 English tweets are 95%. So we can delete (maybe later translate) 5% of disrupting data.
 
+Lenght of all tweets:
+- before preprocessing: 52686072
+- after preprocessing (just englisch + punctation + stopwords):  39666607
+39666607/52686072 = 0.75
 ### Interpretation
 
 Probably, no real interpretation possible, so feel free to leave this section out.

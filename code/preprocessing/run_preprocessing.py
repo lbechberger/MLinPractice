@@ -46,7 +46,6 @@ if args.tokenize:
 # if args.language is not None:
 #   preprocessors.append(LanguageRemover())
 
-
 if args.language is not None:
     # filter out one language
     before = len(df)
@@ -55,16 +54,12 @@ if args.language is not None:
     print("Filtered out: {0}".format(before-after))
     df.reset_index(drop=True, inplace=True)
 
-    
-
 # call all preprocessing steps
 for preprocessor in preprocessors:
     df = preprocessor.fit_transform(df)
 
 # drop useless line which makes problems with csv
 del df['trans_dest\r']
-import pdb
-pdb.set_trace()
 # store the results
 df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
 #pdb.set_trace()
