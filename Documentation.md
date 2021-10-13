@@ -44,3 +44,11 @@ feature by @lbechberger.
 Does the month in which the tweet was published have an impact on its virality? Are there times of the year in which 
 the potential to go viral is higher, e.g. holiday season? Using the `datetime` module, we extract the month in which a 
 tweet was published from the metadata.
+
+### Sentiment analysis
+Using the VADER ((Valence Aware Dictionary and sEntiment Reasoner) framework ([PyPI](https://pypi.org/project/vaderSentiment/)) 
+or [homepage](https://github.com/cjhutto/vaderSentiment )), we extract the sentiment of a tweet. VADER was built 
+for social media and takes into account, among other factors, emojis, punctuation, and caps. The `polarity_score()` function 
+returns a value for positive, negative, and neutral polarity, as well as an additional compound value with -1 representing 
+the most negative and +1 the most positive sentiment. The classifier does not need training as it is pre-trained, 
+unknown words, however, are simply classified as neutral.
