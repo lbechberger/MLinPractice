@@ -5,6 +5,7 @@ Runs the specified collection of preprocessing steps
 """
 
 import argparse, csv, pickle
+from numpy.core.numeric import NaN
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.preprocessors.column_dropper import ColumnDropper
@@ -28,8 +29,12 @@ def main():
     args = parser.parse_args()
 
     # load data
-    df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",converters={'mentions': eval,'photos':eval,'urls':eval})
-    #filter by language
+    df = pd.read_csv(args.input_file,
+                     quoting=csv.QUOTE_NONNUMERIC,
+                     lineterminator="\n",
+                     verbose=False,
+                     dtype={"quote_url": object, "place": object, "tweet": object, "language": object, "thumbnail": object},
+                     converters={'mentions': eval, 'photos': eval, 'urls': eval})
 
     # collect all preprocessors
     preprocessors = []
