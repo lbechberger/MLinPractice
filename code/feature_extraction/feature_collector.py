@@ -22,7 +22,7 @@ class FeatureCollector(FeatureExtractor):
             input_columns += feature.get_input_columns()
         
         # remove duplicate columns
-        input_colums = list(set(input_columns))
+        input_columns = list(set(input_columns))
         
         # call constructor of super class
         super().__init__(input_columns, "FeatureCollector")

@@ -3,7 +3,7 @@
 """
 Base class for all of our feature extractors.
 """
-
+import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 
 # base class for all feature extractors
@@ -49,7 +49,7 @@ class FeatureExtractor(BaseEstimator,TransformerMixin):
     # get feature values based on input column and internal variables
     # should return a numpy array
     # to be implemented by subclass!
-    def _get_values(self, inputs):
+    def _get_values(self, inputs) -> np.ndarray:
         pass
         
     # transform function: transforms pandas DataFrame to numpy array of feature values
