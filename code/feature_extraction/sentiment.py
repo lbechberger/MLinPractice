@@ -9,7 +9,8 @@ Created on Wed Oct 13 11:12:51 2021
 """
 
 from code.feature_extraction.feature_extractor import FeatureExtractor
-from nltk.sentiment.vadeer import SentimentIntensityAnalyzer
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import numpy as np
 
 
 class SentimentAnalyzer(FeatureExtractor):
@@ -27,7 +28,7 @@ class SentimentAnalyzer(FeatureExtractor):
         """Analyse sentiment and return compound value."""
         sia = SentimentIntensityAnalyzer()
         
-        result = [sia.polarity_scores(tweet)["compound"] for tweet in inputs[0]]
+        result = np.array([sia.polarity_scores(tweet)["compound"] for tweet in inputs[0]])
         result = result.reshape(-1, 1)
         return result
         
