@@ -1,0 +1,28 @@
+#!/bin/bash
+#$ -N create_env
+#$ -l mem=2G
+#$ -cwd
+#$ -pe default 2
+#$ -o $HOME
+#$ -e $HOME
+
+wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -b -p "$HOME/miniconda"
+rm Miniconda3-latest-Linux-x86_64.sh
+
+export PATH="$HOME/miniconda/bin:$PATH"
+conda init bash
+eval "$(conda shell.bash hook)"
+conda create -y -q --name MLinPractice python=3.6
+
+conda activate MLinPractice
+conda install -y -q -c conda-forge scikit-learn=0.24.2
+conda install -y -q -c conda-forge matplotlib=3.3.4
+conda install -y -q -c conda-forge nltk=3.6.3
+conda install -y -q -c conda-forge gensim=4.1.2
+conda install -y -q -c conda-forge pandas=1.1.5
+conda install -y -q -c conda-forge mlflow=1.20.2
+conda deactivate
+
+cd $HOME/miniconda/pkgs
+rm *.tar.bz2 -f 2> /dev/null

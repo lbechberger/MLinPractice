@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# exclude /data directory entirely
-/data/
+# exclude csv files from data directory
+data/raw/
+data/preprocessing/
