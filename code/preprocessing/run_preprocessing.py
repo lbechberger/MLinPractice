@@ -12,6 +12,7 @@ import argparse, csv, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
+from code.preprocessing.stopwords import StopwordsRemover
 from code.preprocessing.language_remover import LanguageRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, COLUMN_LANGUAGE
@@ -21,8 +22,9 @@ parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
+parser.add_argument("-s", "--stopwords", action = "store_true", help = "remove stopwords")
 parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
-parser.add_argument("--tokenize_input", help = "input column to tokenize", default = COLUMN_TWEET)
+#parser.add_argument("--tokenize_input", help = "input column to tokenize", default = 'output')
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("--language", help = "just use tweets with this language ", default = None)
 args = parser.parse_args()
@@ -30,26 +32,34 @@ args = parser.parse_args()
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
+preprocess_col = 'preprocess_col'
 # collect all preprocessors
 preprocessors = []
-#if args.punctuation:
-#    preprocessors.append(PunctuationRemover())
-#if args.tokenize:
-#    preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
-if args.language is not None:
-    preprocessors.append(LanguageRemover())
+if args.punctuation:
+    preprocessors.append(PunctuationRemover("tweet", preprocess_col))
+if args.stopwords:
+    preprocessors.append(StopwordsRemover(preprocess_col, preprocess_col))
+if args.tokenize:
+    preprocessors.append(Tokenizer(preprocess_col, preprocess_col + SUFFIX_TOKENIZED))
 
+# no need to detect languages, because it is already given
+# if args.language is not None:
+#   preprocessors.append(LanguageRemover())
+
+#import pdb
+#pdb.set_trace()
+if args.language is not None:
+    # filter out one language
+    before = len(df)
+    df = df[df['language']==args.language]
+    after = len(df)
+    print("Filtered out: {0}".format(before-after))
 
 # call all preprocessing steps
 for preprocessor in preprocessors:
     df = preprocessor.fit_transform(df)
 
-if args.language is not None:
-    # filter out one language
-    before = len(df)
-    df = df[df[COLUMN_LANGUAGE]==args.language]
-    after = len(df)
-    print("Filtered out: {0}".format(begore-after))
+
 
 # store the results
 df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
@@ -59,3 +69,6 @@ if args.export_file is not None:
     pipeline = make_pipeline(*preprocessors)
     with open(args.export_file, 'wb') as f_out:
         pickle.dump(pipeline, f_out)
+
+
+

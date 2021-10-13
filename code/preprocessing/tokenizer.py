@@ -24,14 +24,20 @@ class Tokenizer(Preprocessor):
         """Tokenize the tweet."""
         
         tokenized = []
-        
+        import pdb
         for tweet in inputs[0]:
-            sentences = nltk.sent_tokenize(tweet)
+            #pdb.set_trace()
+            if type(tweet) is float:
+                # if tweet is nan, maybe because of stopword remove
+                 sentences = nltk.sent_tokenize('')
+            else:
+                sentences = nltk.sent_tokenize(tweet)
             tokenized_tweet = []
             for sentence in sentences:
                 words = nltk.word_tokenize(sentence)
                 tokenized_tweet += words
             
             tokenized.append(str(tokenized_tweet))
-        
+
+        #pdb.set_trace()
         return tokenized
