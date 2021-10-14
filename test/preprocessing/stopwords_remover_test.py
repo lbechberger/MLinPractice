@@ -21,7 +21,7 @@ class StopwordsRemoverTest(unittest.TestCase):
     def test_removing_english_stopwords(self):
         input_text = "this is a sentence that shows an example of a text containing some English stopwords."
         input_text_tokenized = [[input_text.split()]]
-        output_text = "sentence shows example text containing english stopwords."
+        output_text = "sentence shows example text containing English stopwords."
         output_text_tokenized = output_text.split()
         input_df = pd.DataFrame({self.INPUT_COLUMN[0]: input_text_tokenized, self.INPUT_COLUMN[1]:'en'})
         stopwordsremoved = self.stopwordsremover.fit_transform(input_df)
