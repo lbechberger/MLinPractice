@@ -32,19 +32,22 @@ class StopwordsRemover(Preprocessor):
         tweets_withno_stopwords = []
         language = inputs.iloc[:,1][0]
         for tweet in inputs.iloc[:,0]:
-            tweet = tweet[0]
+            if isinstance(tweet, list) and len(tweet) == 1:
+                tweet = tweet[0]
+            tweet_withno_stopwords = []
             if tweet:
-                tweet_withno_stopwords = []
+                
                 if 'en' in language:
-                    tweet_withno_contractions = [contractions.fix(word).lower() for word in tweet]
-                    tweet_withno_stopwords = [word.split(" ") for word in tweet_withno_contractions if word not in self._stopwords_en]
+                    tweet_withno_contractions = [contractions.fix(word) for word in tweet]
+                    tweet_withno_stopwords = [word.split(" ") for word in tweet_withno_contractions if word.lower() not in self._stopwords_en]
                     tweet_withno_stopwords_splitted = [splitted if isinstance(word, list) else word for word in tweet_withno_stopwords for splitted in word]
-                    tweet_withno_stopwords = [word for word in tweet_withno_stopwords_splitted if word not in self._stopwords_en]
+                    tweet_withno_stopwords = [word for word in tweet_withno_stopwords_splitted if word.lower() not in self._stopwords_en]
                 elif 'de' in language:
                     tweet_withno_stopwords = [word for word in tweet if word.lower() not in self._stopwords_de]
                 elif 'fr' in language:
                     tweet_withno_stopwords = [word for word in tweet if word.lower() not in self._stopwords_fr]
                 elif 'es' in language:
                     tweet_withno_stopwords = [word for word in tweet if word.lower() not in self._stopwords_es]
+
                 tweets_withno_stopwords.append(tweet_withno_stopwords)
         return tweets_withno_stopwords

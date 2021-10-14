@@ -25,7 +25,7 @@ class TokenizerTest(unittest.TestCase):
 
     def test_tokenization_single_sentence(self):
         input_text = "This is an example sentence"
-        output_text = ['This', 'is', 'an', 'example', 'sentence']
+        output_text = ['this', 'is', 'an', 'example', 'sentence']
         
         input_df = pd.DataFrame()
         input_df[self.INPUT_COLUMN] = [input_text]
@@ -35,12 +35,13 @@ class TokenizerTest(unittest.TestCase):
 
     def test_tokenization_several_sentences(self):
         input_text = ["This is an example sentence", "I want for my tweet to go viral", "Can we talk about global warming?"]
-        output_text = [['This', 'is', 'an', 'example', 'sentence'], ["I", "want", "for", "my", "tweet", "to", "go", "viral"],
-                        ["Can", "we", 'talk', 'about', 'global', 'warming', '?']]
+        output_text = [['this', 'is', 'an', 'example', 'sentence'], ["i", "want", "for", "my", "tweet", "to", "go", "viral"],
+                        ["can", "we", 'talk', 'about', 'global', 'warming', '?']]
         
         input_df = pd.DataFrame(input_text, columns=[self.INPUT_COLUMN])
 
         tokenized = self.tokenizer.fit_transform(input_df)
+        print(tokenized[self.OUTPUT_COLUMN][0])
         for i in range(3):
             self.assertEquals(tokenized[self.OUTPUT_COLUMN][i], output_text[i])
     
