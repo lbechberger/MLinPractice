@@ -30,7 +30,7 @@ parser.add_argument("--language", help = "just use tweets with this language ", 
 args = parser.parse_args()
 
 # load data
-df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
+df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",low_memory=False)
 
 preprocess_col = 'preprocess_col'
 # collect all preprocessors
