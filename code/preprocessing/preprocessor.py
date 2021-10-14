@@ -46,11 +46,12 @@ class Preprocessor(BaseEstimator,TransformerMixin):
         
     # transform function: transforms pandas DataFrame based on any internal variables
     def transform(self, df):
+        
         inputs = []
         # collect all input columns from df
         for input_col in self._input_columns:
             inputs.append(df[input_col])
-
+        
         # add to copy of DataFrame
         df_copy = df.copy()
         df_copy[self._output_column] = self._get_values(inputs)   
