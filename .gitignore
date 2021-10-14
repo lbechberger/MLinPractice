@@ -131,6 +131,7 @@ dmypy.json
 # exclude csv files from data directory
 data/raw/
 data/preprocessing/
+data/classification/mlflow
 
 # exlcude OSX specific files
 .DS_Store
