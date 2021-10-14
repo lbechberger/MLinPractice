@@ -10,8 +10,6 @@ Created on Wed Sep 29 09:45:56 2021
 import contractions
 from nltk.corpus import stopwords
 from code.preprocessing.preprocessor import Preprocessor
-from code.util import DETECTION_MODEL
-
 
 class StopwordsRemover(Preprocessor):
     # constructor
@@ -29,25 +27,24 @@ class StopwordsRemover(Preprocessor):
     
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
-
+        inputs = inputs[0]
         # replace stopwords and punctuations with empty string
         tweets_withno_stopwords = []
+        language = inputs.language.values[0]
 
-        for tweet in inputs[0]:
+        for tweet in inputs.input[0]:
             if tweet:
                 tweet_withno_stopwords = []
-                lang = DETECTION_MODEL.predict(tweet)[0][0][0]
-                
-                if 'en' in lang:
+                if 'en' in language:
                     tweet_withno_contractions = [contractions.fix(word).lower() for word in tweet]
                     tweet_withno_stopwords = [word.split(" ") for word in tweet_withno_contractions if word not in self._stopwords_en]
                     tweet_withno_stopwords_splitted = [splitted if isinstance(word, list) else word for word in tweet_withno_stopwords for splitted in word]
                     tweet_withno_stopwords = [word for word in tweet_withno_stopwords_splitted if word not in self._stopwords_en]
-                elif 'de' in lang:
+                elif 'de' in language:
                     tweet_withno_stopwords = [word for word in tweet if word not in self._stopwords_de]
-                elif 'fr' in lang:
+                elif 'fr' in language:
                     tweet_withno_stopwords = [word for word in tweet if word not in self._stopwords_fr]
-                elif 'es' in lang:
+                elif 'es' in language:
                     tweet_withno_stopwords = [word for word in tweet if word not in self._stopwords_es]
                 tweets_withno_stopwords.append(tweet_withno_stopwords)
         return tweets_withno_stopwords

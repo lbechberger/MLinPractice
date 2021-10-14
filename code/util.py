@@ -11,6 +11,7 @@ import fasttext, warnings
 
 # column names for the original data frame
 COLUMN_TWEET = "tweet"
+COLUMN_LANGUAGE = "language"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
 
