@@ -14,7 +14,7 @@ import nltk
 class Tokenizer(Preprocessor):
     """Tokenizes the given input column into individual words."""
     
-    def __init__(self, input_column, output_column):
+    def __init__(self, input_column, output_column): 
         """Initialize the Tokenizer with the given input and output column."""
         super().__init__([input_column], output_column)
     
@@ -22,16 +22,32 @@ class Tokenizer(Preprocessor):
     
     def _get_values(self, inputs):
         """Tokenize the tweet."""
-        
+
+        # all_input_tokenized = []
+        # print(len(inputs), inputs[0])
+        # if len(inputs) > 1:
+        #     inputs = inputs[0]
+        #     print(inputs)
+        #     for tweet in inputs:
+        #         tokenized = []
+        #         sentences = nltk.sent_tokenize(tweet)
+        #         for sentence in sentences:
+        #             words = nltk.word_tokenize(sentence)
+        #             tokenized.append(words)
+        #     tokenized = [token for sublist in tokenized for token in sublist]
+        #     all_input_tokenized.append(tokenized)
+        # else:
+        #     words = nltk.word_tokenize(inputs[0][0])
+
+        #     all_input_tokenized.append(words)
         tokenized = []
-        
         for tweet in inputs[0]:
-            sentences = nltk.sent_tokenize(tweet)
+            sentences = nltk.sent_tokenize(tweet.lower())
             tokenized_tweet = []
             for sentence in sentences:
                 words = nltk.word_tokenize(sentence)
                 tokenized_tweet += words
             
-            tokenized.append(str(tokenized_tweet))
-        
+            tokenized.append(tokenized_tweet)
+
         return tokenized

@@ -22,13 +22,14 @@ parser.add_argument("-r", '--retweet_weight', type = int, help = "weight of retw
 parser.add_argument("-t", '--threshold', type = int, help = "threshold to surpass for positive class", default = 50)
 args = parser.parse_args()
 
+
 # get all csv files in data_directory
 file_paths = [args.data_directory + f for f in os.listdir(args.data_directory) if f.endswith(".csv")]
 
 # load all csv files
 dfs = []
 for file_path in file_paths:
-    dfs.append(pd.read_csv(file_path, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n"))
+    dfs.append(pd.read_csv(file_path, quoting = csv.QUOTE_NONNUMERIC, low_memory=False, lineterminator = "\n"))
 
 # join all data into a single DataFrame
 df = pd.concat(dfs)
