@@ -23,7 +23,7 @@ parser.add_argument("-v", '--validation_size', type = float, help = "relative si
 args = parser.parse_args()
 
 # load the data
-df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
+df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n", low_memory=False)
 
 # split into (training & validation) and test set
 X, X_test = train_test_split(df, test_size = args.test_size, random_state = args.seed, shuffle = True, stratify = df[COLUMN_LABEL])

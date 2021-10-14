@@ -10,7 +10,11 @@ from code.preprocessing.preprocessor import Preprocessor
 from code.util import COLUMN_TWEET, COLUMN_PUNCTUATION
 from nltk.corpus import stopwords
 import pandas as pd
+
 STOPWORDS = set(stopwords.words('english'))
+LINKS = set('https')
+EMOJIS = set('U+')
+
 # removes punctuation from the original tweet
 # inspired by https://stackoverflow.com/a/45600350
 class StopwordsRemover(Preprocessor):
@@ -28,11 +32,11 @@ class StopwordsRemover(Preprocessor):
     
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
-        # replace punctuation with empty string
-        # replace stop words with empty string
-        # replace duplicate words with empty string
+        # replace stopwords with empty string
         column = inputs[0].str #.replace(self._punctuation, "")
         column = [' '.join([word for word in tweet if word.lower() not in STOPWORDS]) for tweet in column.split()]
+        # column = [' '.join([word for word in tweet if word.startswith('https') is False]) for tweet in column.split()]
+        # column = [' '.join([word for word in tweet if word.encode('unicode-escape').startswith('U00') is False]) for tweet in column.split()]
         column = pd.Series(column)
         #import pdb
         #pdb.set_trace()

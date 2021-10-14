@@ -10,6 +10,7 @@ Created on Tue Sep 28 16:43:18 2021
 
 import argparse, csv, pickle
 import pandas as pd
+from tqdm import tqdm
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.stopwords import StopwordsRemover
@@ -31,6 +32,7 @@ args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",low_memory=False)
+df = df[0:1000]
 
 preprocess_col = 'preprocess_col'
 # collect all preprocessors
@@ -55,7 +57,7 @@ if args.language is not None:
     df.reset_index(drop=True, inplace=True)
 
 # call all preprocessing steps
-for preprocessor in preprocessors:
+for preprocessor in tqdm(preprocessors):
     df = preprocessor.fit_transform(df)
 
 # drop useless line which makes problems with csv

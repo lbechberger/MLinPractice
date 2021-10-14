@@ -28,7 +28,7 @@ file_paths = [args.data_directory + f for f in os.listdir(args.data_directory) i
 # load all csv files
 dfs = []
 for file_path in file_paths:
-    dfs.append(pd.read_csv(file_path, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n"))
+    dfs.append(pd.read_csv(file_path, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n", low_memory=False))
 
 # join all data into a single DataFrame
 df = pd.concat(dfs)
