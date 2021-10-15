@@ -12,7 +12,7 @@ python -m code.preprocessing.create_labels data/raw/ data/preprocessing/labeled.
 
 # other preprocessing (removing punctuation etc.)
 echo -e "\n -> general preprocessing\n"
-python -m code.preprocessing.run_preprocessing data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv --punctuation --stopwords --tokenize --language en -e data/preprocessing/pipeline.pickle
+python -m code.preprocessing.run_preprocessing data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv --punctuation --strings --tokenize --language en -e data/preprocessing/pipeline.pickle
 
 # split the data set
 echo -e "\n -> splitting the data set\n"

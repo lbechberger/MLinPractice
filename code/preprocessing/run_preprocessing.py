@@ -13,7 +13,7 @@ import pandas as pd
 from tqdm import tqdm
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
-from code.preprocessing.stopwords import StopwordsRemover
+from code.preprocessing.string_remover import StringRemover
 from code.preprocessing.language_remover import LanguageRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, COLUMN_LANGUAGE
@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
-parser.add_argument("-s", "--stopwords", action = "store_true", help = "remove stopwords")
+parser.add_argument("-s", "--strings", action = "store_true", help = "remove stopwords, links and emojis")
 parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
 #parser.add_argument("--tokenize_input", help = "input column to tokenize", default = 'output')
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
@@ -32,15 +32,15 @@ args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",low_memory=False)
-#df = df[0:1000]
+df = df[0:1000]
 
 preprocess_col = 'preprocess_col'
 # collect all preprocessors
 preprocessors = []
 if args.punctuation:
     preprocessors.append(PunctuationRemover("tweet", preprocess_col))
-if args.stopwords:
-    preprocessors.append(StopwordsRemover(preprocess_col, preprocess_col))
+if args.strings:
+    preprocessors.append(StringRemover(preprocess_col, preprocess_col))
 if args.tokenize:
     preprocessors.append(Tokenizer(preprocess_col, preprocess_col + SUFFIX_TOKENIZED))
 
@@ -53,7 +53,7 @@ if args.language is not None:
     before = len(df)
     df = df[df['language']==args.language]
     after = len(df)
-    print("Filtered out: {0}".format(before-after))
+    print("Filtered out: {0} (not 'en')".format(before-after))
     df.reset_index(drop=True, inplace=True)
 
 # call all preprocessing steps

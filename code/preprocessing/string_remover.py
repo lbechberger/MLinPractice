@@ -12,12 +12,10 @@ from nltk.corpus import stopwords
 import pandas as pd
 
 STOPWORDS = set(stopwords.words('english'))
-LINKS = set('https')
-EMOJIS = set('U+')
 
 # removes punctuation from the original tweet
 # inspired by https://stackoverflow.com/a/45600350
-class StopwordsRemover(Preprocessor):
+class StringRemover(Preprocessor):
     
     # constructor
     def __init__(self, inputcol, outputcol):
@@ -32,12 +30,17 @@ class StopwordsRemover(Preprocessor):
     
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
-        # replace stopwords with empty string
         column = inputs[0].str #.replace(self._punctuation, "")
-        column = [' '.join([word for word in tweet if word.lower() not in STOPWORDS]) for tweet in column.split()]
+        
+        # replace stopwords with empty string
+        # column = [' '.join([word for word in tweet if word.lower() not in STOPWORDS]) for tweet in column.split()]
+        
+        # replace links with empty string
         # column = [' '.join([word for word in tweet if word.startswith('https') is False]) for tweet in column.split()]
-        # column = [' '.join([word for word in tweet if word.encode('unicode-escape').startswith('U00') is False]) for tweet in column.split()]
+        
+        # replace emojis with empty string
+        column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).__contains__('\\') is False]) for tweet in column.split()] 
+        
         column = pd.Series(column)
-        #import pdb
-        #pdb.set_trace()
+
         return column
