@@ -37,7 +37,7 @@ parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate usi
 parser.add_argument("-f1", "--f1_score", action = "store_true", help = "evaluate using F1 score")
 
 # <--- Param optimization --->
-parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
+#parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
 
 args = parser.parse_args()
 
@@ -45,7 +45,7 @@ args = parser.parse_args()
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
 
-set_tracking_uri(args.log_folder)
+#set_tracking_uri(args.log_folder)
 
 if args.import_file is not None:
     # import a pre-trained classifier
@@ -94,9 +94,11 @@ else:   # manually set up a classifier
         log_param("classifier", "tree")
         log_param("max_depth", args.tree)
         params = {"classifier": "tree", "max_depth": args.tree}
-        standardizer = StandardScaler()
-        decision_tree = DecisionTreeClassifier(max_depth = args.tree)
-        classifier = make_pipeline(standardizer, decision_tree)
+        #standardizer = StandardScaler()
+        #decision_tree = DecisionTreeClassifier(max_depth = args.tree)
+        #classifier = make_pipeline(standardizer, decision_tree)
+        classifier = DecisionTreeClassifier(max_depth = args.tree)
+        classifier.fit(data["features"], data["labels"])
     
     classifier.fit(data["features"], data["labels"].ravel())
     log_param("dataset", "training")
