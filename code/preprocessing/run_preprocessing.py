@@ -32,7 +32,7 @@ args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",low_memory=False)
-df = df[0:1000]
+# df = df[0:1000]
 
 preprocess_col = 'preprocess_col'
 # collect all preprocessors

@@ -14,6 +14,7 @@ import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.hash_vector import HashVector
 from code.feature_extraction.feature_collector import FeatureCollector
+from code.feature_extraction.hashtag_count import HashtagCount
 from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PREPROCESS
 
 
@@ -24,6 +25,7 @@ parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("--hashtags", action = "store_true", help = "count hashtags of the tweet")
 parser.add_argument("--hash_vec", action = "store_true", help = "compute the hash vector of the tweet")
 args = parser.parse_args()
 
@@ -45,6 +47,9 @@ else:    # need to create FeatureCollector manually
     if args.hash_vec:
         # hash of original tweet (without any changes)
         features.append(HashVector(COLUMN_TWEET))
+    if args.hashtags:
+        # number of hashtags per tweet
+        features.append(HashtagCount(COLUMN_TWEET))
         
 
     # create overall FeatureCollector
