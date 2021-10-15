@@ -42,6 +42,4 @@ class StringRemover(Preprocessor):
         column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).__contains__('\\') is False]) for tweet in column.str.split()] 
         
         column = pd.Series(column)
-        import pdb
-        pdb.set_trace()
         return column

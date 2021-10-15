@@ -32,7 +32,7 @@ args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",low_memory=False)
-df = df[0:1000]
+
 
 preprocess_col = 'preprocess_col'
 # collect all preprocessors
@@ -64,7 +64,7 @@ for preprocessor in tqdm(preprocessors):
 del df['trans_dest\r']
 # store the results
 df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
-#pdb.set_trace()
+
 # create a pipeline if necessary and store it as pickle file
 if args.export_file is not None:
     pipeline = make_pipeline(*preprocessors)
