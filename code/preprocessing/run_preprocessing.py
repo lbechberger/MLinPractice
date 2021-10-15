@@ -22,7 +22,7 @@ from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, COLUMN_LANGUAGE
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
-parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
+parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation and special characters")
 parser.add_argument("-s", "--strings", action = "store_true", help = "remove stopwords, links and emojis")
 parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
 #parser.add_argument("--tokenize_input", help = "input column to tokenize", default = 'output')
