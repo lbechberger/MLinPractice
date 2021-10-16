@@ -31,7 +31,7 @@ class HashVector(FeatureExtractor):
         # create the transform
         # pdb.set_trace()
         vectorizer = HashingVectorizer(n_features=HASH_VECTOR_N_FEATURES,
-                                       strip_accents='ascii', stop_words='english', ngram_range=(2, 2))
+                                       strip_accents='ascii', stop_words='english', ngram_range=(1, 2))
         # encode document
         vector = vectorizer.fit_transform(inputs[0])
         return vector.toarray()
