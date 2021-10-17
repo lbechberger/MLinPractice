@@ -1,29 +1,42 @@
-import pdb
-from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer, TfidfTransformer
-from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler
-from sklearn.pipeline import Pipeline
+import argparse, pdb, csv, pickle
+
+
+# feature_extraction
+from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer, TfidfTransformer, TfidfVectorizer
+
+# feature_selection
+from sklearn.feature_selection import SelectKBest, mutual_info_classif, chi2
+
+# dim_reduction
+from sklearn.decomposition import PCA, TruncatedSVD, NMF
+
+# classifier 
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
+
+from sklearn.pipeline import Pipeline
+from sklearn.pipeline import FeatureUnion
+
+# metrics
 from sklearn.metrics import classification_report, cohen_kappa_score, accuracy_score, balanced_accuracy_score
-import argparse
-import csv
-import pickle
 
 import pandas as pd
 import numpy as np
+
+# balancing
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
-from collections import Counter
 from sklearn.model_selection import train_test_split
-from sklearn.feature_selection import SelectKBest, mutual_info_classif, chi2
-from sklearn.pipeline import FeatureUnion
-from sklearn.linear_model import LogisticRegression
-from sklearn.decomposition import PCA, TruncatedSVD
 
-parser = argparse.ArgumentParser(description="Classifier")
-parser.add_argument("input_file", help="path to the input pickle file")
+from collections import Counter
+
+parser = argparse.ArgumentParser(description="all in one")
+parser.add_argument("input_file", help="path to the input file")
 parser.add_argument("-e", "--export_file",
                     help="export the trained classifier to the given location", default=None)
+
+# evaluate:
 parser.add_argument("-a", "--accuracy", action="store_true",
                     help="evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action="store_true",
@@ -33,14 +46,19 @@ parser.add_argument("--balanced_accuracy", action="store_true",
 parser.add_argument("--classification_report", action="store_true",
                     help="evaluate using classification_report")
 
-parser.add_argument("--count_vectorizer", action="store_true",
-                    help="using count_vectorizer")
-parser.add_argument("--hash_vectorizer", action="store_true",
-                    help="using hash_vectorizer")
-parser.add_argument("--classifier", type=str,
-                    help="choose a classifier", default=None)
+# balance dataset
+parser.add_argument("--balance", type=str,
+                    help="choose btw under and oversampling", default=None)
+# feature_extraction
+parser.add_argument("--feature_extraction", type=str,
+                    help="choose a feature_extraction algo", default=None)
+# dim_red
 parser.add_argument("--dim_red", type=str,
                     help="choose a dim_red algo", default=None)
+# classifier
+parser.add_argument("--classifier", type=str,
+                    help="choose a classifier", default=None)
+
 args = parser.parse_args()
 #args, unk = parser.parse_known_args()
 
@@ -53,43 +71,40 @@ df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC,
                  lineterminator="\n")
 
 # split data
-
-
 X = df['tweet'].array.reshape(-1, 1)
 y = df["label"].ravel()
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.1, random_state=100)
+    X, y, test_size=0.05, random_state=100)
 
-#over_sampler = RandomOverSampler(random_state=42)
-under_sampler = RandomUnderSampler(random_state=42)
-X_res, y_res = under_sampler.fit_resample(X_train, y_train)
-#X_res, y_res = X_train, y_train
-#X_res, y_res = over_sampler.fit_resample(X_train, y_train)
+# balance data
+if args.balance == 'over_sampler':
+    over_sampler = RandomOverSampler(random_state=42)
+    X_res, y_res = over_sampler.fit_resample(X_train, y_train)
+elif args.balance == 'under_sampler':
+    under_sampler = RandomUnderSampler(random_state=42)
+    X_res, y_res = under_sampler.fit_resample(X_train, y_train)
+else:
+    X_res, y_res = X_train, y_train
 
 print(f"Training target statistics: {Counter(y_res)}")
 print(f"Testing target statistics: {Counter(y_test)}")
-# classifier = Pipeline([('vect', CountVectorizer()),
-#                      ('tfidf', TfidfTransformer()), ('clf', MultinomialNB()), ])
 
-
-if args.count_vectorizer:
-    print(" using count_vectorizer")
-    classifier = Pipeline([('vect', CountVectorizer()),
-                           ('tfidf', TfidfTransformer()),  ('clf', SGDClassifier(class_weight="balanced", n_jobs=-1,
-                                                                                 random_state=42, alpha=1e-07, verbose=1)), ])
-elif args.hash_vectorizer:
-    print(" using hash_vectorizer")
-    classifier = Pipeline([('hashvec', HashingVectorizer(n_features=2**22,
-                                                         strip_accents='ascii', stop_words='english', ngram_range=(1, 3))),
-                           ('clf', SGDClassifier(class_weight="balanced", n_jobs=-1,
-                                                 random_state=42, alpha=1e-07, verbose=1)), ])
 
 my_pipeline = []
+
+# feature_extraction
+if args.feature_extraction == 'HashingVectorizer':
+    my_pipeline.append(('hashvec', HashingVectorizer(n_features=2**22,
+                                                     strip_accents='ascii', stop_words='english', ngram_range=(1, 3))))
+elif args.feature_extraction == 'TfidfVectorizer':
+    my_pipeline.append(('tfidf', TfidfVectorizer(stop_words = 'english', ngram_range=(1, 3))))
 
 # dimension reduction
 if args.dim_red == 'SelectKBest(chi2)':
     my_pipeline.append(('dim_red', SelectKBest(chi2)))
+elif args.dim_red == 'NMF':
+    my_pipeline.append(('nmf', NMF()))
 
 
 # classifier
@@ -99,6 +114,7 @@ elif args.classifier == 'SGDClassifier':
     my_pipeline.append(('clf', SGDClassifier(class_weight="balanced", n_jobs=-1,
                                              random_state=42, alpha=1e-06, verbose=1)))
 
+classifier = Pipeline(my_pipeline)
 """
 if args.small is not None:
     # if limit is given
