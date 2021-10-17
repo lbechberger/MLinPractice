@@ -24,4 +24,4 @@ mkdir -p data/all_in_one/
 # don't touch the test set, yet, because that would ruin the final generalization experiment!
 
 # new approach
-python3 -m code.all_in_one data/preprocessing/preprocessed.csv -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report --classifier 'LogisticRegression' --feature_extraction 'HashingVectorizer' #--small 20000 #--balance 'over_sampler' # SVC HashingVectorizer TfidfVectorizer SGDClassifier LogisticRegression LinearSVC MultinomialNB data/preprocessing/split/training.csv data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv
+python3 -m code.all_in_one data/preprocessing/preprocessed.csv -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report --classifier 'LogisticRegression' --feature_extraction 'TfidfVectorizer' #--small 20000 #--balance 'over_sampler' # | HashingVectorizer TfidfVectorizer | SVC SGDClassifier LogisticRegression LinearSVC MultinomialNB data/preprocessing/split/training.csv data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv
