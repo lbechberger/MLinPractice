@@ -22,7 +22,8 @@ class TfidfVectorTest(unittest.TestCase):
         self.df = pd.DataFrame()
         self.df[self.INPUT_COLUMN] = ["This is a tweet This is also a test",
                                       "This is a tweet This is also a test", "hallo ne data science", "OMG look at this"]
-        self.result = self.tfidf_vector_feature._get_values([self.df])
+
+        self.result = self.tfidf_vector_feature._get_values([self.df.squeeze()])
 
     def test_input_columns(self):
         self.assertEqual(self.tfidf_vector_feature._input_columns, [
