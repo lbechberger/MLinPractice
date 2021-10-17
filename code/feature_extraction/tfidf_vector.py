@@ -29,8 +29,10 @@ class TfidfVector(FeatureExtractor):
     def _get_values(self, inputs):
         # inputs is list of text documents
         # create the transform
-        # pdb.set_trace()
+
         vectorizer = TfidfVectorizer(strip_accents='ascii', stop_words='english', ngram_range=(1, 2))
         # encode document
-        vector = vectorizer.fit_transform(inputs[0])
+        vector = vectorizer.fit_transform(inputs[0].iloc[:,0])
+
+
         return vector.toarray()

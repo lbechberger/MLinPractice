@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct  7 14:51:00 2021
-
-@author: ml
+Created on Thu Oct  14 14:51:00 2021
 """
 
 import unittest
 import pandas as pd
-import nltk
+
 from code.feature_extraction.hash_vector import HashVector
 
 class HashVectorTest(unittest.TestCase):
@@ -24,8 +22,6 @@ class HashVectorTest(unittest.TestCase):
 
     def test_feature_name(self):
         self.assertEqual(self.hash_vector_feature.get_feature_name(), self.INPUT_COLUMN + "_hashvector")
-
-
 
 
 
