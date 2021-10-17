@@ -13,16 +13,20 @@ from sklearn.decomposition import PCA, TruncatedSVD, NMF
 # classifier 
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import SGDClassifier
+from sklearn.svm import LinearSVC
 
 from sklearn.pipeline import Pipeline
 from sklearn.pipeline import FeatureUnion
+from sklearn.model_selection import cross_val_score
 
 # metrics
 from sklearn.metrics import classification_report, cohen_kappa_score, accuracy_score, balanced_accuracy_score
 
 import pandas as pd
 import numpy as np
+import seaborn as sns
 
 # balancing
 from imblearn.under_sampling import RandomUnderSampler
@@ -49,6 +53,8 @@ parser.add_argument("--classification_report", action="store_true",
 # balance dataset
 parser.add_argument("--balance", type=str,
                     help="choose btw under and oversampling", default=None)
+parser.add_argument("--small", type=int,
+                    help="choose subset of all data", default=None)
 # feature_extraction
 parser.add_argument("--feature_extraction", type=str,
                     help="choose a feature_extraction algo", default=None)
@@ -70,12 +76,19 @@ args = parser.parse_args()
 df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC,
                  lineterminator="\n")
 
+if args.small is not None:
+    # if limit is given
+    max_length = len(df['label'])
+    limit = min(args.small, max_length)
+    df = df.head(limit)
+
 # split data
-X = df['tweet'].array.reshape(-1, 1)
+input_col = 'preprocess_col'
+X = df[input_col].array.reshape(-1, 1)
 y = df["label"].ravel()
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.05, random_state=100)
+    X, y, test_size=0.1, random_state=42)
 
 # balance data
 if args.balance == 'over_sampler':
@@ -109,30 +122,26 @@ elif args.dim_red == 'NMF':
 
 # classifier
 if args.classifier == 'MultinomialNB':
-    my_pipeline.append(('clf', MultinomialNB()))
+    my_pipeline.append(('MNB', MultinomialNB()))
 elif args.classifier == 'SGDClassifier':
-    my_pipeline.append(('clf', SGDClassifier(class_weight="balanced", n_jobs=-1,
-                                             random_state=42, alpha=1e-06, verbose=1)))
+    my_pipeline.append(('SGD', SGDClassifier(class_weight="balanced", n_jobs=-1,
+                                             random_state=42, alpha=1e-07, verbose=1)))
+elif args.classifier == 'LogisticRegression':
+    my_pipeline.append(('LogisticRegression', LogisticRegression(class_weight="balanced", n_jobs=-1,
+                                             random_state=42, verbose=1)))
+elif args.classifier == 'LinearSVC':
+    my_pipeline.append(('LinearSVC', LinearSVC(class_weight="balanced",
+                                             random_state=42, verbose=1)))
 
 classifier = Pipeline(my_pipeline)
-"""
-if args.small is not None:
-    # if limit is given
-    max_length = len(data['features'])
-    limit = min(args.small, max_length)
-    # go through data and limit it
-    for key, value in data.items():
-        data[key] = value[:limit]
-"""
 
 classifier.fit(X_res.ravel(), y_res)
-# pdb.set_trace()
 
 # now classify the given data
 prediction = classifier.predict(X_test.ravel())
 
 
-# pdb.set_trace()
+
 # collect all evaluation metrics
 evaluation_metrics = []
 if args.accuracy:
@@ -145,7 +154,7 @@ if args.balanced_accuracy:
 for metric_name, metric in evaluation_metrics:
 
     print("    {0}: {1}".format(metric_name,
-          metric(y_test, prediction)))
+        metric(y_test, prediction)))
 
 if args.classification_report:
     categories = ["Flop", "Viral"]

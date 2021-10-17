@@ -24,4 +24,4 @@ mkdir -p data/all_in_one/
 # don't touch the test set, yet, because that would ruin the final generalization experiment!
 
 
-python3 -m code.all_in_one data/preprocessing/labeled.csv -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report --classifier 'SGDClassifier' --feature_extraction 'TfidfVectorizer' # --balance 'under_sampler' # HashingVectorizer TfidfVectorizer MultinomialNB data/preprocessing/split/training.csv
+python3 -m code.all_in_one data/preprocessing/split/training.csv -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report --classifier 'LinearSVC' --feature_extraction 'TfidfVectorizer' --small 100000 #--balance 'over_sampler' # HashingVectorizer TfidfVectorizer MultinomialNB data/preprocessing/split/training.csv data/preprocessing/labeled.csv
