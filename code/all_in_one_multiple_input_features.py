@@ -113,7 +113,7 @@ print(f"Testing target statistics: {Counter(y_test)}")
 my_pipeline = []
 get_text_data = FunctionTransformer(
     lambda x: x['preprocess_col'], validate=False)
-get_numeric_data = FunctionTransformer(lambda x: x['replies_count'].array.reshape(-1,1), validate=False)  # 'likes_count', 'retweets_count',
+get_numeric_data = FunctionTransformer(lambda x: x[['replies_count', 'likes_count', 'retweets_count']], validate=False)  # array.reshape(-1,1)
 
 # add text data
 if args.feature_extraction != 'union':
