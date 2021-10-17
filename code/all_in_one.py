@@ -1,6 +1,6 @@
 import pdb
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer, TfidfTransformer
+
 from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import SGDClassifier
@@ -14,21 +14,15 @@ import numpy as np
 from imblearn.under_sampling import RandomUnderSampler
 from collections import Counter
 from sklearn.model_selection import train_test_split
+from sklearn.feature_selection import SelectKBest, mutual_info_classif
+from sklearn.pipeline import FeatureUnion
+from sklearn.linear_model import LogisticRegression
 
 
 parser = argparse.ArgumentParser(description="Classifier")
 parser.add_argument("input_file", help="path to the input pickle file")
-parser.add_argument("-s", '--seed', type=int,
-                    help="seed for the random number generator", default=None)
 parser.add_argument("-e", "--export_file",
                     help="export the trained classifier to the given location", default=None)
-parser.add_argument("-i", "--import_file",
-                    help="import a trained classifier from the given location", default=None)
-#parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
-#parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
-#parser.add_argument("-v", "--svm", action = "store_true", help = "SVM classifier")
-#parser.add_argument("--sgd", action = "store_true", help = "SGD classifier")
-#parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
 parser.add_argument("-a", "--accuracy", action="store_true",
                     help="evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action="store_true",
@@ -37,8 +31,12 @@ parser.add_argument("--balanced_accuracy", action="store_true",
                     help="evaluate using balanced_accuracy")
 parser.add_argument("--classification_report", action="store_true",
                     help="evaluate using classification_report")
-parser.add_argument("--small", type=int,
-                    help="not use all data but just subset", default=None)
+
+parser.add_argument("--count_vectorizer", action="store_true",
+                    help="using count_vectorizer")
+parser.add_argument("--hash_vectorizer", action="store_true",
+                    help="using hash_vectorizer")
+
 
 args = parser.parse_args()
 #args, unk = parser.parse_known_args()
@@ -57,8 +55,8 @@ df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC,
 X = df['preprocess_col'].array.reshape(-1, 1)
 y = df["label"].ravel()
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=100)
-
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=100)
 
 
 under_sampler = RandomUnderSampler(random_state=42)
@@ -70,10 +68,19 @@ print(f"Testing target statistics: {Counter(y_test)}")
 #                      ('tfidf', TfidfTransformer()), ('clf', MultinomialNB()), ])
 
 
-classifier = Pipeline([('vect', CountVectorizer()),
-                      ('tfidf', TfidfTransformer()),    ('clf', SGDClassifier(n_iter_no_change= 300, verbose=True)), ])
+if args.count_vectorizer:
+    print(" using count_vectorizer")
+    classifier = Pipeline([('vect', CountVectorizer()),
+                           ('tfidf', TfidfTransformer()),  ('dim_red', SelectKBest(mutual_info_classif)),  ('clf', SGDClassifier(verbose=True)), ])
+elif args.hash_vectorizer:
+    print(" using hash_vectorizer")
+    classifier = Pipeline([('hashvec', HashingVectorizer(n_features=2**19,
+                                                         strip_accents='ascii', stop_words='english', ngram_range=(1, 4))),
+                            ('clf', SGDClassifier(verbose=True)), ])
 
 
+
+"""
 if args.small is not None:
     # if limit is given
     max_length = len(data['features'])
@@ -81,16 +88,16 @@ if args.small is not None:
     # go through data and limit it
     for key, value in data.items():
         data[key] = value[:limit]
-
+"""
 
 classifier.fit(X_res.ravel(), y_res)
-#pdb.set_trace()
+# pdb.set_trace()
 
 # now classify the given data
 prediction = classifier.predict(X_test.ravel())
 
 
-#pdb.set_trace()
+# pdb.set_trace()
 # collect all evaluation metrics
 evaluation_metrics = []
 if args.accuracy:

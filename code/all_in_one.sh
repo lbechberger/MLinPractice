@@ -8,7 +8,7 @@ echo "  training set"
 #python3 -m code.all_in_one data/feature_extraction/training.pickle -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report --small 10000
 
 # raw input, ohne preprocessing
-python3 -m code.all_in_one data/preprocessing/split/training.csv -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report 
+python3 -m code.all_in_one data/preprocessing/split/training.csv -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report --hash_vectorizer #--count_vectorizer
 
 # sklearn example
 #python3 -m code.example_sklearn_pipeline data/preprocessing/split/training.csv
