@@ -1,4 +1,7 @@
-import argparse, pdb, csv, pickle
+import argparse
+import pdb
+import csv
+import pickle
 
 
 # feature_extraction
@@ -10,12 +13,12 @@ from sklearn.feature_selection import SelectKBest, mutual_info_classif, chi2
 # dim_reduction
 from sklearn.decomposition import PCA, TruncatedSVD, NMF
 
-# classifier 
+# classifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import SGDClassifier
-from sklearn.svm import LinearSVC
+from sklearn.svm import LinearSVC, l1_min_c, SVC, LinearSVR, SVR
 
 from sklearn.pipeline import Pipeline
 from sklearn.pipeline import FeatureUnion
@@ -111,7 +114,8 @@ if args.feature_extraction == 'HashingVectorizer':
     my_pipeline.append(('hashvec', HashingVectorizer(n_features=2**22,
                                                      strip_accents='ascii', stop_words='english', ngram_range=(1, 3))))
 elif args.feature_extraction == 'TfidfVectorizer':
-    my_pipeline.append(('tfidf', TfidfVectorizer(stop_words = 'english', ngram_range=(1, 3))))
+    my_pipeline.append(('tfidf', TfidfVectorizer(
+        stop_words='english', ngram_range=(1, 3))))
 
 # dimension reduction
 if args.dim_red == 'SelectKBest(chi2)':
@@ -128,10 +132,14 @@ elif args.classifier == 'SGDClassifier':
                                              random_state=42, alpha=1e-07, verbose=1)))
 elif args.classifier == 'LogisticRegression':
     my_pipeline.append(('LogisticRegression', LogisticRegression(class_weight="balanced", n_jobs=-1,
-                                             random_state=42, verbose=1)))
+                                                                 random_state=42, verbose=1)))
 elif args.classifier == 'LinearSVC':
     my_pipeline.append(('LinearSVC', LinearSVC(class_weight="balanced",
-                                             random_state=42, verbose=1)))
+                                               random_state=42, verbose=1)))
+elif args.classifier == 'SVC':
+    # attention: time = samples ^ 2
+    my_pipeline.append(('SVC', SVC(class_weight="balanced",
+                                   random_state=42, verbose=1)))
 
 classifier = Pipeline(my_pipeline)
 
@@ -140,7 +148,9 @@ classifier.fit(X_res.ravel(), y_res)
 # now classify the given data
 prediction = classifier.predict(X_test.ravel())
 
+prediction_train_set = classifier.predict(X_res.ravel())
 
+pdb.set_trace()
 
 # collect all evaluation metrics
 evaluation_metrics = []
@@ -154,10 +164,14 @@ if args.balanced_accuracy:
 for metric_name, metric in evaluation_metrics:
 
     print("    {0}: {1}".format(metric_name,
-        metric(y_test, prediction)))
+                                metric(y_test, prediction)))
 
 if args.classification_report:
     categories = ["Flop", "Viral"]
+    print("Matrix Train set:")
+    print(classification_report(y_res, prediction_train_set,
+                                target_names=categories))
+    print("Matrix Test set:")
     print(classification_report(y_test.ravel(), prediction,
                                 target_names=categories))
 
