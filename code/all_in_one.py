@@ -83,7 +83,7 @@ elif args.hash_vectorizer:
     classifier = Pipeline([('hashvec', HashingVectorizer(n_features=2**22,
                                                          strip_accents='ascii', stop_words='english', ngram_range=(1, 3))),
                            ('clf', SGDClassifier(class_weight="balanced", n_jobs=-1,
-                                                 random_state=42, alpha=1e-06, verbose=1)), ])
+                                                 random_state=42, alpha=1e-07, verbose=1)), ])
 
 my_pipeline = []
 
