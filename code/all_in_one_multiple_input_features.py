@@ -23,6 +23,7 @@ from sklearn.svm import LinearSVC, l1_min_c, SVC, LinearSVR, SVR
 from sklearn.pipeline import Pipeline
 from sklearn.pipeline import FeatureUnion
 from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import FunctionTransformer
 
 # metrics
 from sklearn.metrics import classification_report, cohen_kappa_score, accuracy_score, balanced_accuracy_score
@@ -86,13 +87,14 @@ if args.small is not None:
     df = df.head(limit)
 
 # split data
-input_col = 'preprocess_col'
-X = df[input_col].array.reshape(-1, 1)
-y = df["label"].ravel()
+# input_col = 'preprocess_col'
+#X = df[input_col].array.reshape(-1, 1)
+#y = df["label"].ravel()
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.1, random_state=42)
+    df, df['label'], test_size=0.1, random_state=42)
 
+"""
 # balance data
 if args.balance == 'over_sampler':
     over_sampler = RandomOverSampler(random_state=42)
@@ -103,11 +105,20 @@ elif args.balance == 'under_sampler':
 else:
     X_res, y_res = X_train, y_train
 
+
 print(f"Training target statistics: {Counter(y_res)}")
 print(f"Testing target statistics: {Counter(y_test)}")
-
+"""
 
 my_pipeline = []
+get_text_data = FunctionTransformer(
+    lambda x: x['preprocess_col'], validate=False)
+get_numeric_data = FunctionTransformer(lambda x: x['replies_count'].array.reshape(-1,1), validate=False)  # 'likes_count', 'retweets_count',
+
+# add text data
+if args.feature_extraction != 'union':
+    my_pipeline.append(('selector', get_numeric_data))
+
 
 # feature_extraction
 if args.feature_extraction == 'HashingVectorizer':
@@ -116,6 +127,25 @@ if args.feature_extraction == 'HashingVectorizer':
 elif args.feature_extraction == 'TfidfVectorizer':
     my_pipeline.append(('tfidf', TfidfVectorizer(
         stop_words='english', ngram_range=(1, 3))))
+
+elif args.feature_extraction == 'union':
+    # using more than just text data as features:
+
+    my_pipeline.append(('features', FeatureUnion([('selector', get_numeric_data),('text_features', Pipeline([('selector', get_text_data),('vec', TfidfVectorizer())]))], verbose=1)))
+
+
+"""
+abc = FeatureUnion([
+    ('numeric_features', Pipeline([
+        ('selector', get_numeric_data)
+    ])),
+    ('text_features', Pipeline([
+        ('selector', get_text_data),
+        ('vec', TfidfVectorizer())
+    ]))
+],verbose=1)
+"""
+
 
 # dimension reduction
 if args.dim_red == 'SelectKBest(chi2)':
@@ -135,23 +165,27 @@ elif args.classifier == 'LogisticRegression':
                                                                  random_state=42, verbose=1)))
 elif args.classifier == 'LinearSVC':
     my_pipeline.append(('LinearSVC', LinearSVC(class_weight="balanced",
-                                               random_state=42, verbose=1)))
+                                               random_state=42, verbose=1, max_iter=10000)))
 elif args.classifier == 'SVC':
     # attention: time = samples ^ 2
     my_pipeline.append(('SVC', SVC(class_weight="balanced",
                                    random_state=42, verbose=1)))
 
 classifier = Pipeline(my_pipeline)
-import pdb
-pdb.set_trace()
-classifier.fit(X_res.ravel(), y_res)
+
+
+
+
+
+classifier.fit(X_train, y_train)
+
 
 # now classify the given data
-prediction = classifier.predict(X_test.ravel())
+prediction = classifier.predict(X_test)
 
-prediction_train_set = classifier.predict(X_res.ravel())
+prediction_train_set = classifier.predict(X_train)
 
-pdb.set_trace()
+
 
 # collect all evaluation metrics
 evaluation_metrics = []
@@ -170,14 +204,13 @@ for metric_name, metric in evaluation_metrics:
 if args.classification_report:
     categories = ["Flop", "Viral"]
     print("Matrix Train set:")
-    print(classification_report(y_res, prediction_train_set,
-                                target_names=categories))
+    print(classification_report(y_train, prediction_train_set,target_names=categories))
     print("Matrix Test set:")
-    print(classification_report(y_test.ravel(), prediction,
+    print(classification_report(y_test, prediction,
                                 target_names=categories))
 
 
-# export the trained classifier if the user wants us to do so
-if args.export_file is not None:
-    with open(args.export_file, 'wb') as f_out:
-        pickle.dump(classifier, f_out)
+## export the trained classifier if the user wants us to do so
+#if args.export_file is not None:
+#    with open(args.export_file, 'wb') as f_out:
+#        pickle.dump(classifier, f_out)
