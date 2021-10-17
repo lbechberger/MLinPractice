@@ -126,3 +126,8 @@ selected setup: How well does it generalize to the test set?
 Which hyperparameter settings are how important for the results?
 How good are we? Can this be used in practice or are we still too bad?
 Anything else we may have learned?
+
+
+
+## Tests
+We have written tests for tfidf_vec and hash_vector, because even though the sklearn functions themselves naturally have many tests implemented, we want to double check that we are using them correctly and that we are getting the expected output. Therefore especially 'test_result_shape' is very important, because it checks if the length of the output list matches the number of input elements.  
