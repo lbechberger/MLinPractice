@@ -23,16 +23,16 @@ class EmojiCount(FeatureExtractor):
         
         column = inputs[0].str
         
-        results = []
-        values = 0
+        column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).__contains__('U00') is True]) for tweet in column.split()] 
         
-        for tweet in column.split():
-            for word in tweet:
-                if str(word.encode('unicode-escape').decode('ASCII')).__contains__('\\'):
-                    values =+ 1 
-                    
-            results.append(values)
-                
+        values = []
+        
+        print(column)
+        
+        for i in column:
+
+            values.append(len(list(i.split(None))))
+        
         result = np.array(values)
         result = result.reshape(-1,1)
         
