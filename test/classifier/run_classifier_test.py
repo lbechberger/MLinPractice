@@ -61,8 +61,8 @@ class TestClassifier(unittest.TestCase):
                 raise Exception("{clf} was not created successfully.")
 
             args_dict[clf] = False
-            pdb.set_trace()
-    
+
+
     def test_no_classifier(self):
         self.args.knn = None
         with self.assertRaises(UnboundLocalError):
