@@ -24,7 +24,7 @@ class RepliesCount(FeatureExtractor):
     def _get_values(self, inputs):
         values = []
         for index, row in inputs[0].iteritems():
-            values.append(row)
+            values.append(int(row))
         result = np.array(values)
         result = result.reshape(-1,1)
         return result
