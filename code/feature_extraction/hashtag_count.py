@@ -9,6 +9,7 @@ Created on Wed Sep 29 12:29:25 2021
 """
 
 import numpy as np
+import ast
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
 # class for extracting the character-based length as a feature
@@ -23,9 +24,16 @@ class HashtagCount(FeatureExtractor):
     # compute the word length based on the inputs
     def _get_values(self, inputs):
         
-        column = inputs[0].str
-        column = [' '.join([word for word in tweet if word.__contains__('#')]) for tweet in column.split()]
-        
-        count = int(column.count('#'))
+        hashtags_list = inputs[0].astype(str).values.tolist()
 
-        return count
+        values = []
+        for row in hashtags_list:
+            if ast.literal_eval(row) == []:
+                values.append(0)
+            else:
+                values.append(len(ast.literal_eval(row)))
+                
+        result = np.array(values)
+        result = result.reshape(-1,1)
+        
+        return result

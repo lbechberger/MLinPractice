@@ -49,7 +49,7 @@ else:    # need to create FeatureCollector manually
         features.append(HashVector(COLUMN_TWEET))
     if args.hashtags:
         # number of hashtags per tweet
-        features.append(HashtagCount(COLUMN_TWEET))
+        features.append(HashtagCount('hashtags'))
         
 
     # create overall FeatureCollector
@@ -71,6 +71,8 @@ label_array = label_array.reshape(-1, 1)
 # store the results
 results = {"features": feature_array, "labels": label_array, 
            "feature_names": feature_collector.get_feature_names()}
+
+# print(results['features'].ravel())
 
 with open(args.output_file, 'wb') as f_out:
     pickle.dump(results, f_out)
