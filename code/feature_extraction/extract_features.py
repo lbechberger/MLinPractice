@@ -42,6 +42,7 @@ args = parser.parse_args()
 # load data
 df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC,
                  lineterminator="\n")
+df = df[0:1000]
 
 if args.import_file is not None:
     # simply import an exisiting FeatureCollector

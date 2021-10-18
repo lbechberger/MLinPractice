@@ -23,7 +23,7 @@ class EmojiCount(FeatureExtractor):
         
         column = inputs[0].str
         
-        column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).__contains__('U00') is True]) for tweet in column.split()] 
+        column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).count('U00')]) for tweet in column.split()] 
         
         values = []
         
