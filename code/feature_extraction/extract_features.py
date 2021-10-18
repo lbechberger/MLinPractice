@@ -14,6 +14,7 @@ import pickle
 import pandas as pd
 import numpy as np
 from code.feature_extraction.character_length import CharacterLength
+from code.feature_extraction.emoji_count import EmojiCount
 from code.feature_extraction.hash_vector import HashVector
 from code.feature_extraction.tfidf_vector import TfidfVector
 from code.feature_extraction.feature_collector import FeatureCollector
@@ -30,6 +31,8 @@ parser.add_argument("-i", "--import_file",
                     help="import an existing pipeline from the given location", default=None)
 parser.add_argument("-c", "--char_length", action="store_true",
                     help="compute the number of characters in the tweet")
+parser.add_argument("--emoji_count", action="store_true",
+                    help="count the emojis in a tweet")
 parser.add_argument("--hash_vec", action="store_true",
                     help="compute the hash vector of the tweet")
 parser.add_argument("--tfidf_vec", action="store_true",
@@ -58,6 +61,9 @@ else:    # need to create FeatureCollector manually
     if args.tfidf_vec:
 
         features.append(TfidfVector(COLUMN_PREPROCESS))
+        
+    if args.emoji_count:
+        features.append(EmojiCount('tweet'))
 
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
@@ -77,6 +83,8 @@ label_array = label_array.reshape(-1, 1)
 # store the results
 results = {"features": feature_array, "labels": label_array,
            "feature_names": feature_collector.get_feature_names()}
+
+print(results['features'].ravel())
 
 with open(args.output_file, 'wb') as f_out:
     pickle.dump(results, f_out)
