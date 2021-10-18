@@ -113,7 +113,8 @@ print(f"Testing target statistics: {Counter(y_test)}")
 my_pipeline = []
 get_text_data = FunctionTransformer(
     lambda x: x['preprocess_col'], validate=False)
-get_numeric_data = FunctionTransformer(lambda x: x[['replies_count', 'likes_count', 'retweets_count']], validate=False)  # array.reshape(-1,1)
+get_numeric_data = FunctionTransformer(lambda x: x[[
+                                       'replies_count', 'likes_count', 'retweets_count']], validate=False)  # array.reshape(-1,1)
 
 # add text data
 if args.feature_extraction != 'union':
@@ -130,9 +131,10 @@ elif args.feature_extraction == 'TfidfVectorizer':
 
 elif args.feature_extraction == 'union':
     # using more than just text data as features:
-
-    my_pipeline.append(('features', FeatureUnion([('selector', get_numeric_data),('text_features', Pipeline([('selector', get_text_data),('vec', TfidfVectorizer())]))], verbose=1)))
-
+    my_pipeline.append(('features', FeatureUnion([
+        ('selector', get_numeric_data), 
+        ('text_features', Pipeline(
+        [('selector', get_text_data), ('vec', TfidfVectorizer())]))], verbose=1)))
 
 """
 abc = FeatureUnion([
@@ -174,9 +176,6 @@ elif args.classifier == 'SVC':
 classifier = Pipeline(my_pipeline)
 
 
-
-
-
 classifier.fit(X_train, y_train)
 
 
@@ -184,7 +183,6 @@ classifier.fit(X_train, y_train)
 prediction = classifier.predict(X_test)
 
 prediction_train_set = classifier.predict(X_train)
-
 
 
 # collect all evaluation metrics
@@ -204,13 +202,14 @@ for metric_name, metric in evaluation_metrics:
 if args.classification_report:
     categories = ["Flop", "Viral"]
     print("Matrix Train set:")
-    print(classification_report(y_train, prediction_train_set,target_names=categories))
+    print(classification_report(
+        y_train, prediction_train_set, target_names=categories))
     print("Matrix Test set:")
     print(classification_report(y_test, prediction,
                                 target_names=categories))
 
 
-## export the trained classifier if the user wants us to do so
-#if args.export_file is not None:
+# export the trained classifier if the user wants us to do so
+# if args.export_file is not None:
 #    with open(args.export_file, 'wb') as f_out:
 #        pickle.dump(classifier, f_out)
