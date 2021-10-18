@@ -39,7 +39,7 @@ class StringRemover(Preprocessor):
         column = [' '.join([word for word in tweet if word.startswith('https') is False]) for tweet in column.str.split()]
         column = pd.Series(column)
         # replace emojis with empty string
-        column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).__contains__('\\') is False]) for tweet in column.str.split()] 
+        column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).__contains__('U00') is False]) for tweet in column.str.split()] 
         
         column = pd.Series(column)
         return column
