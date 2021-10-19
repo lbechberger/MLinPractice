@@ -136,3 +136,6 @@ data/classification/mlflow
 # exlcude OSX specific files
 .DS_Store
 **/.DS_Store
+
+# exlcude /mlruns subfolder
+mlruns/
