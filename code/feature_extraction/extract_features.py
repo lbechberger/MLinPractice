@@ -17,23 +17,30 @@ from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.hash_vector import HashVector
 from code.feature_extraction.tfidf_vector import TfidfVector
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PREPROCESS
+from code.feature_extraction.photo_bool import PhotoBool
+from code.feature_extraction.video_bool import VideoBool
+from code.feature_extraction.replies_count import RepliesCount
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PREPROCESS, COLUMN_PHOTOS, COLUMN_REPLIES, COLUMN_VIDEO
 
 
 # setting up CLI
-parser = argparse.ArgumentParser(description="Feature Extraction")
+parser = argparse.ArgumentParser(description = "Feature Extraction")
 parser.add_argument("input_file", help="path to the input csv file")
 parser.add_argument("output_file", help="path to the output pickle file")
-parser.add_argument("-e", "--export_file",
-                    help="create a pipeline and export to the given location", default=None)
-parser.add_argument("-i", "--import_file",
-                    help="import an existing pipeline from the given location", default=None)
-parser.add_argument("-c", "--char_length", action="store_true",
-                    help="compute the number of characters in the tweet")
-parser.add_argument("--hash_vec", action="store_true",
-                    help="compute the hash vector of the tweet")
-parser.add_argument("--tfidf_vec", action="store_true",
-                    help="compute the tfidf vector of the tweet")
+parser.add_argument("-e", "--export_file", 
+		    help="create a pipeline and export to the given location", default=None)
+parser.add_argument("-i", "--import_file", 
+		    help="import an existing pipeline from the given location", default=None)
+parser.add_argument("-c", "--char_length", action="store_true", 
+		    help="compute the number of characters in the tweet")
+parser.add_argument("--hash_vec", action="store_true", 
+		    help="compute the hash vector of the tweet")
+parser.add_argument("--photo_bool", action="store_true", 
+		    help="tells whether the tweet contains photos or not")
+parser.add_argument("--video_bool", action="store_true", 
+		    help="tells whether the tweet contains a video or not")
+parser.add_argument("--replies_count", action="store_true", 
+		    help="compute the amount of replies of the tweet")
 args = parser.parse_args()
 
 # load data
@@ -58,6 +65,15 @@ else:    # need to create FeatureCollector manually
     if args.tfidf_vec:
 
         features.append(TfidfVector(COLUMN_PREPROCESS))
+    if args.photo_bool:
+        # do photos exist or not
+        features.append(PhotoBool(COLUMN_PHOTOS))
+    if args.video_bool:
+        # does a video exist or not
+        features.append(VideoBool(COLUMN_VIDEO))
+    if args.replies_count:
+        # how many replies does the tweet have
+        features.append(RepliesCount(COLUMN_REPLIES))
 
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)

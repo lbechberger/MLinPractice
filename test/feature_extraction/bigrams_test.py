@@ -9,7 +9,7 @@ Created on Thu Oct  7 14:51:00 2021
 import unittest
 import pandas as pd
 import nltk
-from code.feature_extraction.bigrams import BigramFeature
+from codes.feature_extraction.bigrams import BigramFeature
 
 class BigramFeatureTest(unittest.TestCase):
     
