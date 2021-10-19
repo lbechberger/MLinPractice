@@ -12,7 +12,7 @@ from src.preprocessing.preprocessors.column_dropper import ColumnDropper
 from src.preprocessing.preprocessors.non_english_remover import NonEnglishRemover
 from src.preprocessing.punctuation_remover import PunctuationRemover
 from src.preprocessing.tokenizer import Tokenizer
-from src.util import COLUMN_MENTIONS, COLUMN_TWEET, SUFFIX_TOKENIZED
+from src.util import COLUMN_TWEET, SUFFIX_TOKENIZED
 
 
 def main():

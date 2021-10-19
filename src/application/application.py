@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.pipeline import make_pipeline
 from src.util import COLUMN_TWEET
 
+
 def main():
     # setting up CLI
     parser = argparse.ArgumentParser(description = "Application")
@@ -26,7 +27,7 @@ def main():
     with open(args.dim_red_file, 'rb') as f_in:
         dimensionality_reduction = pickle.load(f_in)
     with open(args.classifier_file, 'rb') as f_in:
-        classifier = pickle.load(f_in)
+        classifier = pickle.load(f_in)["classifier"]
 
     # chain them together into a single pipeline
     pipeline = make_pipeline(preprocessing, feature_extraction, dimensionality_reduction, classifier)
