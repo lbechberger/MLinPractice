@@ -24,4 +24,4 @@ COLUMN_PREPROCESS = 'preprocess_col'
 SUFFIX_TOKENIZED = "_tokenized"
 
 # number of features for hash vector
-HASH_VECTOR_N_FEATURES = 2**3
+HASH_VECTOR_N_FEATURES = 2**10

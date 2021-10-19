@@ -12,7 +12,7 @@ import numpy as np
 from code.feature_extraction.feature_extractor import FeatureExtractor
 from sklearn.feature_extraction.text import HashingVectorizer
 
-from codes.util import HASH_VECTOR_N_FEATURES
+from code.util import HASH_VECTOR_N_FEATURES
 
 # class for extracting the character-based length as a feature
 
