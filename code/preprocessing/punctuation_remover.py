@@ -28,7 +28,7 @@ class PunctuationRemover(Preprocessor):
     # set internal variables based on input columns
     def _set_variables(self, inputs):
         # store punctuation for later reference
-        self._punctuation = "[{}]".format(string.punctuation+string.digits+'’'+'—'+'”'+'➡️')
+        self._punctuation = "[{}]".format(string.punctuation+string.digits+'’'+'—'+'”'+'➡️'+'“'+'↓')
     
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
