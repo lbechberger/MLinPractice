@@ -8,8 +8,8 @@ Created on Thu Oct  7 14:30:41 2021
 
 import unittest
 import pandas as pd
-from code.preprocessing.tokenizer import Tokenizer
-from code.util import fm
+from src.preprocessing.tokenizer import Tokenizer
+from src.util import fm
 
 class TokenizerTest(unittest.TestCase):
     

@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct  7 14:51:00 2021
-
-@author: ml
+Test the bigram feature
 """
 
 import unittest
 import pandas as pd
 import nltk
-from code.feature_extraction.bigrams import BigramFeature
+from src.feature_extraction.bigrams import BigramFeature
 
 class BigramFeatureTest(unittest.TestCase):
     

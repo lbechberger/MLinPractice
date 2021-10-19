@@ -7,6 +7,7 @@ Utility file for collecting frequently used constants and helper function.
 # column names for the original data frame
 COLUMN_TWEET = "tweet"
 COLUMN_MENTIONS = "mentions"
+COLUMN_PHOTOS = "photos"
 COLUMN_MENTIONS_COUNT = "mentions_count"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"

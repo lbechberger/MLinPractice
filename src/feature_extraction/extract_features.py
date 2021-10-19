@@ -7,9 +7,10 @@ Runs the specified collection of feature extractors.
 import argparse, csv, pickle
 import pandas as pd
 import numpy as np
-from code.feature_extraction.character_length import CharacterLength
-from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL
+from src.feature_extraction.character_length import CharacterLength
+from src.feature_extraction.counter_fe import CounterFE
+from src.feature_extraction.feature_collector import FeatureCollector
+from src.util import COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_TWEET, COLUMN_LABEL
 
 
 def main():
@@ -37,6 +38,8 @@ def main():
         if args.char_length:
             # character length of original tweet (without any changes)
             features.append(CharacterLength(COLUMN_TWEET))
+            features.append(CounterFE(COLUMN_MENTIONS))
+            # features.append(CounterFE(COLUMN_PHOTOS))
         
         # create overall FeatureCollector
         feature_collector = FeatureCollector(features)

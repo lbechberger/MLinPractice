@@ -8,7 +8,7 @@ Created on Thu Oct  7 14:53:52 2021
 
 import ast
 import nltk
-from code.feature_extraction.feature_extractor import FeatureExtractor
+from src.feature_extraction.feature_extractor import FeatureExtractor
 
 class BigramFeature(FeatureExtractor):
     

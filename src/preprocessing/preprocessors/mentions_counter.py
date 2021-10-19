@@ -6,8 +6,8 @@ mentions array column -> length of array column
 """
 
 from ast import literal_eval
-from code.preprocessing.preprocessor import Preprocessor
-from code.util import COLUMN_MENTIONS, COLUMN_MENTIONS_COUNT
+from src.preprocessing.preprocessor import Preprocessor
+from src.util import COLUMN_MENTIONS, COLUMN_MENTIONS_COUNT
 
 class MentionsCounter(Preprocessor):
     

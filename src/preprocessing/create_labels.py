@@ -7,7 +7,7 @@ Stores the result as a single pandas DataFrame in a pickle file.
 
 import os, argparse, csv
 import pandas as pd
-from code.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_LABEL
+from src.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_LABEL
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
         dfs.append(pd.read_csv(file_path, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n", dtype={"quote_url": str, "place": str, "tweet": str, "language": str}))
 
     # join all data into a single DataFrame
-    df = pd.concat(dfs)
+    df = dfs[0] #pd.concat(dfs)
 
     # compute new column "label" based on likes and retweets
     df[COLUMN_LABEL] = (args.likes_weight * df[COLUMN_LIKES] + args.retweet_weight * df[COLUMN_RETWEETS]) > args.threshold

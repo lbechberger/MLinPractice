@@ -7,7 +7,7 @@ Console-based application for tweet classification.
 import argparse, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
-from code.util import COLUMN_TWEET
+from src.util import COLUMN_TWEET
 
 def main():
     # setting up CLI
