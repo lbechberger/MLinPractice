@@ -7,7 +7,7 @@ Stores the result as a single pandas DataFrame in a pickle file.
 
 import os, argparse, csv
 import pandas as pd
-from code.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_LABEL
+from src.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_LABEL
 
 
 def main():

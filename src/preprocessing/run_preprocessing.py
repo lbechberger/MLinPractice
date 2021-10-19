@@ -7,12 +7,12 @@ Runs the specified collection of preprocessing steps
 import argparse, csv, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
-from code.preprocessing.preprocessors.column_dropper import ColumnDropper
-from code.preprocessing.preprocessors.mentions_counter import MentionsCounter
-from code.preprocessing.preprocessors.non_english_remover import NonEnglishRemover
-from code.preprocessing.punctuation_remover import PunctuationRemover
-from code.preprocessing.tokenizer import Tokenizer
-from code.util import COLUMN_MENTIONS, COLUMN_TWEET, SUFFIX_TOKENIZED
+from src.preprocessing.preprocessors.column_dropper import ColumnDropper
+from src.preprocessing.preprocessors.mentions_counter import MentionsCounter
+from src.preprocessing.preprocessors.non_english_remover import NonEnglishRemover
+from src.preprocessing.punctuation_remover import PunctuationRemover
+from src.preprocessing.tokenizer import Tokenizer
+from src.util import COLUMN_MENTIONS, COLUMN_TWEET, SUFFIX_TOKENIZED
 
 
 def main():
