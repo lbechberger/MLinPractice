@@ -41,7 +41,8 @@ def main():
     with open(args.input_file, 'rb') as f_in:
         data = pickle.load(f_in)
 
-    set_tracking_uri(args.log_folder)
+    if args.log_folder is not None:
+        set_tracking_uri(args.log_folder)
 
     if args.import_file is not None:
         # import a pre-trained classifier
