@@ -39,7 +39,7 @@ def main():
             # character length of original tweet (without any changes)
             features.append(CharacterLength(COLUMN_TWEET))
             features.append(CounterFE(COLUMN_MENTIONS))
-            # features.append(CounterFE(COLUMN_PHOTOS))
+            features.append(CounterFE(COLUMN_PHOTOS))
         
         # create overall FeatureCollector
         feature_collector = FeatureCollector(features)
