@@ -35,8 +35,7 @@ def main():
 
         # collect all feature extractors
         features = []
-        if args.char_length:
-            # character length of original tweet (without any changes)
+        if args.char_length:            
             features.append(CharacterLength(COLUMN_TWEET))
             features.append(CounterFE(COLUMN_MENTIONS))
             features.append(CounterFE(COLUMN_PHOTOS))

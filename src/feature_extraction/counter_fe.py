@@ -14,12 +14,17 @@ class CounterFE(FeatureExtractor):
     # constructor
     def __init__(self, input_column):
         super().__init__([input_column], f"{input_column}_count")
-    
+
+
     # don't need to fit, so don't overwrite _set_variables()
-    
-    # compute the word length based on the inputs
+
+
     def _get_values(self, inputs):
-        # result = np.array(inputs[0].str.len())        
+        """
+        Parses the string in every cell of the column/series as an array
+        and counts the length in the cell of the output column
+        """
+
         evaluated = inputs[0].apply(ast.literal_eval)
         result = np.array(evaluated.str.len())
         result = result.reshape(-1,1)

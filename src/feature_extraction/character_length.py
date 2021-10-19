@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Simple feature that counts the number of characters in the given column.
+Simple feature that counts the number of characters in the given column (e.g tweet column).
 """
 
 import numpy as np

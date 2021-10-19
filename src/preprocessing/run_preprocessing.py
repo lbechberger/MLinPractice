@@ -9,7 +9,6 @@ from numpy.core.numeric import NaN
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from src.preprocessing.preprocessors.column_dropper import ColumnDropper
-from src.preprocessing.preprocessors.mentions_counter import MentionsCounter
 from src.preprocessing.preprocessors.non_english_remover import NonEnglishRemover
 from src.preprocessing.punctuation_remover import PunctuationRemover
 from src.preprocessing.tokenizer import Tokenizer
@@ -38,18 +37,16 @@ def main():
 
     # collect all preprocessors
     preprocessors = []
-    # preprocessors.append(MentionsCounter())
     if args.punctuation:
         preprocessors.append(PunctuationRemover())
     if args.tokenize:
         preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
     if args.other:   
-        DROP_COLS = [
-            # COLUMN_MENTIONS,
+        DROP_COLS = [            
             "id", "conversation_id", "created_at", "timezone", "user_id", "name", "place",
             "replies_count", "retweets_count", "likes_count", "language",
             # "cashtag" only few records have this filled. Might be useless
-            # always the same value for all records
+            # below columns have always the same value for all records
             "retweet", "near", "geo", "source", "user_rt_id", "user_rt", "retweet_id",
             "retweet_date", "translate", "trans_src", 'trans_dest\r']
 
