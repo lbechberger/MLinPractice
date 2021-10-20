@@ -22,7 +22,7 @@ class Hours(FeatureExtractor):
     # use the replies count column as a feature
     def _get_values(self, inputs):
         
-        hours = pd.to_datetime(inputs['time'], format='%H:%M:%S').dt.hour
+        hours = pd.to_datetime(inputs[0], format='%H:%M:%S').dt.hour
 
         result = np.array(hours)
         result = result.reshape(-1,1)

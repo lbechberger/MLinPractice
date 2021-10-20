@@ -44,6 +44,8 @@ parser.add_argument("--replies_count", action="store_true",
 		    help="compute the amount of replies of the tweet")
 parser.add_argument("--time", action="store_true", 
 		    help="take into account what hour the tweet was sent")
+parser.add_argument("--tfidf_vec", action="store_true", 
+		    help="take into account what hour the tweet was sent")
 args = parser.parse_args()
 
 # load data
@@ -81,7 +83,7 @@ else:    # need to create FeatureCollector manually
         features.append(RepliesCount(COLUMN_REPLIES))
     if args.time:
         # how many replies does the tweet have
-        features.append(Hour('time'))
+        features.append(Hours('time'))
 
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
