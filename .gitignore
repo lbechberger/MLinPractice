@@ -132,6 +132,7 @@ dmypy.json
 data/raw/
 data/preprocessing/
 data/classification/mlflow
+mlruns/
 
 # exlcude OSX specific files
 .DS_Store
