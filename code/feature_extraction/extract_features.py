@@ -31,32 +31,18 @@ from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PREPROCESS, COLUMN_PHOT
 parser = argparse.ArgumentParser(description = "Feature Extraction")
 parser.add_argument("input_file", help="path to the input csv file")
 parser.add_argument("output_file", help="path to the output pickle file")
-parser.add_argument("-e", "--export_file", 
-		    help="create a pipeline and export to the given location", default=None)
-parser.add_argument("-i", "--import_file", 
-		    help="import an existing pipeline from the given location", default=None)
-parser.add_argument("-c", "--char_length", action="store_true", 
-		    help="compute the number of characters in the tweet")
-parser.add_argument("--hash_vec", action="store_true", 
-		    help="compute the hash vector of the tweet")
-parser.add_argument("--tfidf_vec", action="store_true", 
-		    help="compute the tf idf of the tweet")
-parser.add_argument("--photo_bool", action="store_true", 
-		    help="tells whether the tweet contains photos or not")
-parser.add_argument("--video_bool", action="store_true", 
-		    help="tells whether the tweet contains a video or not")
-parser.add_argument("--replies_count", action="store_true", 
-		    help="compute the amount of replies of the tweet")
-parser.add_argument("--word2vec", action="store_true", 
-		    help="compute the semantic distance of words to given keywords")
-parser.add_argument("--time", action="store_true", 
-		    help="take into account what hour the tweet was sent")
-parser.add_argument("--emoji_count", action="store_true",
-        help="count the emojis in a tweet")
-parser.add_argument("--hashtags", action = "store_true", 
-        help = "count hashtags of the tweet")
-parser.add_argument("--tfidf_vec", action="store_true", 
-		    help="take into account what hour the tweet was sent")
+parser.add_argument("-e", "--export_file", help="create a pipeline and export to the given location", default=None)
+parser.add_argument("-i", "--import_file", help="import an existing pipeline from the given location", default=None)
+parser.add_argument("-c", "--char_length", action="store_true", help="compute the number of characters in the tweet")
+parser.add_argument("--hash_vec", action="store_true", help="compute the hash vector of the tweet")
+parser.add_argument("--tfidf_vec", action="store_true", help="compute the tf idf of the tweet")
+parser.add_argument("--photo_bool", action="store_true", help="tells whether the tweet contains photos or not")
+parser.add_argument("--video_bool", action="store_true", help="tells whether the tweet contains a video or not")
+parser.add_argument("--replies_count", action="store_true", help="compute the amount of replies of the tweet")
+parser.add_argument("--word2vec", action="store_true", help="compute the semantic distance of words to given keywords")
+parser.add_argument("--time", action="store_true", help="take into account what hour the tweet was sent")
+parser.add_argument("--emoji_count", action="store_true", help="count the emojis in a tweet")
+parser.add_argument("--hashtags", action = "store_true", help = "count hashtags of the tweet")
 
 args = parser.parse_args()
 
