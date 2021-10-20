@@ -14,6 +14,7 @@ import pickle
 import pandas as pd
 import numpy as np
 from code.feature_extraction.character_length import CharacterLength
+from code.feature_extraction.emoji_count import EmojiCount
 from code.feature_extraction.hash_vector import HashVector
 from code.feature_extraction.tfidf_vector import TfidfVector
 from code.feature_extraction.feature_collector import FeatureCollector
@@ -49,6 +50,8 @@ parser.add_argument("--word2vec", action="store_true",
 		    help="compute the semantic distance of words to given keywords")
 parser.add_argument("--time", action="store_true", 
 		    help="take into account what hour the tweet was sent")
+parser.add_argument("--emoji_count", action="store_true",
+        help="count the emojis in a tweet")
 parser.add_argument("--tfidf_vec", action="store_true", 
 		    help="take into account what hour the tweet was sent")
 
@@ -57,9 +60,6 @@ args = parser.parse_args()
 # load data
 df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC,
                  lineterminator="\n")
-df = df[0:1000]
-
-df = df[0:1000]
 
 if args.import_file is not None:
     # simply import an exisiting FeatureCollector
@@ -71,14 +71,13 @@ else:    # need to create FeatureCollector manually
     # collect all feature extractors
     features = []
     if args.char_length:
-
         features.append(CharacterLength(COLUMN_PREPROCESS))
     if args.hash_vec:
-
         features.append(HashVector(COLUMN_PREPROCESS))
     if args.tfidf_vec:
-
         features.append(TfidfVector(COLUMN_PREPROCESS))
+    if args.emoji_count:
+        features.append(EmojiCount('tweet'))
     if args.photo_bool:
         # do photos exist or not
         features.append(PhotoBool(COLUMN_PHOTOS))
