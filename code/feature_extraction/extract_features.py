@@ -20,6 +20,7 @@ from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.photo_bool import PhotoBool
 from code.feature_extraction.video_bool import VideoBool
 from code.feature_extraction.replies_count import RepliesCount
+from code.feature_extraction.word2vec import Word2Vec
 from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PREPROCESS, COLUMN_PHOTOS, COLUMN_REPLIES, COLUMN_VIDEO
 
 
@@ -41,11 +42,14 @@ parser.add_argument("--video_bool", action="store_true",
 		    help="tells whether the tweet contains a video or not")
 parser.add_argument("--replies_count", action="store_true", 
 		    help="compute the amount of replies of the tweet")
+parser.add_argument("--word2vec", action="store_true", 
+		    help="compute the semantic distance of words to given keywords")
 args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC,
                  lineterminator="\n")
+df = df[0:1000]
 
 if args.import_file is not None:
     # simply import an exisiting FeatureCollector
@@ -74,6 +78,8 @@ else:    # need to create FeatureCollector manually
     if args.replies_count:
         # how many replies does the tweet have
         features.append(RepliesCount(COLUMN_REPLIES))
+    if args.word2vec:
+        features.append(Word2Vec('preprocess_col_tokenized'))
 
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
@@ -93,6 +99,8 @@ label_array = label_array.reshape(-1, 1)
 # store the results
 results = {"features": feature_array, "labels": label_array,
            "feature_names": feature_collector.get_feature_names()}
+
+print(results['features'].ravel())
 
 with open(args.output_file, 'wb') as f_out:
     pickle.dump(results, f_out)
