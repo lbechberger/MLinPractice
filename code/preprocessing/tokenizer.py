@@ -37,7 +37,7 @@ class Tokenizer(Preprocessor):
                 words = nltk.word_tokenize(sentence)
                 tokenized_tweet += words
             
-            tokenized.append(str(tokenized_tweet))
+            tokenized.append(str(tokenized_tweet).lower().strip('\\u'))
 
         #pdb.set_trace()
         return tokenized

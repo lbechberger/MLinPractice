@@ -35,7 +35,6 @@ args = parser.parse_args()
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",low_memory=False)
 
 
-
 # collect all preprocessors
 preprocessors = []
 if args.punctuation:

@@ -33,13 +33,13 @@ class StringRemover(Preprocessor):
         column = inputs[0].str #.replace(self._punctuation, "")
         
         # replace stopwords with empty string
-        column = [' '.join([word for word in tweet if word.lower() not in STOPWORDS]) for tweet in column.split()]
+        column = [' '.join([word.lower() for word in tweet if word.lower() not in STOPWORDS]) for tweet in column.split()]
         column = pd.Series(column)
         # replace links with empty string
-        column = [' '.join([word for word in tweet if word.startswith('https') is False]) for tweet in column.str.split()]
+        column = [' '.join([word for word in tweet if word.startswith('http') is False]) for tweet in column.str.split()]
         column = pd.Series(column)
         # replace emojis with empty string
-        column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).__contains__('\\') is False]) for tweet in column.str.split()] 
+        column = [' '.join([word for word in tweet if str(word.encode('unicode-escape').decode('ASCII')).__contains__('\\U') is False]) for tweet in column.str.split()] 
         
         column = pd.Series(column)
         return column
