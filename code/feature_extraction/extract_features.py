@@ -113,3 +113,8 @@ with open(args.output_file, 'wb') as f_out:
 if args.export_file is not None:
     with open(args.export_file, 'wb') as f_out:
         pickle.dump(feature_collector, f_out)
+
+df_out = pd.DataFrame(feature_array, columns=feature_collector.get_feature_names())
+df_out.to_csv("data/feature_extraction/features.csv")
+
+# results.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")

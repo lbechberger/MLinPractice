@@ -17,7 +17,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import SGDClassifier
-from sklearn.svm import LinearSVC, l1_min_c, SVC, LinearSVR, SVR
+from sklearn.svm import LinearSVC, SVC
 
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -78,6 +78,11 @@ def load_args():
         "--balanced_accuracy",
         action="store_true",
         help="evaluate using balanced_accuracy",
+    )
+    parser.add_argument(
+        "--classification_report",
+        action="store_true",
+        help="evaluate using classification_report",
     )
 
     parser.add_argument(
@@ -188,6 +193,10 @@ def evaluate_classifier(args, data, prediction):
     for metric_name, metric in evaluation_metrics:
         print("    {0}: {1}".format(metric_name, metric(data["labels"], prediction)))
 
+    if args.classification_report:
+        categories = ["Flop", "Viral"]
+        print(classification_report(
+            data["labels"], prediction, target_names=categories))
 
 def export_classifier(args, classifier):
     # export the trained classifier if the user wants us to do so
