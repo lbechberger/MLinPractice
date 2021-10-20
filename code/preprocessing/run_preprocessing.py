@@ -16,7 +16,7 @@ from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.string_remover import StringRemover
 from code.preprocessing.language_remover import LanguageRemover
 from code.preprocessing.tokenizer import Tokenizer
-from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, COLUMN_LANGUAGE
+from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, COLUMN_LANGUAGE, COLUMN_PREPROCESS
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -28,21 +28,21 @@ parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize 
 #parser.add_argument("--tokenize_input", help = "input column to tokenize", default = 'output')
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("--language", help = "just use tweets with this language ", default = None)
+
 args = parser.parse_args()
 
 # load data
 df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n",low_memory=False)
-# df = df[0:1000]
 
-preprocess_col = 'preprocess_col'
+
 # collect all preprocessors
 preprocessors = []
 if args.punctuation:
-    preprocessors.append(PunctuationRemover("tweet", preprocess_col))
+    preprocessors.append(PunctuationRemover(COLUMN_TWEET, COLUMN_PREPROCESS))
 if args.strings:
-    preprocessors.append(StringRemover(preprocess_col, preprocess_col))
+    preprocessors.append(StringRemover(COLUMN_PREPROCESS, COLUMN_PREPROCESS))
 if args.tokenize:
-    preprocessors.append(Tokenizer(preprocess_col, preprocess_col + SUFFIX_TOKENIZED))
+    preprocessors.append(Tokenizer(COLUMN_PREPROCESS, COLUMN_PREPROCESS + SUFFIX_TOKENIZED))
 
 # no need to detect languages, because it is already given
 # if args.language is not None:
@@ -64,7 +64,7 @@ for preprocessor in tqdm(preprocessors):
 del df['trans_dest\r']
 # store the results
 df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
-#pdb.set_trace()
+
 # create a pipeline if necessary and store it as pickle file
 if args.export_file is not None:
     pipeline = make_pipeline(*preprocessors)
