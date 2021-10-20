@@ -30,7 +30,7 @@ class StringRemover(Preprocessor):
     
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
-        column = inputs[0].str #.replace(self._punctuation, "")
+        column = inputs[0].str
         
         # replace stopwords with empty string
         column = [' '.join([word.lower() for word in tweet if word.lower() not in STOPWORDS]) for tweet in column.split()]

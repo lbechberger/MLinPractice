@@ -18,6 +18,7 @@ from code.feature_extraction.emoji_count import EmojiCount
 from code.feature_extraction.hash_vector import HashVector
 from code.feature_extraction.tfidf_vector import TfidfVector
 from code.feature_extraction.feature_collector import FeatureCollector
+from code.feature_extraction.hashtag_count import HashtagCount
 from code.feature_extraction.photo_bool import PhotoBool
 from code.feature_extraction.video_bool import VideoBool
 from code.feature_extraction.replies_count import RepliesCount
@@ -52,6 +53,8 @@ parser.add_argument("--time", action="store_true",
 		    help="take into account what hour the tweet was sent")
 parser.add_argument("--emoji_count", action="store_true",
         help="count the emojis in a tweet")
+parser.add_argument("--hashtags", action = "store_true", 
+        help = "count hashtags of the tweet")
 parser.add_argument("--tfidf_vec", action="store_true", 
 		    help="take into account what hour the tweet was sent")
 
@@ -73,7 +76,11 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         features.append(CharacterLength(COLUMN_PREPROCESS))
     if args.hash_vec:
-        features.append(HashVector(COLUMN_PREPROCESS))
+        # hash of original tweet (without any changes)
+        features.append(HashVector(COLUMN_TWEET))
+    if args.hashtags:
+        # number of hashtags per tweet
+        features.append(HashtagCount('hashtags'))
     if args.tfidf_vec:
         features.append(TfidfVector(COLUMN_PREPROCESS))
     if args.emoji_count:
@@ -92,7 +99,6 @@ else:    # need to create FeatureCollector manually
     if args.time:
         # how many replies does the tweet have
         features.append(Hours('time'))
-
 
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
