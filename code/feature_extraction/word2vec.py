@@ -44,5 +44,6 @@ class Word2Vec(FeatureExtractor):
             # similarities.append(max(sim)-np.std(sim))
             similarities.append(np.mean(sim)) # try median
     
-        result = similarities.reshape(-1,1)
+        result = np.asarray(similarities)
+        result = result.reshape(-1,1)
         return result

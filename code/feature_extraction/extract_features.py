@@ -36,6 +36,8 @@ parser.add_argument("-c", "--char_length", action="store_true",
 		    help="compute the number of characters in the tweet")
 parser.add_argument("--hash_vec", action="store_true", 
 		    help="compute the hash vector of the tweet")
+parser.add_argument("--tfidf_vec", action="store_true", 
+		    help="compute the tf idf of the tweet")
 parser.add_argument("--photo_bool", action="store_true", 
 		    help="tells whether the tweet contains photos or not")
 parser.add_argument("--video_bool", action="store_true", 
@@ -100,6 +102,7 @@ label_array = label_array.reshape(-1, 1)
 results = {"features": feature_array, "labels": label_array,
            "feature_names": feature_collector.get_feature_names()}
 
+print(df['preprocess_col_tokenized'][0:5])
 print(results['features'].ravel())
 
 with open(args.output_file, 'wb') as f_out:
