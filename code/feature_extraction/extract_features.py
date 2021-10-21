@@ -17,8 +17,9 @@ from code.feature_extraction.month import MonthExtractor
 from code.feature_extraction.sentiment import SentimentAnalyzer
 from code.feature_extraction.photos import Photos
 from code.feature_extraction.mention import Mentions
+from code.feature_extraction.retweets import RetweetExtractor
 from code.feature_extraction.url import URL
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL, COLUMN_RETWEETS
 
 
 # setting up CLI
@@ -35,6 +36,7 @@ parser.add_argument("-s", "--sentiment", action = "store_true", help = "extracts
 parser.add_argument("-p", "--photos", action = "store_true", help = "extracts binary for whether tweet has photo(s) attached")
 parser.add_argument("-@", "--mention", action = "store_true", help = "extracts binary for whether someone has been mentioned by the tweet author")
 parser.add_argument("-u", "--url", action = "store_true", help = "extracts binary for whether a url is attached to tweet")
+parser.add_argument("-r", "--retweet", action = "store_true", help = "extracts number of retweets")
 
 args = parser.parse_args()
 
@@ -73,6 +75,10 @@ else:    # need to create FeatureCollector manually
     if args.url:
         # url attached to tweet
        features.append(URL(COLUMN_URL))
+       
+    if args.retweet:
+        # number of retweets
+        features.append(RetweetExtractor(COLUMN_RETWEETS))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
