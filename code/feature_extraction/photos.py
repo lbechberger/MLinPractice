@@ -15,7 +15,7 @@ import numpy as np
 class Photos(FeatureExtractor):
     
     def __init__(self, input_column):
-        super().__init__([input_column], "{0}_photos".format(input_column))
+        super().__init__([input_column], "{0}_binary".format(input_column))
         
     
     def _get_values(self, inputs):
