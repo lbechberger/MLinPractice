@@ -16,6 +16,7 @@ COLUMN_MONTH = "date"
 COLUMN_PHOTOS = "photos"
 COLUMN_MENTIONS = "mentions"
 COLUMN_URL = "urls"
+COLUMN_REPLIES = "replies_count"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"

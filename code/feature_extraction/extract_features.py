@@ -19,7 +19,8 @@ from code.feature_extraction.photos import Photos
 from code.feature_extraction.mention import Mentions
 from code.feature_extraction.retweets import RetweetExtractor
 from code.feature_extraction.url import URL
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL, COLUMN_RETWEETS
+from code.feature_extraction.reples import RepliesExtractor
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL, COLUMN_RETWEETS, COLUMN_REPLIES
 
 
 # setting up CLI
@@ -37,6 +38,7 @@ parser.add_argument("-p", "--photos", action = "store_true", help = "extracts bi
 parser.add_argument("-@", "--mention", action = "store_true", help = "extracts binary for whether someone has been mentioned by the tweet author")
 parser.add_argument("-u", "--url", action = "store_true", help = "extracts binary for whether a url is attached to tweet")
 parser.add_argument("-r", "--retweet", action = "store_true", help = "extracts number of retweets")
+parser.add_argument("-k", "--replies", action = "store_true", help = "extracts number of replies")
 
 args = parser.parse_args()
 
@@ -80,6 +82,10 @@ else:    # need to create FeatureCollector manually
         # number of retweets
         features.append(RetweetExtractor(COLUMN_RETWEETS))
     
+    if args.replies:
+        # number of replies
+        features.append(RepliesExtractor(COLUMN_REPLIES))
+        
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
     
