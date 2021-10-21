@@ -22,15 +22,16 @@ class StopwordRemover(Preprocessor):
         super().__init__([input_column], output_column)
         
         
-    def _set_variables(self, inputs):
-        """Store stopwords for later reference"""
-        self._stopwords = stopwords.words("english")
+    # def _set_variables(self, inputs):
     
     
     def _get_values(self, inputs):
         """Remove stopwords from given column."""
         # keeps raising invalid syntax error on terminal, works as supposed in jupyter
         stops = set(stopwords.words('english'))
+        # add user defined stopwords
+        # courtesy to https://www.kaggle.com/docxian/data-science-tweets
+        stops = stops.union(set(['https', 't', 'co', '&amp;', 'amp']))
         
         for tweet in inputs[0]:
             tweet_eval = ast.literal_eval(tweet)
