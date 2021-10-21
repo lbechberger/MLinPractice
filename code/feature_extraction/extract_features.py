@@ -16,7 +16,7 @@ from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.month import MonthExtractor
 from code.feature_extraction.sentiment import SentimentAnalyzer
 from code.feature_extraction.photos import Photos
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS
 
 
 # setting up CLI
@@ -60,7 +60,7 @@ else:    # need to create FeatureCollector manually
         
     if args.photos:
         # photos attached to original tweet
-        features.append(Photos(COLUMN_TWEET))
+        features.append(Photos(COLUMN_PHOTOS))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)

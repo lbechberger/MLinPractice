@@ -18,7 +18,7 @@ class Photos(FeatureExtractor):
         super().__init__([input_column], "{0}_photos".format(input_column))
         
     
-    def _get_values(inputs):
+    def _get_values(self, inputs):
          
         result = np.array([0 if len(_) <= 2 else 1 for _ in inputs[0]])
         result = result.reshape(-1, 1)
