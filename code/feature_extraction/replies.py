@@ -10,7 +10,7 @@ Created on Fri Oct 22 00:58:01 2021
 from code.feature_extraction.feature_extractor import FeatureExtractor
 import numpy as np
 
-class RepliestExtractor(FeatureExtractor):
+class RepliesExtractor(FeatureExtractor):
     """Collects the number of replies for a Tweet and stores them as seperate feature"""
     
     def __init__(self, input_column):

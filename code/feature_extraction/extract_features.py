@@ -19,7 +19,7 @@ from code.feature_extraction.photos import Photos
 from code.feature_extraction.mention import Mentions
 from code.feature_extraction.retweets import RetweetExtractor
 from code.feature_extraction.url import URL
-from code.feature_extraction.reples import RepliesExtractor
+from code.feature_extraction.replies import RepliesExtractor
 from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL, COLUMN_RETWEETS, COLUMN_REPLIES
 
 
