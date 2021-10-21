@@ -31,7 +31,7 @@ parser.add_argument("-f", "--frequency", action = "store_true", help = "label fr
 parser.add_argument("-u", "--uniform", action = "store_true", help = "uniform (random) classifier")
 parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
 parser.add_argument("--tree", type = int, help = "decision tree classifier with the specified value as max depth", default = None)
-parser.add_argument("--svm", type = int, help = "support vector machine with rbf kernel and specified value as regularization param", default = None)
+parser.add_argument("--svm", type = str, help = "support vector machine with specified kernel: linear, polynomial, rbf, or sigmoid", default = None)
 
 # <--- Evaluation metrics --->
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
@@ -39,7 +39,7 @@ parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate usi
 parser.add_argument("-f1", "--f1_score", action = "store_true", help = "evaluate using F1 score")
 
 # <--- Param optimization --->
-#parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
+parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
 
 args = parser.parse_args()
 
@@ -47,7 +47,7 @@ args = parser.parse_args()
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
 
-#set_tracking_uri(args.log_folder)
+set_tracking_uri(args.log_folder)
 
 if args.import_file is not None:
     # import a pre-trained classifier
@@ -83,27 +83,39 @@ else:   # manually set up a classifier
         classifier.fit(data["features"], data["labels"])
     
     elif args.knn is not None:
+        # k nearest neighbour classifier
         print("    {0} nearest neighbor classifier".format(args.knn))
+        
         log_param("classifier", "knn")
         log_param("k", args.knn)
         params = {"classifier": "knn", "k": args.knn}
+        
         standardizer = StandardScaler()
         knn_classifier = KNeighborsClassifier(args.knn, n_jobs = -1)
         classifier = make_pipeline(standardizer, knn_classifier)
         
     elif args.tree is not None:
+        # decision tree classifier
         print("    decision tree with max depth of {0}".format(args.tree))
+        
         log_param("classifier", "tree")
         log_param("max_depth", args.tree)
         params = {"classifier": "tree", "max_depth": args.tree}
-        standardizer = StandardScaler()
-        decision_tree = DecisionTreeClassifier(max_depth = args.tree)
-        classifier = make_pipeline(standardizer, decision_tree)
+        
+        #standardizer = StandardScaler()
+        classifier = DecisionTreeClassifier(max_depth = args.tree)
+        #classifier = make_pipeline(standardizer, decision_tree)
     
     elif args.svm is not None:
-        print("    svm classifier,regularization param: {0}".format(args.svm))
+        # support vector machine
+        print("    svm classifier, kernel: {0}".format(args.svm))
+        
+        log_param("classifier", "svm")
+        log_param("kernel", args.svm)
+        params = {"classifier": "svm", "kernel": args.svm}
+        
         standardizer = StandardScaler()
-        svm_classifier = SVC(C = args.svm)
+        svm_classifier = SVC(kernel = args.svm)
         classifier = make_pipeline(standardizer, svm_classifier)
         
     classifier.fit(data["features"], data["labels"].ravel())
