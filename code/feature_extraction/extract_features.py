@@ -15,6 +15,7 @@ from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.month import MonthExtractor
 from code.feature_extraction.sentiment import SentimentAnalyzer
+from code.feature_extraction.photos import Photos
 from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH
 
 
@@ -29,6 +30,7 @@ parser.add_argument("-i", "--import_file", help = "import an existing pipeline f
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
 parser.add_argument("-m", "--month", action = "store_true", help = "extract month in which tweet was published")
 parser.add_argument("-s", "--sentiment", action = "store_true", help = "extracts compound sentiment from original tweet")
+parser.add_argument("-p", "--photos", action = "store_true", help = "extracts binary for whether tweet has photo(s) attached")
 
 args = parser.parse_args()
 
@@ -47,12 +49,18 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
+        
     if args.month:
         # month in which tweet was published
         features.append(MonthExtractor(COLUMN_MONTH))
+        
     if args.sentiment:
         # compound sentiment of tweet
         features.append(SentimentAnalyzer(COLUMN_TWEET))
+        
+    if args.photos:
+        # photos attached to original tweet
+        features.append(Photos(COLUMN_TWEET))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
