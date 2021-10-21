@@ -16,8 +16,7 @@ from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.month import MonthExtractor
 from code.feature_extraction.sentiment import SentimentAnalyzer
 from code.feature_extraction.photos import Photos
-from code.feature_extraction.mention import Mentions
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS
 
 
 # setting up CLI
@@ -32,7 +31,6 @@ parser.add_argument("-c", "--char_length", action = "store_true", help = "comput
 parser.add_argument("-m", "--month", action = "store_true", help = "extract month in which tweet was published")
 parser.add_argument("-s", "--sentiment", action = "store_true", help = "extracts compound sentiment from original tweet")
 parser.add_argument("-p", "--photos", action = "store_true", help = "extracts binary for whether tweet has photo(s) attached")
-parser.add_argument("-@", "--mention", action = "store_true", help = "extracts binary for whether someone has been mentioned by the tweet author")
 
 args = parser.parse_args()
 
@@ -63,10 +61,6 @@ else:    # need to create FeatureCollector manually
     if args.photos:
         # photos attached to original tweet
         features.append(Photos(COLUMN_PHOTOS))
-        
-    if args.mention:
-        # mentions contained in tweet
-        features.append(Mentions(COLUMN_MENTIONS))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
