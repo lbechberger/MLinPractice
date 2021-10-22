@@ -195,8 +195,13 @@ print("After transformation: ", embedded_transformed.shape, y.shape)
 print("Compare: ", X[0], embedded_transformed[0])
 
 
+###############################################################################
+#####################   Pickle ################################################
+###############################################################################
 
-
+#to see what changes were made to pickle files
+object = pd.read_pickle(r'C:/Users/Yannik/Desktop/Uni/Semester5/ml/MLinPractice/data/feature_extraction/training.pickle')
+print(object)
 
 
 
