@@ -8,6 +8,7 @@ Created on Wed Sep 29 12:36:01 2021
 @author: lbechberger
 """
 
+import pdb
 import numpy as np
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
@@ -44,13 +45,23 @@ class FeatureCollector(FeatureExtractor):
         all_feature_values = []
         
         for feature in self._features:
-            all_feature_values.append(feature.transform(df))
-        
-        result = np.concatenate(all_feature_values, axis = 1)
+            # loop over each dimension and append it:
+            for col in feature.transform(df).T:
+                all_feature_values.append(col)
+
+        result = np.array(all_feature_values).T
         return result
 
-    def get_feature_names(self):
+    def get_feature_names(self, df):
         feature_names = []
         for feature in self._features:
-            feature_names.append(feature.get_feature_name())
+            # pdb.set_trace()
+            dim = feature.transform(df).shape
+            # one dimension feature
+            if dim[1] == 1:
+                feature_names.append(feature.get_feature_name())
+            # multi dimension feature
+            else:
+                feature_names += [feature.get_feature_name() + "_{0}".format(ind + 1) for ind in range(dim[1])]
+
         return feature_names

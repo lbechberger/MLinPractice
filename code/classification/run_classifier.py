@@ -8,7 +8,10 @@ Created on Wed Sep 29 14:23:48 2021
 @author: lbechberger
 """
 
+import pdb
 import argparse
+import pandas as pd
+import numpy as np
 import pickle
 
 from sklearn.dummy import DummyClassifier
@@ -22,7 +25,12 @@ from sklearn.svm import LinearSVC, SVC
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from sklearn.metrics import accuracy_score, cohen_kappa_score, balanced_accuracy_score
+from sklearn.metrics import (
+    accuracy_score,
+    cohen_kappa_score,
+    balanced_accuracy_score,
+    classification_report,
+)
 
 
 def load_args():
@@ -55,7 +63,7 @@ def load_args():
         "-f", "--frequency", action="store_true", help="label frequency classifier"
     )
     parser.add_argument("-v", "--svm", action="store_true", help="SVM classifier")
-    parser.add_argument("--sgd", action="store_true", help="SGD classifier")
+    parser.add_argument("--SGDClassifier", action="store_true", help="SGD classifier")
     parser.add_argument(
         "--LogisticRegression", action="store_true", help="LogisticRegression"
     )
@@ -94,8 +102,6 @@ def load_args():
         help="arg for classifier, use balanced data",
     )
 
-    import pdb
-
     args = parser.parse_args()
     return args
 
@@ -114,6 +120,11 @@ def load_dataset(args):
         # go through data and limit it
         for key, value in data.items():
             data[key] = value[:limit]
+
+    # filter out nan for classifier
+    # import pdb
+    # pdb.set_trace()
+    data["features"] = np.nan_to_num(data["features"])
     return data
 
 
@@ -149,7 +160,7 @@ def create_classifier(args, data):
             standardizer = StandardScaler()
             knn_classifier = KNeighborsClassifier(args.knn, n_jobs=-1)
             classifier = make_pipeline(standardizer, knn_classifier)
-        elif args.sgd:
+        elif args.SGDClassifier:
             print("    SGDClassifier")
             standardizer = StandardScaler()
             classifier = make_pipeline(
@@ -169,10 +180,12 @@ def create_classifier(args, data):
         elif args.LinearSVC:
             print("    LinearSVC")
             classifier = LinearSVC(
-                class_weight=balanced, random_state=args.seed, verbose=1
+                class_weight=balanced, random_state=args.seed, verbose=1, max_iter=10000
             )
 
         try:
+
+            #pdb.set_trace()
             classifier.fit(data["features"], data["labels"].ravel())
         except:
             raise UnboundLocalError("Import an classifier or choose one.")
@@ -195,12 +208,15 @@ def evaluate_classifier(args, data, prediction):
 
     if args.classification_report:
         categories = ["Flop", "Viral"]
-        print(classification_report(
-            data["labels"], prediction, target_names=categories))
+        print(
+            classification_report(data["labels"], prediction, target_names=categories)
+        )
+
 
 def export_classifier(args, classifier):
     # export the trained classifier if the user wants us to do so
     if args.export_file is not None:
+        #pdb.set_trace()
         with open(args.export_file, "wb") as f_out:
             pickle.dump(classifier, f_out)
 
@@ -212,6 +228,7 @@ if __name__ == "__main__":
 
     classifier = create_classifier(args, data)
     # now classify the given data
+    #pdb.set_trace()
     prediction = classifier.predict(data["features"])
 
     evaluate_classifier(args, data, prediction)

@@ -63,6 +63,8 @@ else:    # need to create FeatureCollector manually
         features.append(CharacterLength(COLUMN_PREPROCESS))
     if args.hash_vec:
         # hash of original tweet (without any changes)
+        #import pdb
+        #pdb.set_trace()
         features.append(HashVector(COLUMN_TWEET))
     if args.hashtags:
         # number of hashtags per tweet
@@ -103,8 +105,10 @@ label_array = label_array.reshape(-1, 1)
 
 # store the results
 results = {"features": feature_array, "labels": label_array,
-           "feature_names": feature_collector.get_feature_names()}
+           "feature_names": feature_collector.get_feature_names(df)}
 
+# replace 'NaN' in features
+results["features"] = np.nan_to_num(results["features"])
 
 with open(args.output_file, 'wb') as f_out:
     pickle.dump(results, f_out)
@@ -114,7 +118,7 @@ if args.export_file is not None:
     with open(args.export_file, 'wb') as f_out:
         pickle.dump(feature_collector, f_out)
 
-df_out = pd.DataFrame(feature_array, columns=feature_collector.get_feature_names())
+df_out = pd.DataFrame(feature_array, columns=feature_collector.get_feature_names(df))
 df_out.to_csv("data/feature_extraction/features.csv")
 
 # results.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
