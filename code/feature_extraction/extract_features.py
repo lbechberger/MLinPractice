@@ -21,7 +21,8 @@ from code.feature_extraction.retweets import RetweetExtractor
 from code.feature_extraction.url import URL
 from code.feature_extraction.replies import RepliesExtractor
 from code.feature_extraction.hashtags import Hashtags
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL, COLUMN_RETWEETS, COLUMN_REPLIES, COLUMN_HASHTAG
+from code.feature_extraction.likes import Likes
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL, COLUMN_RETWEETS, COLUMN_REPLIES, COLUMN_HASHTAG, COLUMN_LIKES
 
 
 # setting up CLI
@@ -38,9 +39,10 @@ parser.add_argument("-s", "--sentiment", action = "store_true", help = "extracts
 parser.add_argument("-p", "--photos", action = "store_true", help = "extracts binary for whether tweet has photo(s) attached")
 parser.add_argument("-@", "--mention", action = "store_true", help = "extracts binary for whether someone has been mentioned by the tweet author")
 parser.add_argument("-u", "--url", action = "store_true", help = "extracts binary for whether a url is attached to tweet")
-parser.add_argument("-r", "--retweet", action = "store_true", help = "extracts number of retweets")
-parser.add_argument("-k", "--replies", action = "store_true", help = "extracts number of replies")
-parser.add_argument("-o", "--hashtag", action = "store_true", help = "extracts binary for whether a hashtag is attached to tweet")
+parser.add_argument("-rt", "--retweet", action = "store_true", help = "extracts number of retweets")
+parser.add_argument("-re", "--replies", action = "store_true", help = "extracts number of replies")
+parser.add_argument("-#", "--hashtag", action = "store_true", help = "extracts binary for whether a hashtag is attached to tweet")
+parser.add_argument("-l", "--likes", action = "store_true", help = "extracts amount of likes from a tweet")
 
 args = parser.parse_args()
 
@@ -91,6 +93,10 @@ else:    # need to create FeatureCollector manually
     if args.hashtag:
         # number of replies
         features.append(Hashtags(COLUMN_HASHTAG))
+        
+    if args.likes:
+        # number of likes
+        features.append(Likes(COLUMN_LIKES))
         
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
