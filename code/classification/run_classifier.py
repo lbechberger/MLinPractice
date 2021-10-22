@@ -124,7 +124,7 @@ def load_dataset(args):
     # filter out nan for classifier
     # import pdb
     # pdb.set_trace()
-    data["features"] = np.nan_to_num(data["features"])
+    #data["features"] = np.nan_to_num(data["features"])
     return data
 
 
@@ -163,12 +163,9 @@ def create_classifier(args, data):
         elif args.SGDClassifier:
             print("    SGDClassifier")
             standardizer = StandardScaler()
-            classifier = make_pipeline(
-                standardizer,
-                SGDClassifier(
+            classifier = SGDClassifier(
                     class_weight=balanced, random_state=args.seed, n_jobs=-1, verbose=1
-                ),
-            )
+                )
         elif args.MultinomialNB:
             print("    MultinomialNB")
             classifier = MultinomialNB(random_state=args.seed)

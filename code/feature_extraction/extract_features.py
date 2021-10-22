@@ -38,7 +38,6 @@ parser.add_argument("--hash_vec", action="store_true", help="compute the hash ve
 parser.add_argument("--tfidf_vec", action="store_true", help="compute the tf idf of the tweet")
 parser.add_argument("--photo_bool", action="store_true", help="tells whether the tweet contains photos or not")
 parser.add_argument("--video_bool", action="store_true", help="tells whether the tweet contains a video or not")
-parser.add_argument("--replies_count", action="store_true", help="compute the amount of replies of the tweet")
 parser.add_argument("--word2vec", action="store_true", help="compute the semantic distance of words to given keywords")
 parser.add_argument("--time", action="store_true", help="take into account what hour the tweet was sent")
 parser.add_argument("--emoji_count", action="store_true", help="count the emojis in a tweet")
@@ -60,31 +59,37 @@ else:    # need to create FeatureCollector manually
     # collect all feature extractors
     features = []
     if args.char_length:
+        print("Add char_length feature")
         features.append(CharacterLength(COLUMN_PREPROCESS))
     if args.hash_vec:
         # hash of original tweet (without any changes)
         #import pdb
         #pdb.set_trace()
+        print("Add hash_vec feature")
         features.append(HashVector(COLUMN_TWEET))
     if args.hashtags:
+        print("Add hashtags feature")
         # number of hashtags per tweet
         features.append(HashtagCount('hashtags'))
     if args.tfidf_vec:
+        print("Add tfidf_vec feature")
         features.append(TfidfVector(COLUMN_PREPROCESS))
     if args.emoji_count:
+        print("Add emoji_count feature")
         features.append(EmojiCount('tweet'))
     if args.photo_bool:
+        print("Add photo_bool feature")
         # do photos exist or not
         features.append(PhotoBool(COLUMN_PHOTOS))
     if args.video_bool:
+        print("Add video_bool feature")
         # does a video exist or not
         features.append(VideoBool(COLUMN_VIDEO))
-    if args.replies_count:
-        # how many replies does the tweet have
-        features.append(RepliesCount(COLUMN_REPLIES))
     if args.word2vec:
+        print("Add word2vec feature")
         features.append(Word2Vec('preprocess_col_tokenized'))
     if args.time:
+        print("Add time feature")
         # how many replies does the tweet have
         features.append(Hours('time'))
 
@@ -97,15 +102,18 @@ else:    # need to create FeatureCollector manually
 
 # apply the given FeatureCollector on the current data set
 # maps the pandas DataFrame to an numpy array
+
 feature_array = feature_collector.transform(df)
 
 # get label array
 label_array = np.array(df[COLUMN_LABEL])
 label_array = label_array.reshape(-1, 1)
 
+feature_names = feature_collector.get_feature_names(df)
 # store the results
+print("store the results")
 results = {"features": feature_array, "labels": label_array,
-           "feature_names": feature_collector.get_feature_names(df)}
+           "feature_names": feature_names}
 
 # replace 'NaN' in features
 results["features"] = np.nan_to_num(results["features"])
@@ -118,7 +126,7 @@ if args.export_file is not None:
     with open(args.export_file, 'wb') as f_out:
         pickle.dump(feature_collector, f_out)
 
-df_out = pd.DataFrame(feature_array, columns=feature_collector.get_feature_names(df))
+df_out = pd.DataFrame(feature_array, columns=feature_names)
 df_out.to_csv("data/feature_extraction/features.csv")
 
 # results.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")
