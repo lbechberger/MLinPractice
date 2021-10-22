@@ -70,7 +70,7 @@ else:    # need to create FeatureCollector manually
     if args.tfidf_vec:
         features.append(TfidfVector(COLUMN_PREPROCESS))
     if args.emoji_count:
-        features.append(EmojiCount('tweet'))
+        features.append(EmojiCount(COLUMN_TWEET))
     if args.photo_bool:
         # do photos exist or not
         features.append(PhotoBool(COLUMN_PHOTOS))
