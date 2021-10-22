@@ -15,6 +15,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import make_pipeline
 from mlflow import log_metric, log_param, set_tracking_uri
 
@@ -32,6 +33,7 @@ parser.add_argument("-u", "--uniform", action = "store_true", help = "uniform (r
 parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
 parser.add_argument("--tree", type = int, help = "decision tree classifier with the specified value as max depth", default = None)
 parser.add_argument("--svm", type = str, help = "support vector machine with specified kernel: linear, polynomial, rbf, or sigmoid", default = None)
+parser.add_argument("--randforest", type = int, help = "random forest classifier with specified value as # of trees in forest", default = None)
 
 # <--- Evaluation metrics --->
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
@@ -117,6 +119,18 @@ else:   # manually set up a classifier
         standardizer = StandardScaler()
         svm_classifier = SVC(kernel = args.svm)
         classifier = make_pipeline(standardizer, svm_classifier)
+        
+    elif args.randforest is not None:
+        # random forest classifier
+        print("    random forest classifier with {0} trees".format(args.randforest))
+        
+        log_param("classifier", "random forest")
+        log_param("nr trees", args.randforest)
+        params = {"classifier": "random forest", "nr trees": args.randforest}
+        
+        standardizer = StandardScaler()
+        randforest_classifier = RandomForestClassifier(n_estimators = args.randforest, n_jobs = -1)
+        classifier = make_pipeline(standardizer, randforest_classifier)
         
     classifier.fit(data["features"], data["labels"].ravel())
     log_param("dataset", "training")
