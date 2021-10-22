@@ -3,7 +3,7 @@
 """
 Created on Thu Oct  7 14:30:41 2021
 
-@author: ml
+@author: rfarah
 """
 
 import unittest
@@ -47,9 +47,9 @@ class TokenizerTest(unittest.TestCase):
         for i in range(3):
             self.assertEqual(tokenized[self.OUTPUT_COLUMN][i], output_text[i])
 
-    def test_tokenization_several_sentences_with_urls_hashtags_mentions(self):
-        input_text = ["This is an example sentence https://www.atlassian.com/git/tutorials/using-branches",
-                      "I want for my tweet to go viral @twitter", "Can we talk about global warming? #hashtag"]
+    def test_tokenization_several_sentences_with_urls_hashtags_mentions_numberes(self):
+        input_text = ["This is an example sentence (7/7) https://www.atlassian.com/git/tutorials/using-branches",
+                      "I want for my tweet to go viral 100% @twitter", "Can we talk about global warming? #hashtag"]
         output_text = [['this', 'is', 'an', 'example', 'sentence'], ["i", "want", "for", "my", "tweet", "to", "go", "viral"],
                        ["can", "we", 'talk', 'about', 'global', 'warming']]
 

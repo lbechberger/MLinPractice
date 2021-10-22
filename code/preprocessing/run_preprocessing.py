@@ -11,10 +11,11 @@ Created on Tue Sep 28 16:43:18 2021
 import argparse, csv, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
+from code.preprocessing.lemmatizer import Lemmatizer
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.stopwords_remover import StopwordsRemover
 from code.preprocessing.tokenizer import Tokenizer
-from code.util import COLUMN_TWEET, COLUMN_TOKENIZED, COLUMN_PUNCTUATION, COLUMN_STOPWORDS, COLUMN_LANGUAGE
+from code.util import COLUMN_TWEET, COLUMN_TOKENIZED, COLUMN_PUNCTUATION, COLUMN_STOPWORDS, COLUMN_LANGUAGE, COLUMN_LEMMATIZED
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -22,10 +23,12 @@ parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
 parser.add_argument("--tokenize_input", help = "input column to tokenize", default = COLUMN_TWEET)
-parser.add_argument("-p", "--punctuation_remover", action = "store_true", help = "remove punctuation")
-parser.add_argument("--punctuation_remover_input", help = "input column to stopword_remover", default = COLUMN_TOKENIZED)
-parser.add_argument("-sw", "--stopwords_remover", action = "store_true", help = "remove stopwords from the given column")
-parser.add_argument("--stopwords_remover_input", help = "input column to stopword_remover", default = [COLUMN_PUNCTUATION, COLUMN_LANGUAGE])
+parser.add_argument("-p", "--punctuation_removing", action = "store_true", help = "remove punctuation")
+parser.add_argument("--punctuation_removing_input", help = "input column to stopword_remover", default = COLUMN_TOKENIZED)
+parser.add_argument("-sw", "--stopwords_removing", action = "store_true", help = "remove stopwords from the given column")
+parser.add_argument("--stopwords_removing_input", help = "input column to stopword_remover", default = [COLUMN_PUNCTUATION, COLUMN_LANGUAGE])
+parser.add_argument("-l", "--lemmatize", action = "store_true", help = "extract the lemmas from the given column")
+parser.add_argument("--lemmatize_input", help = "input column to lemmatizer", default = COLUMN_STOPWORDS)
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 args = parser.parse_args()
 
@@ -36,10 +39,12 @@ df = pd.read_csv(args.input_file, low_memory=False, quoting = csv.QUOTE_NONNUMER
 preprocessors = []
 if args.tokenize:
     preprocessors.append(Tokenizer(args.tokenize_input, COLUMN_TOKENIZED))
-if args.punctuation_remover:
-    preprocessors.append(PunctuationRemover(args.punctuation_remover_input, COLUMN_PUNCTUATION))
-if args.stopwords_remover:
-    preprocessors.append(StopwordsRemover(args.stopwords_remover_input, COLUMN_STOPWORDS))
+if args.punctuation_removing:
+    preprocessors.append(PunctuationRemover(args.punctuation_removing_input, COLUMN_PUNCTUATION))
+if args.stopwords_removing:
+    preprocessors.append(StopwordsRemover(args.stopwords_removing_input, COLUMN_STOPWORDS))
+if args.lemmatize:
+    preprocessors.append(Lemmatizer(args.lemmatize_input, COLUMN_LEMMATIZED))
 
 # call all preprocessing steps
 for preprocessor in preprocessors:

@@ -13,6 +13,7 @@ COLUMN_TWEET = "tweet"
 COLUMN_LANGUAGE = "language"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
+COLUMN_LEMMATIZED = "lemmatized"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
