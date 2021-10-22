@@ -36,7 +36,7 @@ def main():
 
         if args.mutual_information is not None:
             # select K best based on Mutual Information
-            dim_red = SelectKBest(mutual_info_classif, k = args.mutual_information)
+            dim_red = SelectKBest(mutual_info_classif, k="all") # k = args.mutual_information)
             dim_red.fit(features, labels.ravel())
             
             # resulting feature names based on support given by SelectKBest
@@ -57,6 +57,8 @@ def main():
 
     # apply the dimensionality reduction to the given features
     reduced_features = dim_red.transform(features)
+
+    # print("reduced_features \n --- \n ", reduced_features)
 
     # store the results
     output_data = {"features": reduced_features, 
