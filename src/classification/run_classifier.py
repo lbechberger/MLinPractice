@@ -11,6 +11,7 @@ from typing import Any, Callable, List, Tuple
 from sklearn.dummy import DummyClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import make_pipeline
 from mlflow import log_metric, log_param, set_tracking_uri
 
@@ -30,10 +31,14 @@ def main():
     parser.add_argument("-s", '--seed', type = int, help = "seed for the random number generator", default = None)
     parser.add_argument("-e", "--export_file", help = "export the trained classifier to the given location", default = None)
     parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
-    parser.add_argument("-d", '--dummyclassifier', choices=['most_frequent', 'stratified'])
+
+    parser.add_argument("-d", '--dummyclassifier', choices=["most_frequent", "stratified"], default=None)
     parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
-    metrics_choices = ['none', 'all', METR_ACC, METR_KAPPA, METR_PREC, METR_REC, METR_F1, METR_JAC]
-    parser.add_argument("-m", '--metrics', choices=metrics_choices,  default='none')
+    parser.add_argument("-r", "--randomforest", type = int, help = "Random Forest classifier with the specified number of estimators (trees)", default = None)
+    
+    metrics_choices = ["none", "all", METR_ACC, METR_KAPPA, METR_PREC, METR_REC, METR_F1, METR_JAC]
+    parser.add_argument("-m", "--metrics", choices=metrics_choices,  default="none")
+
     parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
     args = parser.parse_args()
 
@@ -57,20 +62,27 @@ def main():
 
     else:   
         # manually set up a classifier        
-        if args.classifier == "most_frequent":
+        if args.dummyclassifier == "most_frequent":
             # majority vote classifier
             print("    always most_frequent label (Dummy Classifier)")
             log_param("classifier", "most_frequent")
             params = {"classifier": "most_frequent"}
             classifier = DummyClassifier(strategy = "most_frequent", random_state = args.seed)
 
-        elif args.classifier == "stratified":
+        elif args.dummyclassifier == "stratified":
             # label frequency classifier
             print("    label frequency classifier")
             log_param("classifier", "stratified")
             params = {"classifier": "stratified"}
             classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
-            
+        
+        elif args.randomforest is not None:
+            print("    random forest classifier")
+            log_param("classifier", "randomforest")
+            log_param("n", args.randomforest)
+            params = {"classifier": "randomforest", "n": args.randomforest}
+            classifier = RandomForestClassifier(n_estimators = args.randomforest, random_state = args.seed)
+
         elif args.knn is not None:
             print("    {0} nearest neighbor classifier".format(args.knn))
             log_param("classifier", "knn")
