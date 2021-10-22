@@ -42,7 +42,7 @@ class Word2Vec(FeatureExtractor):
                     except KeyError:
                         pass
             # similarities.append(max(sim)-np.std(sim))
-            similarities.append(np.mean(sim)) # try median
+            similarities.append(round(np.mean(sim),4)) # try median
     
         result = np.asarray(similarities)
         result = result.reshape(-1,1)
