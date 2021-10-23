@@ -202,8 +202,32 @@ print("Compare: ", X[0], embedded_transformed[0])
 #to see what changes were made to pickle files
 object = pd.read_pickle(r'C:/Users/Yannik/Desktop/Uni/Semester5/ml/MLinPractice/data/feature_extraction/training.pickle')
 print(object)
+ 
+###############################################################################
+#####################   other testing #########################################
+###############################################################################
 
-
+count = 0 
+count2 = 0
+data = df["created_at"]
+for i in data:
+    a = i.split(" ")
+    count2 = count2 + 1
+    if a[-1] == "IST":
+        count = count +1 
+print(count)
+print(count2)
+    
+count3 = 0 
+count4 = 0
+data = df["language"]
+for i in data:
+    a = i.split(" ")
+    count4 = count4 + 1
+    if a[-1] == "en":
+        count3 = count3 +1 
+print(count3)
+print(count4)
 
 
 
