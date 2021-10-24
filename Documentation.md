@@ -172,6 +172,7 @@ Hour of tweet
 
 The last feature about the tweet metadata is about the posting time of the tweet. We wanted to know if there was a difference in the posting times in viral and non-viral tweets. The following two graphs represent the tweet frequency per hour of posting. 
 
+![Test](/Documentation/time_non_viral.png)
 [2] Hour frequency of non-viral tweets [0-24]
 
 [3] Hour frequency of viral tweets [0-24]
