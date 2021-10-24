@@ -24,11 +24,9 @@ We knew that tweets can sometimes use extensive punctuation, which would be a pr
 
 Example: 
 
-Input: 
-` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp `
-
-Output: 
-` Red Black tree AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops Data Science roles 😏 httptcoQrKYJpiiVp` 
+Input: | `Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp `
+Output: |
+`Red Black tree AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops Data Science roles 😏 httptcoQrKYJpiiVp` 
 
 
 2. Removing stopwords
