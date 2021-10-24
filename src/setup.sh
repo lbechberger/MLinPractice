@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "loading data"
 code/load_data.sh
 
