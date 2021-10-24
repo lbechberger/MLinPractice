@@ -11,7 +11,7 @@ from sklearn.pipeline import make_pipeline
 from src.preprocessing.preprocessors.column_dropper import ColumnDropper
 from src.preprocessing.preprocessors.non_english_remover import NonEnglishRemover
 from src.preprocessing.punctuation_remover import PunctuationRemover
-from Src.preprocessing.tweet_clean import TweetClean
+from src.preprocessing.tweet_clean import TweetClean
 from src.preprocessing.tokenizer import Tokenizer
 from src.util import COLUMN_TWEET, SUFFIX_TOKENIZED
 
@@ -40,7 +40,7 @@ def main():
     preprocessors = []
     if args.punctuation:
         preprocessors.append(PunctuationRemover())
-        preprocessors.append(TweetClean())
+        preprocessors.append(TweetClean("tweet", "tweet_clean"))
     if args.tokenize:
         preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
     if args.other:   
