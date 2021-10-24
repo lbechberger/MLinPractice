@@ -49,7 +49,7 @@ The overall pipeline can be executed with the script `code/pipeline.sh`, which e
 For running unit tests use the following line of code:
 
 ```shell
-python -m unittest discover -s code -p '*_test.py'
+python -m unittest discover -s src -p '*_test.py'
 ```
 
 ## Preprocessing
