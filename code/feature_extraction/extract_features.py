@@ -101,7 +101,7 @@ else:    # need to create FeatureCollector manually
         features.append(Likes(COLUMN_LIKES))
         
     if args.daytime:
-        # number of likes
+        # time range
         features.append(Daytime(COLUMN_TIME))
         
     # create overall FeatureCollector
