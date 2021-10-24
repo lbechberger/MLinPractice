@@ -48,6 +48,10 @@ if args.tokenize:
 # if args.language is not None:
 #   preprocessors.append(LanguageRemover())
 
+
+
+len_before = df[COLUMN_TWEET].str.len().sum()
+
 if args.language is not None:
     # filter out one language
     before = len(df)
@@ -59,6 +63,11 @@ if args.language is not None:
 # call all preprocessing steps
 for preprocessor in tqdm(preprocessors):
     df = preprocessor.fit_transform(df)
+
+len_after = df[COLUMN_PREPROCESS].str.len().sum()
+print("Number of chars before preprocessing: {}".format(len_before))
+print("Number of chars after preprocessing: {}".format(len_after))
+print("Removed: {0} ({1}%)".format(len_before - len_after , (len_before - len_after) * 100 /len_before))
 
 # drop useless line which makes problems with csv
 del df['trans_dest\r']

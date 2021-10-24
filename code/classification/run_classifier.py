@@ -92,6 +92,11 @@ def load_args():
         action="store_true",
         help="evaluate using classification_report",
     )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="print information during training",
+    )
 
     parser.add_argument(
         "--small", type=int, help="not use all data but just subset", default=None
@@ -132,7 +137,7 @@ def create_classifier(args, data):
     """Load or create a classifier with given args and sklearn methods."""
     # use balanced data in classifier
     balanced = "balanced" if args.balanced_data_set else None
-
+    verbose = True if args.verbose else False
     if args.import_file is not None:
         # import a pre-trained classifier
         with open(args.import_file, "rb") as f_in:
@@ -142,18 +147,15 @@ def create_classifier(args, data):
 
         if args.majority:
             # majority vote classifier
-            print("    majority vote classifier")
             classifier = DummyClassifier(
                 strategy="most_frequent", random_state=args.seed
             )
         elif args.frequency:
             # label frequency classifier
-            print("    label frequency classifier")
             classifier = DummyClassifier(strategy="stratified", random_state=args.seed)
         elif args.svm:
-            print("    SVC classifier")
             classifier = make_pipeline(
-                StandardScaler(), SVC(probability=True, verbose=1)
+                StandardScaler(), SVC(probability=True, verbose=verbose)
             )
         elif args.knn is not None:
             print("    {0} nearest neighbor classifier".format(args.knn))
@@ -161,23 +163,20 @@ def create_classifier(args, data):
             knn_classifier = KNeighborsClassifier(args.knn, n_jobs=-1)
             classifier = make_pipeline(standardizer, knn_classifier)
         elif args.SGDClassifier:
-            print("    SGDClassifier")
-            standardizer = StandardScaler()
+            #standardizer = StandardScaler()
             classifier = SGDClassifier(
-                    class_weight=balanced, random_state=args.seed, n_jobs=-1, verbose=1
+                    class_weight=balanced, random_state=args.seed, n_jobs=-1, verbose=verbose
                 )
         elif args.MultinomialNB:
-            print("    MultinomialNB")
             classifier = MultinomialNB(random_state=args.seed)
         elif args.LogisticRegression:
-            print("    LogisticRegression")
+            standardizer = StandardScaler()
             classifier = LogisticRegression(
-                class_weight=balanced, n_jobs=-1, random_state=args.seed, verbose=1
+                class_weight=balanced, n_jobs=-1, random_state=args.seed, verbose=verbose#, max_iter=1000
             )
         elif args.LinearSVC:
-            print("    LinearSVC")
             classifier = LinearSVC(
-                class_weight=balanced, random_state=args.seed, verbose=1, max_iter=10000
+                class_weight=balanced, random_state=args.seed, verbose=verbose
             )
 
         try:
@@ -210,6 +209,7 @@ def evaluate_classifier(args, data, prediction):
         )
 
 
+
 def export_classifier(args, classifier):
     # export the trained classifier if the user wants us to do so
     if args.export_file is not None:
@@ -227,7 +227,7 @@ if __name__ == "__main__":
     # now classify the given data
     #pdb.set_trace()
     prediction = classifier.predict(data["features"])
-
     evaluate_classifier(args, data, prediction)
 
     export_classifier(args, classifier)
+    
