@@ -29,19 +29,19 @@ class Daytime(FeatureExtractor):
             hour = int(time[0])
             
             # night hours
-            if hour in range(0, 6):
+            if hour in range(0, 4):
                 daytime.append(0)
             
             # morning hours
-            if hour in range(6, 11):
+            if hour in range(5, 9):
                 daytime.append(1)
                 
             # midday
-            if hour in range(11, 15):
+            if hour in range(10, 14):
                 daytime.append(2)
                 
             # afternoon
-            if hour in range(15, 19):
+            if hour in range(15, 18):
                 daytime.append(3)
                 
             # evening hours
