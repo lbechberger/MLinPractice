@@ -10,7 +10,7 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score
+from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, balanced_accuracy_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -39,6 +39,7 @@ parser.add_argument("--randforest", type = int, help = "random forest classifier
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 parser.add_argument("-f1", "--f1_score", action = "store_true", help = "evaluate using F1 score")
+parser.add_argument("-ba", "--balanced_accuracy", action = "store_true", help = "evaluate using balanced accuracy score")
 
 # <--- Param optimization --->
 parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
@@ -146,6 +147,8 @@ if args.kappa:
     evaluation_metrics.append(("Cohen_kappa", cohen_kappa_score))
 if args.f1_score:
     evaluation_metrics.append(("F1_score", f1_score))
+if args.balanced_accuracy:
+    evaluation_metrics.append(("balanced_accuracy", balanced_accuracy_score))
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:
