@@ -18,7 +18,7 @@ Since we found it interesting from the start to use some NLP features like the s
 
 To achieve to only keep the core words of a tweet, we used the following data cleaning methods: 
 
-*1. Removing punctuation and digits*
+1. *Removing punctuation and digits*
 
 We knew that tweets can sometimes use extensive punctuation, which would be a problem for later features and/or the tokenizer, since it detects punctuation as a token too. We chose to remove any written digits as well to only keep strings. With the help of the ```string``` package, we filtered out most punctuation and digits, namely: ```['!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~0123456789] ``` . But we also had to add some other special characters that the package did not pick up, and were still being present after the cleaning: ``` [’—”“↓'] ``` . 
 
