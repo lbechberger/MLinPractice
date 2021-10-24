@@ -1,5 +1,6 @@
 import argparse
-import pdb
+
+# import pdb
 import csv
 import pickle
 
@@ -13,7 +14,12 @@ from sklearn.feature_extraction.text import (
 )
 
 # feature_selection
-from sklearn.feature_selection import SelectKBest, mutual_info_classif, chi2, mutual_info_regression
+from sklearn.feature_selection import (
+    SelectKBest,
+    mutual_info_classif,
+    chi2,
+    mutual_info_regression,
+)
 
 # dim_reduction
 from sklearn.decomposition import PCA, TruncatedSVD, NMF
@@ -40,14 +46,15 @@ from sklearn.metrics import (
 
 import pandas as pd
 import numpy as np
-import seaborn as sns
 
+"""
 # balancing
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
+from collections import Counter
+"""
 from sklearn.model_selection import train_test_split
 
-from collections import Counter
 
 parser = argparse.ArgumentParser(description="all in one")
 parser.add_argument("input_file", help="path to the input file")
@@ -94,11 +101,6 @@ parser.add_argument(
     "--verbose", action="store_true", help="print information during training",
 )
 args = parser.parse_args()
-# args, unk = parser.parse_known_args()
-
-# load data
-# with open(args.input_file, 'rb') as f_in:
-#    data = pickle.load(f_in)
 
 # load data
 df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC, lineterminator="\n")
@@ -110,14 +112,16 @@ if args.small is not None:
     df = df.head(limit)
 
 # split data
-# input_col = 'preprocess_col'
-# X = df[input_col].array.reshape(-1, 1)
-# y = df["label"].ravel()
-
 X_train, X_test, y_train, y_test = train_test_split(
     df, df["label"], test_size=0.1, random_state=42
 )
+
+# print information during training
 verbose = True if args.verbose else False
+
+# use this code if you want to balance your dataset via under or over sampling
+# you may have to modify it for your custom dataset.
+# We don't need it here, because sklearn can do it in the classifier directly.
 """
 # balance data
 if args.balance == 'over_sampler':
@@ -134,18 +138,24 @@ print(f"Training target statistics: {Counter(y_res)}")
 print(f"Testing target statistics: {Counter(y_test)}")
 """
 
+
 my_pipeline = []
+
+# write functions for each column extraction to call it later in the pipeline
 get_text_data = FunctionTransformer(lambda x: x["preprocess_col"], validate=False)
 get_numeric_data = FunctionTransformer(
     lambda x: x["video"].values.reshape(-1, 1), validate=False
-)  # array.reshape(-1,1) #'replies_count'
+)
+# calculate the length of a tweet
 get_char_len = FunctionTransformer(
     lambda x: x["tweet"].str.len().values.reshape(-1, 1), validate=False
 )
+# exists a photo in a tweet?
 get_photo_bool = FunctionTransformer(
     lambda x: (x["photos"].str.len() > 2).values.reshape(-1, 1), validate=False
 )
 
+# at which hour was the post?
 get_hour = FunctionTransformer(
     lambda x: pd.to_datetime(x["time"], format="%H:%M:%S").dt.hour.values.reshape(
         -1, 1
@@ -178,7 +188,7 @@ elif args.feature_extraction == "TfidfVectorizer":
     )
 
 elif args.feature_extraction == "union":
-    # using more than just text data as features:
+    # using more than just text data as features
     my_pipeline.append(
         (
             "features",
@@ -200,7 +210,7 @@ elif args.feature_extraction == "union":
                                         strip_accents="ascii",
                                         stop_words="english",
                                         ngram_range=(1, 3),
-                                    ),
+                                    ),  # change this to TfidfVectorizer if you want
                                 ),
                             ]
                         ),
@@ -212,8 +222,7 @@ elif args.feature_extraction == "union":
     )
 
 
-
-# dimension reduction
+# dimension reduction - not recommended here
 if args.dim_red == "SelectKBest(chi2)":
     my_pipeline.append(("dim_red", SelectKBest(chi2)))
 elif args.dim_red == "SelectKBest(mutual_info_regression)":
@@ -224,6 +233,7 @@ elif args.dim_red == "NMF":
 
 # classifier
 if args.classifier == "MultinomialNB":
+    # just use this without negative features
     my_pipeline.append(("MNB", MultinomialNB()))
 elif args.classifier == "SGDClassifier":
     my_pipeline.append(
@@ -239,7 +249,11 @@ elif args.classifier == "LogisticRegression":
         (
             "LogisticRegression",
             LogisticRegression(
-                class_weight="balanced", n_jobs=-1, random_state=42, verbose=verbose #, max_iter = 10000
+                class_weight="balanced",
+                n_jobs=-1,
+                random_state=42,
+                verbose=verbose,
+                max_iter=1000,
             ),
         )
     )
@@ -248,7 +262,7 @@ elif args.classifier == "LinearSVC":
         (
             "LinearSVC",
             LinearSVC(
-                class_weight="balanced", random_state=42, verbose=verbose, #max_iter=10000
+                class_weight="balanced", random_state=42, verbose=verbose, max_iter=1000
             ),
         )
     )
@@ -261,12 +275,11 @@ elif args.classifier == "SVC":
 
 classifier = Pipeline(my_pipeline)
 
-# import pdb
-# pdb.set_trace()
+# start training
 classifier.fit(X_train, y_train)
 
 
-# now classify the given data
+# now predict the given data
 prediction = classifier.predict(X_test)
 
 prediction_train_set = classifier.predict(X_train)
@@ -285,6 +298,7 @@ for metric_name, metric in evaluation_metrics:
 
     print("    {0}: {1}".format(metric_name, metric(y_test, prediction)))
 
+# report table with recall, precision, and f1 score
 if args.classification_report:
     categories = ["Flop", "Viral"]
     print("Matrix Train set:")
@@ -294,6 +308,7 @@ if args.classification_report:
 
 
 # export the trained classifier if the user wants us to do so
-# if args.export_file is not None:
-#    with open(args.export_file, 'wb') as f_out:
-#        pickle.dump(classifier, f_out)
+if args.export_file is not None:
+    with open(args.export_file, "wb") as f_out:
+        pickle.dump(classifier, f_out)
+

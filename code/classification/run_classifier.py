@@ -126,10 +126,6 @@ def load_dataset(args):
         for key, value in data.items():
             data[key] = value[:limit]
 
-    # filter out nan for classifier
-    # import pdb
-    # pdb.set_trace()
-    #data["features"] = np.nan_to_num(data["features"])
     return data
 
 
@@ -163,7 +159,7 @@ def create_classifier(args, data):
             knn_classifier = KNeighborsClassifier(args.knn, n_jobs=-1)
             classifier = make_pipeline(standardizer, knn_classifier)
         elif args.SGDClassifier:
-            #standardizer = StandardScaler()
+            # standardizer = StandardScaler()
             classifier = SGDClassifier(
                     class_weight=balanced, random_state=args.seed, n_jobs=-1, verbose=verbose
                 )
@@ -180,8 +176,6 @@ def create_classifier(args, data):
             )
 
         try:
-
-            #pdb.set_trace()
             classifier.fit(data["features"], data["labels"].ravel())
         except:
             raise UnboundLocalError("Import an classifier or choose one.")
@@ -225,7 +219,6 @@ if __name__ == "__main__":
 
     classifier = create_classifier(args, data)
     # now classify the given data
-    #pdb.set_trace()
     prediction = classifier.predict(data["features"])
     evaluate_classifier(args, data, prediction)
 
