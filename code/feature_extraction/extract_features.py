@@ -21,7 +21,6 @@ from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.hashtag_count import HashtagCount
 from code.feature_extraction.photo_bool import PhotoBool
 from code.feature_extraction.video_bool import VideoBool
-from code.feature_extraction.replies_count import RepliesCount
 from code.feature_extraction.word2vec import Word2Vec
 from code.feature_extraction.time_feature import Hours
 from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PREPROCESS, COLUMN_PHOTOS, COLUMN_REPLIES, COLUMN_VIDEO
@@ -38,7 +37,6 @@ parser.add_argument("--hash_vec", action="store_true", help="compute the hash ve
 parser.add_argument("--tfidf_vec", action="store_true", help="compute the tf idf of the tweet")
 parser.add_argument("--photo_bool", action="store_true", help="tells whether the tweet contains photos or not")
 parser.add_argument("--video_bool", action="store_true", help="tells whether the tweet contains a video or not")
-parser.add_argument("--replies_count", action="store_true", help="compute the amount of replies of the tweet")
 parser.add_argument("--word2vec", action="store_true", help="compute the semantic distance of words to given keywords")
 parser.add_argument("--time", action="store_true", help="take into account what hour the tweet was sent")
 parser.add_argument("--emoji_count", action="store_true", help="count the emojis in a tweet")
@@ -77,9 +75,6 @@ else:    # need to create FeatureCollector manually
     if args.video_bool:
         # does a video exist or not
         features.append(VideoBool(COLUMN_VIDEO))
-    if args.replies_count:
-        # how many replies does the tweet have
-        features.append(RepliesCount(COLUMN_REPLIES))
     if args.word2vec:
         features.append(Word2Vec('preprocess_col_tokenized'))
     if args.time:
