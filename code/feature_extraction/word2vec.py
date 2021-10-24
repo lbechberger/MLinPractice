@@ -19,7 +19,7 @@ class Word2Vec(FeatureExtractor):
     
     # constructor
     def __init__(self, input_column):
-        super().__init__([input_column], "{0}_word2vec".format(input_column))
+        super().__init__([input_column], "tweet_word2vec")
     
     # don't need to fit, so don't overwrite _set_variables()
     
@@ -27,7 +27,7 @@ class Word2Vec(FeatureExtractor):
     def _get_values(self, inputs):
         
         embeddings = api.load('word2vec-google-news-300') # Try glove-twitter-200 for classifier 
-        keywords = ['coding','free','algorithms','statistics'] # DataScience, BigData, deeplearning, machinelearning not present
+        keywords = ['coding','free','algorithms','statistics'] # deeplearning not present
 
         tokens = inputs[0].apply(lambda x: list(ast.literal_eval(x))) # Column from Series to list
 
@@ -42,7 +42,7 @@ class Word2Vec(FeatureExtractor):
                     except KeyError:
                         pass
             # similarities.append(max(sim)-np.std(sim))
-            similarities.append(np.mean(sim)) # try median
+            similarities.append(round(np.mean(sim),4)) # try median
     
         result = np.asarray(similarities)
         result = result.reshape(-1,1)

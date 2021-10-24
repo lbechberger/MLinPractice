@@ -21,7 +21,6 @@ from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.hashtag_count import HashtagCount
 from code.feature_extraction.photo_bool import PhotoBool
 from code.feature_extraction.video_bool import VideoBool
-from code.feature_extraction.replies_count import RepliesCount
 from code.feature_extraction.word2vec import Word2Vec
 from code.feature_extraction.time_feature import Hours
 from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PREPROCESS, COLUMN_PHOTOS, COLUMN_REPLIES, COLUMN_VIDEO
@@ -75,8 +74,7 @@ else:    # need to create FeatureCollector manually
         print("Add tfidf_vec feature")
         features.append(TfidfVector(COLUMN_PREPROCESS))
     if args.emoji_count:
-        print("Add emoji_count feature")
-        features.append(EmojiCount('tweet'))
+        features.append(EmojiCount(COLUMN_TWEET))
     if args.photo_bool:
         print("Add photo_bool feature")
         # do photos exist or not

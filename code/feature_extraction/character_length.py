@@ -16,7 +16,7 @@ class CharacterLength(FeatureExtractor):
     
     # constructor
     def __init__(self, input_column):
-        super().__init__([input_column], "{0}_charlength".format(input_column))
+        super().__init__([input_column], "tweet_charlength")
     
     # don't need to fit, so don't overwrite _set_variables()
     
