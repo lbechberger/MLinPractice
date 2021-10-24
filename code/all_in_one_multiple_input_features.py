@@ -113,17 +113,25 @@ print(f"Testing target statistics: {Counter(y_test)}")
 my_pipeline = []
 get_text_data = FunctionTransformer(
     lambda x: x['preprocess_col'], validate=False)
-get_numeric_data = FunctionTransformer(lambda x: x[[
-                                       'replies_count', 'likes_count', 'retweets_count']], validate=False)  # array.reshape(-1,1)
+get_numeric_data = FunctionTransformer(lambda x: x['video'].values.reshape(-1,1), validate=False)  # array.reshape(-1,1) #'replies_count'
+get_char_len = FunctionTransformer(
+    lambda x: x['tweet'].str.len().values.reshape(-1,1), validate=False)
+get_photo_bool = FunctionTransformer(
+    lambda x: (x['photos'].str.len()>2).values.reshape(-1,1), validate=False)
 
-# add text data
+get_hour = FunctionTransformer(
+    lambda x: pd.to_datetime(x['time'], format='%H:%M:%S').dt.hour.values.reshape(-1,1), validate=False)
+
+
+
+# add text data if use just single feature
 if args.feature_extraction != 'union':
-    my_pipeline.append(('selector', get_numeric_data))
+    my_pipeline.append(('selector', get_text_data))
 
 
 # feature_extraction
 if args.feature_extraction == 'HashingVectorizer':
-    my_pipeline.append(('hashvec', HashingVectorizer(n_features=2**22,
+    my_pipeline.append(('hashvec', HashingVectorizer(n_features=2**10,
                                                      strip_accents='ascii', stop_words='english', ngram_range=(1, 3))))
 elif args.feature_extraction == 'TfidfVectorizer':
     my_pipeline.append(('tfidf', TfidfVectorizer(
@@ -132,9 +140,13 @@ elif args.feature_extraction == 'TfidfVectorizer':
 elif args.feature_extraction == 'union':
     # using more than just text data as features:
     my_pipeline.append(('features', FeatureUnion([
-        ('selector', get_numeric_data), 
+        ('selector_numeric_data', get_numeric_data), 
+        ('selector_char_len', get_char_len),
+        ('photo_bool', get_photo_bool),
+        ('select_hour', get_hour),
         ('text_features', Pipeline(
-        [('selector', get_text_data), ('vec', TfidfVectorizer())]))], verbose=1)))
+        [('selector_text', get_text_data), ('vec', TfidfVectorizer())]))
+        ], verbose=1)))
 
 """
 abc = FeatureUnion([
@@ -167,7 +179,7 @@ elif args.classifier == 'LogisticRegression':
                                                                  random_state=42, verbose=1)))
 elif args.classifier == 'LinearSVC':
     my_pipeline.append(('LinearSVC', LinearSVC(class_weight="balanced",
-                                               random_state=42, verbose=1, max_iter=10000)))
+                                               random_state=42, verbose=1, max_iter=20000)))
 elif args.classifier == 'SVC':
     # attention: time = samples ^ 2
     my_pipeline.append(('SVC', SVC(class_weight="balanced",
@@ -175,7 +187,8 @@ elif args.classifier == 'SVC':
 
 classifier = Pipeline(my_pipeline)
 
-
+#import pdb
+#pdb.set_trace()
 classifier.fit(X_train, y_train)
 
 
