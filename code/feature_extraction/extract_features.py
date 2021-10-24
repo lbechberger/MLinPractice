@@ -22,7 +22,8 @@ from code.feature_extraction.url import URL
 from code.feature_extraction.replies import RepliesExtractor
 from code.feature_extraction.hashtags import Hashtags
 from code.feature_extraction.likes import Likes
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL, COLUMN_RETWEETS, COLUMN_REPLIES, COLUMN_HASHTAG, COLUMN_LIKES
+from code.feature_extraction.daytime import Daytime
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_MONTH, COLUMN_PHOTOS, COLUMN_MENTIONS, COLUMN_URL, COLUMN_RETWEETS, COLUMN_REPLIES, COLUMN_HASHTAG, COLUMN_LIKES, COLUMN_TIME
 
 
 # setting up CLI
@@ -43,6 +44,7 @@ parser.add_argument("-rt", "--retweet", action = "store_true", help = "extracts 
 parser.add_argument("-re", "--replies", action = "store_true", help = "extracts number of replies")
 parser.add_argument("-#", "--hashtag", action = "store_true", help = "extracts binary for whether a hashtag is attached to tweet")
 parser.add_argument("-l", "--likes", action = "store_true", help = "extracts amount of likes from a tweet")
+parser.add_argument("-d", "--daytime", action = "store_true", help = "extracts at which time of day tweet was tweeted")
 
 args = parser.parse_args()
 
@@ -97,6 +99,10 @@ else:    # need to create FeatureCollector manually
     if args.likes:
         # number of likes
         features.append(Likes(COLUMN_LIKES))
+        
+    if args.daytime:
+        # time range
+        features.append(Daytime(COLUMN_TIME))
         
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)

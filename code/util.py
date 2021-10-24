@@ -19,6 +19,7 @@ COLUMN_URL = "urls"
 COLUMN_REPLIES = "replies_count"
 COLUMN_HASHTAG = "hashtags"
 COLUMN_LIKES = "likes_count"
+COLUMN_TIME = "time"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
