@@ -27,7 +27,7 @@ class Word2Vec(FeatureExtractor):
     def _get_values(self, inputs):
         
         embeddings = api.load('word2vec-google-news-300') # Try glove-twitter-200 for classifier 
-        keywords = ['coding','free','algorithms','statistics'] # DataScience, BigData, deeplearning, machinelearning not present
+        keywords = ['coding','free','algorithms','statistics'] # deeplearning not present
 
         tokens = inputs[0].apply(lambda x: list(ast.literal_eval(x))) # Column from Series to list
 
