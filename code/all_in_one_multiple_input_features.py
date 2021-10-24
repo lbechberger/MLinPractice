@@ -5,10 +5,15 @@ import pickle
 
 
 # feature_extraction
-from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer, TfidfTransformer, TfidfVectorizer
+from sklearn.feature_extraction.text import (
+    CountVectorizer,
+    HashingVectorizer,
+    TfidfTransformer,
+    TfidfVectorizer,
+)
 
 # feature_selection
-from sklearn.feature_selection import SelectKBest, mutual_info_classif, chi2
+from sklearn.feature_selection import SelectKBest, mutual_info_classif, chi2, mutual_info_regression
 
 # dim_reduction
 from sklearn.decomposition import PCA, TruncatedSVD, NMF
@@ -26,7 +31,12 @@ from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import FunctionTransformer
 
 # metrics
-from sklearn.metrics import classification_report, cohen_kappa_score, accuracy_score, balanced_accuracy_score
+from sklearn.metrics import (
+    classification_report,
+    cohen_kappa_score,
+    accuracy_score,
+    balanced_accuracy_score,
+)
 
 import pandas as pd
 import numpy as np
@@ -41,59 +51,73 @@ from collections import Counter
 
 parser = argparse.ArgumentParser(description="all in one")
 parser.add_argument("input_file", help="path to the input file")
-parser.add_argument("-e", "--export_file",
-                    help="export the trained classifier to the given location", default=None)
+parser.add_argument(
+    "-e",
+    "--export_file",
+    help="export the trained classifier to the given location",
+    default=None,
+)
 
 # evaluate:
-parser.add_argument("-a", "--accuracy", action="store_true",
-                    help="evaluate using accuracy")
-parser.add_argument("-k", "--kappa", action="store_true",
-                    help="evaluate using Cohen's kappa")
-parser.add_argument("--balanced_accuracy", action="store_true",
-                    help="evaluate using balanced_accuracy")
-parser.add_argument("--classification_report", action="store_true",
-                    help="evaluate using classification_report")
+parser.add_argument(
+    "-a", "--accuracy", action="store_true", help="evaluate using accuracy"
+)
+parser.add_argument(
+    "-k", "--kappa", action="store_true", help="evaluate using Cohen's kappa"
+)
+parser.add_argument(
+    "--balanced_accuracy", action="store_true", help="evaluate using balanced_accuracy"
+)
+parser.add_argument(
+    "--classification_report",
+    action="store_true",
+    help="evaluate using classification_report",
+)
 
 # balance dataset
-parser.add_argument("--balance", type=str,
-                    help="choose btw under and oversampling", default=None)
-parser.add_argument("--small", type=int,
-                    help="choose subset of all data", default=None)
+parser.add_argument(
+    "--balance", type=str, help="choose btw under and oversampling", default=None
+)
+parser.add_argument("--small", type=int, help="choose subset of all data", default=None)
 # feature_extraction
-parser.add_argument("--feature_extraction", type=str,
-                    help="choose a feature_extraction algo", default=None)
+parser.add_argument(
+    "--feature_extraction",
+    type=str,
+    help="choose a feature_extraction algo",
+    default=None,
+)
 # dim_red
-parser.add_argument("--dim_red", type=str,
-                    help="choose a dim_red algo", default=None)
+parser.add_argument("--dim_red", type=str, help="choose a dim_red algo", default=None)
 # classifier
-parser.add_argument("--classifier", type=str,
-                    help="choose a classifier", default=None)
-
+parser.add_argument("--classifier", type=str, help="choose a classifier", default=None)
+parser.add_argument(
+    "--verbose", action="store_true", help="print information during training",
+)
 args = parser.parse_args()
-#args, unk = parser.parse_known_args()
+# args, unk = parser.parse_known_args()
 
 # load data
 # with open(args.input_file, 'rb') as f_in:
 #    data = pickle.load(f_in)
 
 # load data
-df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC,
-                 lineterminator="\n")
+df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC, lineterminator="\n")
 
 if args.small is not None:
     # if limit is given
-    max_length = len(df['label'])
+    max_length = len(df["label"])
     limit = min(args.small, max_length)
     df = df.head(limit)
 
 # split data
 # input_col = 'preprocess_col'
-#X = df[input_col].array.reshape(-1, 1)
-#y = df["label"].ravel()
+# X = df[input_col].array.reshape(-1, 1)
+# y = df["label"].ravel()
 
 X_train, X_test, y_train, y_test = train_test_split(
-    df, df['label'], test_size=0.1, random_state=42)
-
+    df, df["label"], test_size=0.1, random_state=42
+)
+verbose = True if args.verbose else False
 """
 # balance data
 if args.balance == 'over_sampler':
@@ -111,84 +135,134 @@ print(f"Testing target statistics: {Counter(y_test)}")
 """
 
 my_pipeline = []
-get_text_data = FunctionTransformer(
-    lambda x: x['preprocess_col'], validate=False)
-get_numeric_data = FunctionTransformer(lambda x: x['video'].values.reshape(-1,1), validate=False)  # array.reshape(-1,1) #'replies_count'
+get_text_data = FunctionTransformer(lambda x: x["preprocess_col"], validate=False)
+get_numeric_data = FunctionTransformer(
+    lambda x: x["video"].values.reshape(-1, 1), validate=False
+)  # array.reshape(-1,1) #'replies_count'
 get_char_len = FunctionTransformer(
-    lambda x: x['tweet'].str.len().values.reshape(-1,1), validate=False)
+    lambda x: x["tweet"].str.len().values.reshape(-1, 1), validate=False
+)
 get_photo_bool = FunctionTransformer(
-    lambda x: (x['photos'].str.len()>2).values.reshape(-1,1), validate=False)
+    lambda x: (x["photos"].str.len() > 2).values.reshape(-1, 1), validate=False
+)
 
 get_hour = FunctionTransformer(
-    lambda x: pd.to_datetime(x['time'], format='%H:%M:%S').dt.hour.values.reshape(-1,1), validate=False)
-
+    lambda x: pd.to_datetime(x["time"], format="%H:%M:%S").dt.hour.values.reshape(
+        -1, 1
+    ),
+    validate=False,
+)
 
 
 # add text data if use just single feature
-if args.feature_extraction != 'union':
-    my_pipeline.append(('selector', get_text_data))
+if args.feature_extraction != "union":
+    my_pipeline.append(("selector", get_text_data))
 
 
 # feature_extraction
-if args.feature_extraction == 'HashingVectorizer':
-    my_pipeline.append(('hashvec', HashingVectorizer(n_features=2**10,
-                                                     strip_accents='ascii', stop_words='english', ngram_range=(1, 3))))
-elif args.feature_extraction == 'TfidfVectorizer':
-    my_pipeline.append(('tfidf', TfidfVectorizer(
-        stop_words='english', ngram_range=(1, 3))))
+if args.feature_extraction == "HashingVectorizer":
+    my_pipeline.append(
+        (
+            "hashvec",
+            HashingVectorizer(
+                n_features=2 ** 22,
+                strip_accents="ascii",
+                stop_words="english",
+                ngram_range=(1, 3),
+            ),
+        )
+    )
+elif args.feature_extraction == "TfidfVectorizer":
+    my_pipeline.append(
+        ("tfidf", TfidfVectorizer(stop_words="english", ngram_range=(1, 3)))
+    )
 
-elif args.feature_extraction == 'union':
+elif args.feature_extraction == "union":
     # using more than just text data as features:
-    my_pipeline.append(('features', FeatureUnion([
-        ('selector_numeric_data', get_numeric_data), 
-        ('selector_char_len', get_char_len),
-        ('photo_bool', get_photo_bool),
-        ('select_hour', get_hour),
-        ('text_features', Pipeline(
-        [('selector_text', get_text_data), ('vec', TfidfVectorizer())]))
-        ], verbose=1)))
+    my_pipeline.append(
+        (
+            "features",
+            FeatureUnion(
+                [
+                    ("selector_numeric_data", get_numeric_data),
+                    ("selector_char_len", get_char_len),
+                    ("photo_bool", get_photo_bool),
+                    ("select_hour", get_hour),
+                    (
+                        "text_features",
+                        Pipeline(
+                            [
+                                ("selector_text", get_text_data),
+                                (
+                                    "vec",
+                                    HashingVectorizer(
+                                        n_features=2 ** 22,
+                                        strip_accents="ascii",
+                                        stop_words="english",
+                                        ngram_range=(1, 3),
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                ],
+                verbose=verbose,
+            ),
+        )
+    )
 
-"""
-abc = FeatureUnion([
-    ('numeric_features', Pipeline([
-        ('selector', get_numeric_data)
-    ])),
-    ('text_features', Pipeline([
-        ('selector', get_text_data),
-        ('vec', TfidfVectorizer())
-    ]))
-],verbose=1)
-"""
 
 
 # dimension reduction
-if args.dim_red == 'SelectKBest(chi2)':
-    my_pipeline.append(('dim_red', SelectKBest(chi2)))
-elif args.dim_red == 'NMF':
-    my_pipeline.append(('nmf', NMF()))
+if args.dim_red == "SelectKBest(chi2)":
+    my_pipeline.append(("dim_red", SelectKBest(chi2)))
+elif args.dim_red == "SelectKBest(mutual_info_regression)":
+    my_pipeline.append(("dim_red", SelectKBest(mutual_info_regression)))
+elif args.dim_red == "NMF":
+    my_pipeline.append(("nmf", NMF()))
 
 
 # classifier
-if args.classifier == 'MultinomialNB':
-    my_pipeline.append(('MNB', MultinomialNB()))
-elif args.classifier == 'SGDClassifier':
-    my_pipeline.append(('SGD', SGDClassifier(class_weight="balanced", n_jobs=-1,
-                                             random_state=42, alpha=1e-07, verbose=1)))
-elif args.classifier == 'LogisticRegression':
-    my_pipeline.append(('LogisticRegression', LogisticRegression(class_weight="balanced", n_jobs=-1,
-                                                                 random_state=42, verbose=1)))
-elif args.classifier == 'LinearSVC':
-    my_pipeline.append(('LinearSVC', LinearSVC(class_weight="balanced",
-                                               random_state=42, verbose=1, max_iter=20000)))
-elif args.classifier == 'SVC':
+if args.classifier == "MultinomialNB":
+    my_pipeline.append(("MNB", MultinomialNB()))
+elif args.classifier == "SGDClassifier":
+    my_pipeline.append(
+        (
+            "SGD",
+            SGDClassifier(
+                class_weight="balanced", n_jobs=-1, random_state=42, verbose=verbose
+            ),
+        )
+    )
+elif args.classifier == "LogisticRegression":
+    my_pipeline.append(
+        (
+            "LogisticRegression",
+            LogisticRegression(
+                class_weight="balanced", n_jobs=-1, random_state=42, verbose=verbose #, max_iter = 10000
+            ),
+        )
+    )
+elif args.classifier == "LinearSVC":
+    my_pipeline.append(
+        (
+            "LinearSVC",
+            LinearSVC(
+                class_weight="balanced", random_state=42, verbose=verbose, #max_iter=10000
+            ),
+        )
+    )
+
+elif args.classifier == "SVC":
     # attention: time = samples ^ 2
-    my_pipeline.append(('SVC', SVC(class_weight="balanced",
-                                   random_state=42, verbose=1)))
+    my_pipeline.append(
+        ("SVC", SVC(class_weight="balanced", random_state=42, verbose=verbose))
+    )
 
 classifier = Pipeline(my_pipeline)
 
-#import pdb
-#pdb.set_trace()
+# import pdb
+# pdb.set_trace()
 classifier.fit(X_train, y_train)
 
 
@@ -209,17 +283,14 @@ if args.balanced_accuracy:
 # compute and print them
 for metric_name, metric in evaluation_metrics:
 
-    print("    {0}: {1}".format(metric_name,
-                                metric(y_test, prediction)))
+    print("    {0}: {1}".format(metric_name, metric(y_test, prediction)))
 
 if args.classification_report:
     categories = ["Flop", "Viral"]
     print("Matrix Train set:")
-    print(classification_report(
-        y_train, prediction_train_set, target_names=categories))
+    print(classification_report(y_train, prediction_train_set, target_names=categories))
     print("Matrix Test set:")
-    print(classification_report(y_test, prediction,
-                                target_names=categories))
+    print(classification_report(y_test, prediction, target_names=categories))
 
 
 # export the trained classifier if the user wants us to do so

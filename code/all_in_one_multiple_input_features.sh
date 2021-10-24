@@ -22,6 +22,10 @@ mkdir -p data/all_in_one_multiple_input_features/
 #python3 -m code.all_in_one data/feature_extraction/validation.pickle -i data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --small 10000
 
 # don't touch the test set, yet, because that would ruin the final generalization experiment!
-
-# new approach
-python3 -m code.all_in_one_multiple_input_features data/preprocessing/preprocessed.csv -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report --classifier 'SGDClassifier' --feature_extraction 'union' #--small 2000 #--balance 'over_sampler' # | HashingVectorizer TfidfVectorizer | SVC SGDClassifier LogisticRegression LinearSVC MultinomialNB data/preprocessing/split/training.csv data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv
+classifieres=("SGDClassifier LogisticRegression LinearSVC")
+for k in $classifieres
+do
+    echo $k
+    # new approach
+    python3 -m code.all_in_one_multiple_input_features data/preprocessing/preprocessed.csv -e data/classification/classifier.pickle --accuracy --kappa --balanced_accuracy --classification_report --classifier $k --feature_extraction 'union' --verbose --dim_red 'SelectKBest(mutual_info_regression)' #--small 2000  #--balance 'over_sampler' # | HashingVectorizer TfidfVectorizer | SVC SGDClassifier LogisticRegression LinearSVC MultinomialNB data/preprocessing/split/training.csv data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv
+done
