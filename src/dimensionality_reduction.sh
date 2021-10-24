@@ -5,7 +5,7 @@ mkdir -p data/dimensionality_reduction/
 
 # run dimensionality reduction on training set to fit the parameters
 echo "  training set"
-python -m src.dimensionality_reduction.reduce_dimensionality data/feature_extraction/training.pickle data/dimensionality_reduction/training.pickle -e data/dimensionality_reduction/pipeline.pickle -m 1 --verbose
+python -m src.dimensionality_reduction.reduce_dimensionality data/feature_extraction/training.pickle data/dimensionality_reduction/training.pickle -e data/dimensionality_reduction/pipeline.pickle -m 3 --verbose
 
 # run feature extraction on validation set and test set (with pre-fit parameters)
 echo "  validation set"

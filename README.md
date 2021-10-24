@@ -197,3 +197,9 @@ python -m debugpy --wait-for-client --listen 5678 .\src\feature_extraction\test\
 ```
 
 3. Start the attach debug configuration via the VS Code UI ([F5] key or `Run`/`Run and Debug` menu)
+
+## Running MlFlow
+
+```
+mlflow ui --backend-store-uri data/classification/mlflow
+```

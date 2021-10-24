@@ -1,0 +1,15 @@
+artifact_uri: data/classification/mlflow/0/af59d8fd6467448887013f0561655ca2/artifacts
+end_time: 1634906741758
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: af59d8fd6467448887013f0561655ca2
+run_uuid: af59d8fd6467448887013f0561655ca2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1634906741516
+status: 3
+tags: []
+user_id: Krext

@@ -29,7 +29,7 @@ def main():
         dfs.append(pd.read_csv(file_path, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n", dtype={"quote_url": str, "place": str, "tweet": str, "language": str}))
 
     # join all data into a single DataFrame
-    df = dfs[0] #pd.concat(dfs)
+    df = pd.concat(dfs)
 
     # compute new column "label" based on likes and retweets
     df[COLUMN_LABEL] = (args.likes_weight * df[COLUMN_LIKES] + args.retweet_weight * df[COLUMN_RETWEETS]) > args.threshold

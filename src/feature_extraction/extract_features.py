@@ -55,6 +55,8 @@ def main():
     label_array = np.array(df[COLUMN_LABEL])
     label_array = label_array.reshape(-1, 1)
 
+    # print("features\n ---\n", feature_array)
+
     # store the results
     results = {"features": feature_array, "labels": label_array, 
             "feature_names": feature_collector.get_feature_names()}
