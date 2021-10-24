@@ -240,7 +240,7 @@ elif args.classifier == "SGDClassifier":
         (
             "SGD",
             SGDClassifier(
-                class_weight="balanced", n_jobs=-1, random_state=42, verbose=verbose
+                class_weight="balanced", n_jobs=-1, random_state=42, verbose=verbose, 
             ),
         )
     )
@@ -253,7 +253,7 @@ elif args.classifier == "LogisticRegression":
                 n_jobs=-1,
                 random_state=42,
                 verbose=verbose,
-                max_iter=1000,
+                max_iter=10000,
             ),
         )
     )
