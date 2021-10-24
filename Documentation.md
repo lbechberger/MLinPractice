@@ -31,7 +31,8 @@ Input: | Output:
 -------|--------
 `Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp ` | `Red Black tree AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops Data Science roles 😏 httptcoQrKYJpiiVp` 
 
-
+<br />
+<br />
 
 2. *Removing stopwords*
 
@@ -53,12 +54,12 @@ For the sake of only using important words for our features, we removed so calle
 
 Example: 
 
-Input: 
-`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
+Input: | Output: 
+-------|--------
+`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp` | `Red Black tree, AVL Tree Algorithms like Bellman ford etc asked interviews even Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
 
-Output: 
-`Red Black tree, AVL Tree Algorithms like Bellman ford etc asked interviews even Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
-
+<br />
+<br />
 
 3. *Remove emojis*
 
@@ -68,9 +69,12 @@ Seeing as how the decoded emojis all start with ```\UXXXX``` followed by a set o
 
 Example: 
 
-Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp```
+Input: | Output: 
+-------|--------
+` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp` | `Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles httptcoQrKYJpiiVp`
 
-Output: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles httptcoQrKYJpiiVp```
+<br />
+<br />
 
 4. *Remove links*
 
@@ -78,11 +82,12 @@ We thought we had finished the cleaning part, since there was finally only text 
 
 Example: 
 
-Input: 
-`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
+Input: | Output: 
+-------|--------
+`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp` | `Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏`
 
-Output: 
-`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏`
+<br />
+<br />
 
 5. *Tokenize tweet*
 
@@ -92,9 +97,12 @@ Every part of the string that is not a whitespace or ```’ ‘``` is then added
 
 Example: 
 
-Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp```
+Input: | Output: 
+-------|--------
+`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp` | `[‘Red’, ‘Black’, ‘tree’, ’,’, ‘AVL’, ‘Tree’, ‘and’, ‘other’, ‘Algorithms’, ‘like’, ‘Bellman’, ‘ford’, ‘etc’, ‘are’, ‘asked’, ‘in’, ‘most’, ‘interviews’, ‘even’, ‘on’, ‘Devops’, ‘,’, ‘Data’, ‘Science’, ‘roles’, ‘😏’, ‘httptcoQrKYJpiiVp’ ]`
 
-Output: ``` [‘Red’, ‘Black’, ‘tree’, ’,’, ‘AVL’, ‘Tree’, ‘and’, ‘other’, ‘Algorithms’, ‘like’, ‘Bellman’, ‘ford’, ‘etc’, ‘are’, ‘asked’, ‘in’, ‘most’, ‘interviews’, ‘even’, ‘on’, ‘Devops’, ‘,’, ‘Data’, ‘Science’, ‘roles’, ‘😏’, ‘httptcoQrKYJpiiVp’ ]```
+<br />
+<br />
 
 6. *Set language to only english*
 
@@ -106,9 +114,12 @@ It turns out, from the total 295811 samples, 95% were english tweets. The rest w
 
 Example: 
 
-Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp```
+Input: | Output: 
+-------|--------
+`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp` | `Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
 
-Output: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp```
+<br />
+<br />
 
 7. *Set all words to lowercase*
 
@@ -116,9 +127,9 @@ Our final preprocessing step was only implemented after having examined keywords
 
 Example: 
 
-Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp```
-
-Output: ``` red black tree, avl tree and other algorithms like bellman ford etc are asked in most interviews even on devops, data science roles 😏 httptcoQrKYJpiiVp```
+Input: | Output: 
+-------|--------
+`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp` | `red black tree, avl tree and other algorithms like bellman ford etc are asked in most interviews even on devops, data science roles 😏 httptcoQrKYJpiiVp`
 
 ### Results
 
