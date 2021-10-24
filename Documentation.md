@@ -18,18 +18,20 @@ Since we found it interesting from the start to use some NLP features like the s
 
 To achieve to only keep the core words of a tweet, we used the following data cleaning methods: 
 
-Removing punctuation and digits
+1. Removing punctuation and digits
 
 We knew that tweets can sometimes use extensive punctuation, which would be a problem for later features and/or the tokenizer, since it detects punctuation as a token too. We chose to remove any written digits as well to only keep strings. With the help of the ```string``` package, we filtered out most punctuation and digits, namely: ```['!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~0123456789] ``` . But we also had to add some other special characters that the package did not pick up, and were still being present after the cleaning: ``` [’—”“↓'] ``` . 
 
 Example: 
 
-Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp ```
+Input: 
+` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp `
 
-Output: ``` Red Black tree AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops Data Science roles 😏 httptcoQrKYJpiiVp``` 
+Output: 
+` Red Black tree AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops Data Science roles 😏 httptcoQrKYJpiiVp` 
 
 
-Removing stopwords
+2. Removing stopwords
 
 For the sake of only using important words for our features, we removed so called stopwords, or filler words used commonly in sentences. This was possible with the ```nltk``` package. So for each word in the tweet, any word that was equal to the corpus of stopwords was removed :
 ```
@@ -48,12 +50,14 @@ For the sake of only using important words for our features, we removed so calle
 
 Example: 
 
-Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp```
+Input: 
+`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
 
-Output: ``` Red Black tree, AVL Tree Algorithms like Bellman ford etc asked interviews even Devops, Data Science roles 😏 httptcoQrKYJpiiVp``` 
+Output: 
+`Red Black tree, AVL Tree Algorithms like Bellman ford etc asked interviews even Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
 
 
-Remove emojis
+3. Remove emojis
 
 In between the now usable words, we found some tweets had emojis. This of course was not a string and since interpretability of emojis by encoding and decoding into ASCII was a little difficult, we chose to just remove them from the tweet. 
 
@@ -65,17 +69,19 @@ Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc a
 
 Output: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles httptcoQrKYJpiiVp```
 
-Remove links
+4. Remove links
 
 We thought we had finished the cleaning part, since there was finally only text in a tweet. But we quickly found that links were also recognized as strings, and were practically unusable for us. So we also removed any string that started with ``` http ```. 
 
 Example: 
 
-Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp```
+Input: 
+`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
 
-Output: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏```
+Output: 
+`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏`
 
-Tokenize tweet
+5. Tokenize tweet
 
 After these important cleaning steps, we took all words in the tweet and tokenized them for easier feature extraction when dealing with NLP features, because we would then just be iterating over a list or core words. This tokenizer is built using ```nltk``` and was already implemented in one of the seminar sessions. 
 
@@ -87,7 +93,7 @@ Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc a
 
 Output: ``` [‘Red’, ‘Black’, ‘tree’, ’,’, ‘AVL’, ‘Tree’, ‘and’, ‘other’, ‘Algorithms’, ‘like’, ‘Bellman’, ‘ford’, ‘etc’, ‘are’, ‘asked’, ‘in’, ‘most’, ‘interviews’, ‘even’, ‘on’, ‘Devops’, ‘,’, ‘Data’, ‘Science’, ‘roles’, ‘😏’, ‘httptcoQrKYJpiiVp’ ]```
 
-Set language to only english
+6. Set language to only english
 
 Taking a closer look at the languages of our tweets, our analysis summary was the following: 
 
@@ -101,7 +107,7 @@ Input: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc a
 
 Output: ``` Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp```
 
-Set all words to lowercase
+7. Set all words to lowercase
 
 Our final preprocessing step was only implemented after having examined keywords for the feature extraction and found out that many words on ‘most used words’ analysis had appeared twice. This was because sometimes people would write them with lower and uppercase. So we just went back into the code and made sure to append all strings to our preprocessing columns with ```.lower()```, making all words lowercase. 
 
