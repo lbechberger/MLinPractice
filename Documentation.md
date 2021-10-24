@@ -18,6 +18,8 @@ Since we found it interesting from the start to use some NLP features like the s
 
 To achieve to only keep the core words of a tweet, we used the following data cleaning methods: 
 
+<br />
+<br />
 
 1. *Removing punctuation and digits*
 
@@ -112,12 +114,6 @@ Taking a closer look at the languages of our tweets, our analysis summary was th
 
 It turns out, from the total 295811 samples, 95% were english tweets. The rest would be pretty much unusable for our subsequent NLP-based features, so we chose to remove that 5% portion from our preprocessed data. 
 
-Example: 
-
-Input: | Output: 
--------|--------
-`Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp` | `Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp`
-
 <br />
 <br />
 
@@ -130,6 +126,9 @@ Example:
 Input: | Output: 
 -------|--------
 `Red Black tree, AVL Tree and other Algorithms like Bellman ford etc are asked in most interviews even on Devops, Data Science roles 😏 httptcoQrKYJpiiVp` | `red black tree, avl tree and other algorithms like bellman ford etc are asked in most interviews even on devops, data science roles 😏 httptcoQrKYJpiiVp`
+
+<br />
+<br />
 
 ### Results
 
