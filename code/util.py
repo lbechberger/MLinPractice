@@ -25,14 +25,14 @@ SUFFIX_TOKENIZED = "_tokenized"
 
 
 # split dataset (all in one)
-TEST_SIZE = 0.1
+TEST_SIZE = 0.03
 # number of features for hash vector
-HASH_VECTOR_N_FEATURES = 2**9
-NGRAM_RANGE = (1, 3)
+HASH_VECTOR_N_FEATURES = 2**25
+NGRAM_RANGE = (1, 4)
 
 # classifier 
 KNN_K = 5
-MAX_ITER_LOGISTIC = 4000
+MAX_ITER_LOGISTIC = 10000
 MAX_ITER_LINEAR_SVC = 1000
-MAX_ITER_SGD = 100
+MAX_ITER_SGD = 10000
 ALPHA_SGD = 1e-6

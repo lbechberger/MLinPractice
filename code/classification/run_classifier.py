@@ -31,7 +31,14 @@ from sklearn.metrics import (
     balanced_accuracy_score,
     classification_report,
 )
-from code.util  import KNN_K
+from code.util import (
+    KNN_K,
+    MAX_ITER_LOGISTIC,
+    MAX_ITER_LINEAR_SVC,
+    ALPHA_SGD,
+    MAX_ITER_SGD,
+)
+
 
 def load_args():
     # setting up CLI
@@ -74,7 +81,6 @@ def load_args():
         "--knn",
         action="store_true",
         help="k nearest neighbor classifier with the specified value of k (in util.py",
-
     )
     parser.add_argument(
         "-a", "--accuracy", action="store_true", help="evaluate using accuracy"
@@ -161,18 +167,26 @@ def create_classifier(args, data):
         elif args.SGDClassifier:
             # standardizer = StandardScaler()
             classifier = SGDClassifier(
-                    class_weight=balanced, random_state=args.seed, n_jobs=-1, verbose=verbose
-                )
+                class_weight=balanced,
+                random_state=args.seed,
+                n_jobs=-1,
+                verbose=verbose,
+                alpha=ALPHA_SGD,
+                max_iter=MAX_ITER_SGD,
+            )
         elif args.MultinomialNB:
             classifier = MultinomialNB()
         elif args.LogisticRegression:
             standardizer = StandardScaler()
             classifier = LogisticRegression(
-                class_weight=balanced, n_jobs=-1, random_state=args.seed, verbose=verbose#, max_iter=1000
+                class_weight=balanced,
+                n_jobs=-1,
+                random_state=args.seed,
+                verbose=verbose,  max_iter=MAX_ITER_LOGISTIC,
             )
         elif args.LinearSVC:
             classifier = LinearSVC(
-                class_weight=balanced, random_state=args.seed, verbose=verbose
+                class_weight=balanced, random_state=args.seed, verbose=verbose, max_iter=MAX_ITER_LINEAR_SVC,
             )
 
         try:
@@ -203,11 +217,10 @@ def evaluate_classifier(args, data, prediction):
         )
 
 
-
 def export_classifier(args, classifier):
     # export the trained classifier if the user wants us to do so
     if args.export_file is not None:
-        #pdb.set_trace()
+        # pdb.set_trace()
         with open(args.export_file, "wb") as f_out:
             pickle.dump(classifier, f_out)
 
@@ -223,4 +236,3 @@ if __name__ == "__main__":
     evaluate_classifier(args, data, prediction)
 
     export_classifier(args, classifier)
-    
