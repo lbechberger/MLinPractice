@@ -44,6 +44,16 @@ from sklearn.metrics import (
     balanced_accuracy_score,
 )
 
+from code.util import (
+    TEST_SIZE,
+    HASH_VECTOR_N_FEATURES,
+    NGRAM_RANGE,
+    KNN_K,
+    MAX_ITER_LOGISTIC,
+    MAX_ITER_LINEAR_SVC,
+    ALPHA_SGD,
+    MAX_ITER_SGD,
+)
 import pandas as pd
 import numpy as np
 
@@ -98,7 +108,9 @@ parser.add_argument("--dim_red", type=str, help="choose a dim_red algo", default
 # classifier
 parser.add_argument("--classifier", type=str, help="choose a classifier", default=None)
 parser.add_argument(
-    "--verbose", action="store_true", help="print information during training",
+    "--verbose",
+    action="store_true",
+    help="print information during training",
 )
 args = parser.parse_args()
 
@@ -113,7 +125,7 @@ if args.small is not None:
 
 # split data
 X_train, X_test, y_train, y_test = train_test_split(
-    df, df["label"], test_size=0.1, random_state=42
+    df, df["label"], test_size=TEST_SIZE, random_state=42
 )
 
 # print information during training
@@ -142,26 +154,27 @@ print(f"Testing target statistics: {Counter(y_test)}")
 my_pipeline = []
 
 # write functions for each column extraction to call it later in the pipeline
-get_text_data = FunctionTransformer(lambda x: x["preprocess_col"], validate=False)
-get_numeric_data = FunctionTransformer(
-    lambda x: x["video"].values.reshape(-1, 1), validate=False
-)
+def get_text_data(x):
+    return x["preprocess_col"]
+
+
+def get_numeric_data(x):
+    return x["video"].values.reshape(-1, 1)
+
+
 # calculate the length of a tweet
-get_char_len = FunctionTransformer(
-    lambda x: x["tweet"].str.len().values.reshape(-1, 1), validate=False
-)
+def get_char_len(x):
+    return x["tweet"].str.len().values.reshape(-1, 1)
+
+
 # exists a photo in a tweet?
-get_photo_bool = FunctionTransformer(
-    lambda x: (x["photos"].str.len() > 2).values.reshape(-1, 1), validate=False
-)
+def get_photo_bool(x):
+    return (x["photos"].str.len() > 2).values.reshape(-1, 1)
+
 
 # at which hour was the post?
-get_hour = FunctionTransformer(
-    lambda x: pd.to_datetime(x["time"], format="%H:%M:%S").dt.hour.values.reshape(
-        -1, 1
-    ),
-    validate=False,
-)
+def get_hour(x):
+    return pd.to_datetime(x["time"], format="%H:%M:%S").dt.hour.values.reshape(-1, 1)
 
 
 # add text data if use just single feature
@@ -175,16 +188,16 @@ if args.feature_extraction == "HashingVectorizer":
         (
             "hashvec",
             HashingVectorizer(
-                n_features=2 ** 22,
+                n_features=HASH_VECTOR_N_FEATURES,
                 strip_accents="ascii",
                 stop_words="english",
-                ngram_range=(1, 3),
+                ngram_range=NGRAM_RANGE,
             ),
         )
     )
 elif args.feature_extraction == "TfidfVectorizer":
     my_pipeline.append(
-        ("tfidf", TfidfVectorizer(stop_words="english", ngram_range=(1, 3)))
+        ("tfidf", TfidfVectorizer(stop_words="english", ngram_range=NGRAM_RANGE))
     )
 
 elif args.feature_extraction == "union":
@@ -194,22 +207,22 @@ elif args.feature_extraction == "union":
             "features",
             FeatureUnion(
                 [
-                    ("selector_numeric_data", get_numeric_data),
-                    ("selector_char_len", get_char_len),
-                    ("photo_bool", get_photo_bool),
-                    ("select_hour", get_hour),
+                    ("selector_numeric_data", FunctionTransformer(get_numeric_data)),
+                    ("selector_char_len", FunctionTransformer(get_char_len)),
+                    ("photo_bool", FunctionTransformer(get_photo_bool)),
+                    ("select_hour", FunctionTransformer(get_hour)),
                     (
                         "text_features",
                         Pipeline(
                             [
-                                ("selector_text", get_text_data),
+                                ("selector_text", FunctionTransformer(get_text_data)),
                                 (
                                     "vec",
                                     HashingVectorizer(
-                                        n_features=2 ** 22,
+                                        n_features=HASH_VECTOR_N_FEATURES,
                                         strip_accents="ascii",
                                         stop_words="english",
-                                        ngram_range=(1, 3),
+                                        ngram_range=NGRAM_RANGE,
                                     ),  # change this to TfidfVectorizer if you want
                                 ),
                             ]
@@ -240,7 +253,12 @@ elif args.classifier == "SGDClassifier":
         (
             "SGD",
             SGDClassifier(
-                class_weight="balanced", n_jobs=-1, random_state=42, verbose=verbose, 
+                class_weight="balanced",
+                n_jobs=-1,
+                random_state=42,
+                verbose=verbose,
+                alpha=ALPHA_SGD,
+                max_iter=MAX_ITER_SGD,
             ),
         )
     )
@@ -253,7 +271,7 @@ elif args.classifier == "LogisticRegression":
                 n_jobs=-1,
                 random_state=42,
                 verbose=verbose,
-                max_iter=10000,
+                max_iter=MAX_ITER_LOGISTIC,
             ),
         )
     )
@@ -262,7 +280,10 @@ elif args.classifier == "LinearSVC":
         (
             "LinearSVC",
             LinearSVC(
-                class_weight="balanced", random_state=42, verbose=verbose, max_iter=1000
+                class_weight="balanced",
+                random_state=42,
+                verbose=verbose,
+                max_iter=MAX_ITER_LINEAR_SVC,
             ),
         )
     )
@@ -311,4 +332,3 @@ if args.classification_report:
 if args.export_file is not None:
     with open(args.export_file, "wb") as f_out:
         pickle.dump(classifier, f_out)
-
