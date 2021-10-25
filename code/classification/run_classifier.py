@@ -31,7 +31,7 @@ from sklearn.metrics import (
     balanced_accuracy_score,
     classification_report,
 )
-
+from code.util  import KNN_K
 
 def load_args():
     # setting up CLI
@@ -72,9 +72,9 @@ def load_args():
 
     parser.add_argument(
         "--knn",
-        type=int,
-        help="k nearest neighbor classifier with the specified value of k",
-        default=None,
+        action="store_true",
+        help="k nearest neighbor classifier with the specified value of k (in util.py",
+
     )
     parser.add_argument(
         "-a", "--accuracy", action="store_true", help="evaluate using accuracy"
@@ -153,10 +153,10 @@ def create_classifier(args, data):
             classifier = make_pipeline(
                 StandardScaler(), SVC(probability=True, verbose=verbose)
             )
-        elif args.knn is not None:
-            print("    {0} nearest neighbor classifier".format(args.knn))
+        elif args.knn:
+            print("    {0} nearest neighbor classifier".format(KNN_K))
             standardizer = StandardScaler()
-            knn_classifier = KNeighborsClassifier(args.knn, n_jobs=-1)
+            knn_classifier = KNeighborsClassifier(KNN_K, n_jobs=-1)
             classifier = make_pipeline(standardizer, knn_classifier)
         elif args.SGDClassifier:
             # standardizer = StandardScaler()
@@ -164,7 +164,7 @@ def create_classifier(args, data):
                     class_weight=balanced, random_state=args.seed, n_jobs=-1, verbose=verbose
                 )
         elif args.MultinomialNB:
-            classifier = MultinomialNB(random_state=args.seed)
+            classifier = MultinomialNB()
         elif args.LogisticRegression:
             standardizer = StandardScaler()
             classifier = LogisticRegression(

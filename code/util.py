@@ -23,5 +23,9 @@ COLUMN_LANGUAGE = "language"
 COLUMN_PREPROCESS = 'preprocess_col'
 SUFFIX_TOKENIZED = "_tokenized"
 
+
 # number of features for hash vector
 HASH_VECTOR_N_FEATURES = 2**9
+
+# classifier 
+KNN_K = 5

@@ -22,22 +22,23 @@ class TestClassifier(unittest.TestCase):
             import_file=None,
             majority=False,
             frequency=False,
-            sgd=False,
             svm=False,
+            knn=False,
             LinearSVC=False,
+            SGDClassifier=False,
             MultinomialNB=False,
             LogisticRegression=False,
-            knn=1,
+            verbose=True,
         )
         self.data = load_dataset(self.args)
         self.all_clf = [
             "majority",
             "frequency",
-            "sgd",
             "LogisticRegression",
-            "MultinomialNB",
             "LinearSVC",
             "svm",
+            "SGDClassifier",
+            "knn"
         ]
 
     def test_load_dataset(self):
@@ -53,6 +54,7 @@ class TestClassifier(unittest.TestCase):
 
     def test_create_classifier(self):
         for clf in self.all_clf:
+            print("\n\n----------Test {}-----------".format(clf))
             args_dict = vars(self.args)
             args_dict[clf] = True
             try:
