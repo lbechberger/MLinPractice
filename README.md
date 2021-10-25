@@ -70,6 +70,8 @@ Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), whil
 The preprocessing steps to take can be configured with the following flags:
 - `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
 - `-t`or `--tokenize`: Tokenize the given column (can be specified by `--tokenize_input`, default = "tweet"), and create new column with suffix "_tokenized" containing tokenized tweet.
+- `-s` or `--strings`: Remove stopwords, links and emojis in the "tweet" column of the data frame. (see code/preprocessing/string_remover.py)
+- `--language`: Only keep tweets with the given language argument. Supported strings have to match enires of the "language" column of the data frame (en, fr, de, etc.). This argument is set to keep only english tweets (en). 
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
@@ -100,12 +102,18 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 
 The features to be extracted can be configured with the following optional parameters:
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
+- `--photo_bool`: Tells whether the tweet contains photos or not from column "photos". (see code/feature_extraction/photo_bool.py)
+- `--video_bool`: Tells whether the tweet contains videos or not from column "videos". (see code/feature_extraction/video_bool.py)
+- `--time`: Extract what hour the tweet was sent from column "time". (see code/feature_extraction/time_feature.py)
+- `--emoji_count`: Count the emojis in a tweet from column "tweet". (see code/feature_extraction/emoji_count.py)
+- `--hashtags`: Count the hashtags in a tweet from column "hashtags". (see code/feature_extraction/hashtag_count.py)
+- `--word2vec`: Compute the semantic distance of words to given keywords from column "preprocess_col_tokenized". (see code/feature_extraction/word2vec.py)
+- `--hash_vec`: Compute the HashingVectorizer from column "preprocess_col" and set number of features in argument HASH_VECTOR_N_FEATURES in util.py. (see code/feature_extraction/hash_vector.py)
+- `--tfidf_vec`: Compute the Tf Idf vector of the tweet "preprocess_col". (see code/feature_extraction/tfidf_vecotr.py)
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
 - `-e` or `--export_file`: Export the configured and fitted feature extraction into the given pickle file.
-- `--hash_vec`: use HashingVectorizer from sklearn.
-and for number of features for hash vector edit HASH_VECTOR_N_FEATURES in util.py
 
 ## Dimensionality Reduction
 
