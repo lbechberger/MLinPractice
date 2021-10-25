@@ -8,8 +8,8 @@ As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) 
 
 In order to install all necessary dependencies, please make sure that you have a local [Conda](https://docs.conda.io/en/latest/) distribution (e.g., Anaconda or miniconda) installed. Begin by creating a new environment called "MLinPractice" that has Python 3.6 installed:
 
-```conda create -y -q --name MLinPractice python=3.6
-
+```
+conda create -y -q --name MLinPractice python=3.6
 ```
 
 You can enter this environment with `conda activate MLinPractice` (or `source activate MLinPractice`, if the former does not work). You can leave it with `conda deactivate` (or `source deactivate`, if the former does not work). Enter the environment and execute the following commands in order to install the necessary dependencies (this may take a while):
@@ -43,7 +43,7 @@ The overall pipeline can be executed with the script `code/pipeline.sh`, which e
 - The script `code/classification.sh` takes care of training and evaluating a classifier.
 - The script `code/application.sh` launches the application example.
 
-- The script `code/all_in_one_multiple_input_features.sh`is a powerfull extra file, which will launch a hole sklearn pipeline.
+- The script `code/all_in_one_multiple_input_features.sh`is a powerfull extra file, which will launch a entire sklearn pipeline.
 
 ## Preprocessing
 
@@ -63,8 +63,8 @@ The script takes the following optional parameters:
 ### Classical Preprocessing
 
 The script `run_preprocessing.py` is used to run various preprocessing steps on the raw data, producing additional columns in the csv file. It is executed as follows:
-```python -m code.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv
-
+```
+python -m code.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv
 ```
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
 The preprocessing steps to take can be configured with the following flags:
@@ -90,8 +90,8 @@ The script takes the following optional parameters:
 All python scripts and classes for feature extraction can be found in `code/feature_extraction/` .
 
 The script `extract_features.py` takes care of the overall feature extraction process and can be invoked as follows:
-```python -m code.feature_extraction.extract_features path/to/input.csv path/to/output.pickle
-
+```
+python -m code.feature_extraction.extract_features path/to/input.csv path/to/output.pickle
 ```
 Here, `input.csv` is the respective training, validation, or test set file created by `split_data.py`. The file `output.pickle` will be used to store the results of the feature extraction process, namely a dictionary with the following entries:
 - `"features"`: a numpy array with the raw feature values (rows are training examples, colums are features)
