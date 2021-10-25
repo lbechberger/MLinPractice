@@ -1,4 +1,4 @@
-# Documentation
+# Documentation for Team: ML Freunde
 
 This is the forked repository for Magnus Müller, Maximilian Kalcher and Samuel Hagemann. 
 
@@ -334,7 +334,7 @@ Since we only had a handful of features to work with and thought all of those co
 
 ## Classification
 
-First of all, before heading straight into classifying, we added a new argument: ```--small 1000``` which would just use 1000s tweets for quick testing. This helped testing out classifiers little by little and also helped with the debugging. Since we did not inherently know which type of classifier would preform the best, we chose to implement as many as possible of which their description still fitted the task at hand. Note: some classifiers required a StandardScaler() function provided form sklearn to work, this pipeline addition is not stated in the points below, but can be traced in the code structure. 
+Since we did not inherently know which type of classifier would preform the best, we chose to implement as many as possible of which their description still fitted the task at hand. Note: some classifiers required a ```StandardScaler()``` function provided form ```sklearn``` to work, this pipeline addition is not stated in the points below, but can be traced in the code structure. 
 
 ### Design Decisions
 
@@ -345,51 +345,81 @@ Below are listed all classifiers we used, including their hyperparameter tuning.
 
 1. *Majority classifier* 
 
-DummyClassifier(strategy="stratified", random_state=args.seed)
+`DummyClassifier(strategy="stratified", random_state=args.seed)`
 
 * strategy="stratified" : generates predictions by respecting the training set’s class distribution
-* random_state=args.seed : Saving the seed for replicability
+* random_state=args.seed : Save the seed for replicability
 <br />
 
 2. *Frequency classifier*
-DummyClassifier(strategy="most_frequent", random_state=args.seed)
+
+`DummyClassifier(strategy="most_frequent", random_state=args.seed)`
 
 * strategy="most_frequent" : always predicts the most frequent label in the training set
-* random_state=args.seed : Saving the seed for replicability
+* random_state=args.seed : Save the seed for replicability
 <br />
 
 3. *SVC (SVM)*
 
-SVC(probability=True, verbose=verbose)
+`SVC(probability=True, verbose=verbose)`
 
-* probability=True
+* probability=True : Enable probability estimates 
+* verbose=verbose : Show progress bar in output
 <br />
 
 4. *KNN*
+
+`KNeighborsClassifier(args.knn, n_jobs=-1)`
+
+* args.knn : Number of neighbors (in our case: 4)
+* n_jobs=-1 : Use all (computer) processors and run all jobs in parallel 
 <br />
 
 5. *SGDC classifier*
+
+`SGDClassifier(class_weight=balanced, random_state=args.seed, n_jobs=-1, verbose=verbose)`
+
+* class_weight=balanced : Use the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as `n_samples / (n_classes * np.bincount(y))`
+* random_state=args.seed : Save the seed for replicability
+* n_jobs=-1 : Use all (computer) processors and run all jobs in parallel 
+* verbose=verbose : Show progress bar in output
 <br />
 
 6. *Multinomial NB*
+
+`MultinomialNB(random_state=args.seed)`
+
+* random_state=args.seed : Saving the seed for replicability
 <br />
 
 7. *Linear SVC*
+
+`LinearSVC(class_weight=balanced, random_state=args.seed, verbose=verbose)`
+
+* class_weight=balanced : Use the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as `n_samples / (n_classes * np.bincount(y))`
+* random_state=args.seed : Save the seed for replicability
+* verbose=verbose : Show progress bar in output
 <br />
 
 8. *Logistic Regression*
-<br />
 
+`LogisticRegression(class_weight=balanced, n_jobs=-1, random_state=args.seed, verbose=verbose, max_iter=1000)`
+
+* class_weight=balanced : Use the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as `n_samples / (n_classes * np.bincount(y))`
+* n_jobs=-1 : Use all (computer) processors and run all jobs in parallel 
+* random_state=args.seed : Save the seed for replicability
+* verbose=verbose : Show progress bar in output
+* max_iter=1000 : Maximum number of iterations taken for the solvers to converge (in our case: 1000)
+<br />
+<br />
 
 ### Results
 
-Most classifiers worked fine but some of them took way longer than expected, which 
+Most classifiers worked fine but some of them took way longer than expected, which was a little bit of a setback and the reason why we added a new argument: ```--small X``` which would just use X tweets for quick testing. This helped testing out classifiers little by little and also helped with the debugging. 
 
-When we finally ran it successfully with 25 features, we tried it with the SVM classifier, but that took too much time (nearly endless), so we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1 and after some tuning (using more data) to 0.3.
-
-The big finale begins: What are the evaluation results you obtained with your
-classifiers in the different setups? Do you overfit or underfit? For the best
-selected setup: How well does it generalize to the test set?
+It seems like the best classifier in terms of runtime is ...
+The most notable classifier is ...
+The classifier that made the most sense for our features was ... 
 
 ### Interpretation
 
@@ -401,15 +431,80 @@ Anything else we may have learned?
 
 ### Design Decisions
 
-To evaluate our classifiers, we mainly used the integrated ```classification report``` from ```sklearn.metrics```, as well as single metric functions like the ```accuracy_score```, ```balanced_accuracy_score``` and the ```cohen_kappa_score```. 
+To evaluate our classifiers, we mainly used the integrated ```classification report``` (including precision, recall, f1-score) from ```sklearn.metrics```, as well as single metric functions like the ```accuracy_score```, ```balanced_accuracy_score``` and the ```cohen_kappa_score```. 
 
 ### Results
 
-How do the baselines perform with respect to the evaluation metrics?
+Below are listed all evaluations per classifiers we used. 
+
+<br />
+<br />
+
+1. *Majority classifier* 
+
+<br />
+
+2. *Frequency classifier*
+
+<br />
+
+3. *SVC (SVM)*
+
+<br />
+
+4. *KNN*
+
+<br />
+
+5. *SGDC classifier*
+
+<br />
+
+6. *Multinomial NB*
+
+<br />
+
+7. *Linear SVC*
+
+Overall: 
+```
+Accuracy: 0.8959892670526762
+Cohen's kappa: 0.3311179122770793
+Balanced accuracy: 0.6494107104172189
+```
+Detail:
+
+
+<br />
+
+8. *Logistic Regression*
+
+Overall:
+```
+Accuracy: 0.832968507272984
+Cohen's kappa: 0.33451551107436683
+Balanced accuracy: 0.743639191661198
+```
+Detail: 
+
+Test set: |  precision | recall | f1-score | support
+---------|-------------|--------|----------|-------
+    Flop |      0.96    |  0.85   |   0.90   |  25627
+   Viral |    0.31     | 0.63     | 0.42     | 2697
+accuracy |             |           |  **0.83**   |  28324
+macro avg | 0.64 |  0.74 |  0.66 |  28324
+weighted avg | 0.90  | 0.83  | 0.86  | 28324
+
+<br />
+<br />
 
 ### Interpretation
 
-Is there anything we can learn from these results?
+Indeed, our classifier X performed the best out of the bunch reaching a whopping 0.X on the test set. 
+
+When we finally ran it successfully with 25 features, we tried it with the SVM classifier, but that took too much time (nearly endless), so we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1 and after some tuning (using more data) to 0.3.
+
+* Increasing the dataset increases the kappa? 
 
 ## Tests
 
@@ -418,3 +513,5 @@ We have written tests for tfidf_vec and hash_vector, because even though the skl
 We added in run_classifier, a number of functions to run from the run_classifier_test.py which tests all classifiers, checks if the data is still equal length, if no classifier is written, try classifier fit, if not, give correct error output. 
 
 ## Project Organization
+
+Our overall organization went very smoothly. The use of Trello, which none of us had heard before, was a suprisingly pleasent experience. Especially for really bringing that needed structure into the group work. We held meetings every 2 days, in a similar fashion to scrum, where we talked about current Trello sprints and what we should have finished until the next sprint. We really only had to postpone very little things and the overall workflow worked really well. 
