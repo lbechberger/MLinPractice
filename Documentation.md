@@ -63,7 +63,7 @@ Input: | Output:
 <br />
 <br />
 
-3. *Remove emojis*
+3. *Removing emojis*
 
 In between the now usable words, we found some tweets had emojis. This of course was not a string and since interpretability of emojis by encoding and decoding into ASCII was a little difficult, we chose to just remove them from the tweet. 
 
@@ -78,7 +78,7 @@ Input: | Output:
 <br />
 <br />
 
-4. *Remove links*
+4. *Removing links*
 
 We thought we had finished the cleaning part, since there was finally only text in a tweet. But we quickly found that links were also recognized as strings, and were practically unusable for us. So we also removed any string that started with ``` http ```. 
 
@@ -91,7 +91,7 @@ Input: | Output:
 <br />
 <br />
 
-5. *Tokenize tweet*
+5. *Tokenizing tweet*
 
 After these important cleaning steps, we took all words in the tweet and tokenized them for easier feature extraction when dealing with NLP features, because we would then just be iterating over a list or core words. This tokenizer is built using ```nltk``` and was already implemented in one of the seminar sessions. 
 
@@ -106,7 +106,7 @@ Input: | Output:
 <br />
 <br />
 
-6. *Set language to only english*
+6. *Setting language to only english*
 
 Taking a closer look at the languages of our tweets, our analysis summary was the following: 
 
@@ -117,7 +117,7 @@ It turns out, from the total 295811 samples, 95% were english tweets. The rest w
 <br />
 <br />
 
-7. *Set all words to lowercase*
+7. *Setting all words to lowercase*
 
 Our final preprocessing step was only implemented after having examined keywords for the feature extraction and found out that many words on ‘most used words’ analysis had appeared twice. This was because sometimes people would write them with lower and uppercase. So we just went back into the code and made sure to append all strings to our preprocessing columns with ```.lower()```, making all words lowercase. 
 
@@ -136,7 +136,10 @@ At the end of our preprocessing, we had created 2 new columns: ``` preprocess_co
 
 Our resulting columns from a raw tweet looks like this: 
 
-(raw) (preprocess_col) (preprocess_col_tokenized)
+tweet | preprocess_col | preprocess_col_tokenized
+------|----------------|-------------------------
+Some solid #datascience podcasts here. And one looks super familiar... 😎 Check it out 👇  https://t.co/Lhrkp4FCoc | solid datascience podcasts one looks super familiar check | ['solid', 'datascience', 'podcasts', 'one', 'looks', 'super', 'familiar', 'check'] 
+
 Looking at this from a different perspective, we can count how much of the original dataset was removed solely based on the character count: 
 
 Number of characters before preprocessing: 52686072
@@ -149,8 +152,8 @@ At the end of our preprocessing, almost 60% of the original data was used and wo
 
 The dataset was very variable and we had a lot of features to work with, which gave us the freedom to choose and experiment with these freely. We chose to extract two types of features: 
 
-Features about special characters and metadata, and
-Features about natural language, word similarity and frequency
+a) Features about special characters and metadata, and
+b) Features about natural language, word similarity and frequency
 
 These features are appended to the preprocessed dataset as new columns and can be inspected in the ``` features.csv ``` file in the feature extraction folder. Below we listed all extracted features and their explanation. 
 
@@ -158,54 +161,76 @@ These features are appended to the preprocessed dataset as new columns and can b
 
 Below are listed all implemented features and their explanation. 
 
-Photo Bool
+<br />
+<br />
+
+1. *Photo Bool*
 
 We implemented a simple feature that would tell whether the tweet under consideration contains one (or even multiple) photos or not. The idea behind this was that tweets with visual stimulus are more appealing and would therefore be more likely to go viral. 
 
 The possible outputs are either ```[1]``` if the tweet contains photo(s) and ```[0]``` if it does not. If we have 5 tweets that either contain videos or not, an exemplary output could be: ```[[1], [0], [0], [1], [0]]```
 
-Video Bool
+<br />
+<br />
+
+2. *Video Bool*
 
 Also, we were interested in the possible effect of video(s) in the tweets and implemented it as a feature in a similar way to the photo feature. This feature will tell whether the tweet under consideration contains video(s) or not. The possible outputs are either ```[1]``` if the tweet contains video(s) and ```[0]``` if it does not. If we have 5 tweets that either contain videos or not, an exemplary output could be: ```[[0], [1], [0], [1], [1]]```
 
 Since this feature was already integrated in the raw dataset, we just had to extract the values of this column. 
 
-Hashtag Counter
+<br />
+<br />
 
-We also thought about the importance of hashtags. Since using a hashtag increases the engagement of tweets by tagging similar topics together, having more hashtags would mean that more people could be reached for a variety of topics. Because of this, we implemented a feature that counts the number of hashtags a tweet has. If we have 5 tweets that contain different number of hashtags, an exemplary output could be: ```[[0], [5], [2], [3], [1]]```
+3. *Hashtag Counter*
 
-Emoji Counter
+We also thought about the importance of hashtags. Since using a hashtag increases the engagement of tweets by tagging similar topics together, having more hashtags would mean that more people could be reached for a variety of topics and the tweet is more likely to become viral. Because of this, we implemented a feature that counts the number of hashtags a tweet has. If we have 5 tweets that contain different number of hashtags, an exemplary output could be: ```[[0], [5], [2], [3], [1]]```
 
-According to a study, emojis have not only become a visual language used to reveal several things (like feelings and thoughts), but also part of the fundamental structure of texts. They have shown to convey easier communication and strengthen the meaning and social connections between users. 
+<br />
+<br />
+
+4. *Emoji Counter*
+
+According to a [study](https://knepublishing.com/index.php/KnE-Social/article/view/4880/9771#toc), emojis have not only become a visual language used to reveal several things (like feelings and thoughts), but also part of the fundamental structure of texts. They have shown to convey easier communication and strengthen the meaning and social connections between users. 
 
 Because of this, we thought it would be very fitting to add a feature about emojis. So we took the original unprocessed tweets again, and counted every occurrence of strings that started or contained ```\U``` after being decoded. This number was then added to a new column as a feature to show that using a n > 0 number of emojis would increase the attractiveness of the tweet. If we have 5 tweets that contain different number of emojis, an exemplary output could be: ```[[0], [5], [2], [3], [1]]```
 
+<br />
+<br />
 
-Tweet length
+5. *Tweet length*
 
-This feature was already implemented, so we did not add anything to it. We did find this very interesting though. According to a 2013 study trying to analyze why tweets became viral, most viral tweets back then had less than 140 characters. This means that a shorter and precise tweet would perform better than a longer tweet conveying more information.
+This feature was already implemented, so we did not add anything to it. We did find this very interesting though. According to a 2013 [paper](https://www.researchgate.net/publication/262166912_Analyzing_and_predicting_viral_tweets) trying to analyze why tweets became viral, most viral tweets back then had less than 140 characters. This means that a shorter and precise tweet would perform better than a longer tweet conveying more information.
 
 This feature just counts the entire tweet string and adds the value to a new feature column. If we have 5 tweets of different length, an exemplary output could be: ```[[45], [14], [41], [30], [12]]``
 
-Hour of tweet
+<br />
+<br />
+
+6. *Hour of tweet*
 
 The last feature about the tweet metadata is about the posting time of the tweet. We wanted to know if there was a difference in the posting times in viral and non-viral tweets. The following two graphs represent the tweet frequency per hour of posting. 
 
-![Test](/Documentation/time_non_viral.png)
-[2] Hour frequency of non-viral tweets [0-24]
+![time_non_viral](/Documentation/time_non_viral.png)
+&emsp;&emsp;&emsp;&emsp;[1] Hour frequency of non-viral tweets [0-24]
 
-[3] Hour frequency of viral tweets [0-24]
+![time_viral](/Documentation/time_viral.png)
+&emsp;&emsp;&emsp;&emsp;[2] Hour frequency of viral tweets [0-24]
 
-Interestingly enough, both viral and non-viral tweets are distributed pretty much equally except for a timeframe of about 3 hours in the morning from 7:00 - 10:00. This is where the viral tweets tend to be tweeted more. Using this information, we stripped the hour from the ```time``` column of the raw dataset and added this as a feature in a new column. So for a time of ```12:05:45``` the feature would just extract the number ```12```. If we have 5 tweets of posting times, an exemplary output could be: ```[[12], [14], [3], [4], [0]]``
+Interestingly enough, both viral and non-viral tweets are distributed pretty much equally except for a timeframe of about 3 hours in the morning from 7:00 - 10:00. This is where the viral tweets tend to be tweeted more. Using this information, we stripped the hour from the ```time``` column of the raw dataset and added this as a feature in a new column ```time_hours```. So for a time of ```12:05:45``` the feature would just extract the number ```12```. If we have 5 tweets of posting times, an exemplary output could be: ```[[12], [14], [3], [4], [0]]``
 
+<br />
+<br />
 
-Word2Vec
+7. *Word2Vec*
 
 We then started to analyze features about semantics and natural language. The first thing that came to mind was seeing if there was a different word usage comparing the viral and non-viral tweets. The two graphs below show the 20 most used words in both categories:
 
-[3] Top 20 most used words in non-viral tweets (label == False)
+![word_count_non_viral](/Documentation/word_count_non_viral.png)
+&emsp;&emsp;&emsp;&emsp;[3] Top 20 most used words in non-viral tweets (label == False)
 
-[3] Top 20 most used words in viral tweets (label == True)
+![word_count_viral](/Documentation/word_count_viral.png)
+&emsp;&emsp;&emsp;&emsp;[4] Top 20 most used words in viral tweets (label == True)
 
 What we can gather from this is that both categories seem to use the word ‘data’, followed by ‘datascience’  the most. This is not surprising, as the entire dataset is about data-science related tweets. Applying a word embedding feature using these words would not make much sense, as the feature would score equally high for the majority of both viral and non-viral tweets. So we had to differentiate between the categories and find words that were only present in the top 20 words in viral tweets, and not in non-virals. Since we used a dataset of embedded words from google news ( ```'word2vec-google-news-300'```), the keywords had to be present there and could not be too specific (deepleaning, datascience, etc. did not exist). We then settled with the following words: 
 
@@ -213,33 +238,98 @@ What we can gather from this is that both categories seem to use the word ‘dat
 
 These words were present in the dataset for word embeddings and were also exclusively used in viral tweets. 
 
-Using the package ```gensim``` for computing word embeddings and semantic similarity, we could easily iterate over all words in ```preprocess_col_tokenized``` and compare each word there with each word in our ```keyword``` list. For every (tokenized) tweet, we took the mean of all similarity values and added this float number to a new feature column ```word2vec```. 
+Using the package ```gensim``` for computing word embeddings and semantic similarity, we could easily iterate over all words in ```preprocess_col_tokenized``` and compare each word there with each word in our ```keyword``` list. For every (tokenized) tweet, we took the mean of all similarity values and added this float number to a new feature column ```word2vec```. For example, using the keywords stated above and 2 sentences: 
 
+``` 
+keywords  = ['coding','free','algorithms','statistics'] 
 
-Hashing Vectorizer
-Tf Idf
+['i', 'love', 'free', 'coding', 'courses'] = 0.1786
+['i', 'will', 'make', 'some', 'pizza', 'today'] = 0.0890
+```
+We can see that the first sentence obsioulsy has more to do with the given keywords than the second sentence, and our word2vec score reflects this. 
 
-We wanted to try something we didn't hear in the lecture. Therefore, we used the HashingVectorizer from sklearn to create an individual hash for each tweet. For a sentence like 'I love Machine Learning', the output can look like [0.4, 0.3, 0.9, 0, 0.21], with length n representing the number of features. It's not very intuitive to humans why this works, but after a long time of version conflicts and other problems, we enjoyed the simplicity of using sklearn. 
+<br />
+<br />
+
+8. *Hashing Vectorizer*
+
+We also wanted to try something we didn't hear in the lecture. Therefore, we used a function called ```HashingVectorizer``` from ```sklearn``` to create an individual hash for each tweet. It is mainly used for converting a collection of text documents to a matrix of token occurances. But in our case, it worked just as well by using it to compare across all preprocessed tweets for some kind of similarity. It also performs really well and uses low memory. For a sentence like 'I love Machine Learning', the output can look like this depending on the number of ```features``` (argument in function): 
+
+```[0.4, 0, 0, 0, 0.21, 0.25, 0, 0.3]``` 
+
+Which is basically a very high dimensional but sparse matrix of values. <br />
+
+After experimenting around for a bit, we found that this function yields some interesting results. After converting the column ```preprocessed_col_tokenized``` into a sparse matrix with 2^3 = 8 features via the HashingVectorizer, our feature looked like this: 
+
+```
+[[-0.22941573  0.          0.         -0.45883147 -0.22941573  0.
+   0.45883147 -0.6882472 ]
+ [ 0.35355339 -0.70710678  0.35355339  0.         -0.35355339  0.
+   0.35355339  0.        ]
+ [ 0.52522573 -0.13130643  0.13130643 -0.52522573  0.          0.26261287
+  -0.52522573  0.26261287]
+ [-0.33333333 -0.66666667 -0.33333333 -0.33333333  0.          0.
+   0.33333333 -0.33333333]
+ [-0.57735027  0.          0.          0.          0.          0.
+   0.57735027 -0.57735027]
+   ...]
+```
+Each row representing a vectorized tweet. To see if there was still structure in the data after the hashing, we used the newer cluster algorithm ```DBSCAN``` from ```sklearn``` to cluster this newly formed data and give us some unique labels for us to examine. For the entire data, there seemed to be about 8 unique clusters (-1 being noise): `[0, -1, 6, 1, 2, 5, 3, 4, 7]`. If we now reverse the search and look for each label, we could spot some interesting findings. Taking a look at a few instances of cluster `4`, we can see that almost all of them include the words data analysis in some way: 
+
+```
+['email', 'UMich', 'Dean', 'Today', 'Provost', 'told', 'scientists', 'labs', 'closed', 'instead', 'work', 'activities', 'completed', 'remotely', 'writing', 'papers', 'grant', 'proposals', 'completing', **'data', 'analysis'**] 
+
+['Heres', 'chance', 'identify', 'skills', 'needed', 'future', 'amp', 'plan', 'tomorrow', 'without', 'neglecting', 'today', 'FutureOfWork', 'YourStory', 'set', 'bring', 'together', 'CTOs', 'CPOs', 'data', 'science', 'heads', 'amp', 'tech', 'architects', 'help', 'stay', 'ahead', 'curve', 'FOW'] 
+
+['new', 'DSDimensions', **'data', 'analysis'**, 'HeleneDraux', 'juergenwastl', 'Digital', 'Science', 'Consultancy', 'confirms', 'COVIDs', 'negative', 'impact', 'proportion', 'women', 'first', 'authors', 'journal', 'articles', 'DavidMJourno', 'timeshighered', 'discusses', 'findings'] 
+
+['Basic', **'Data', 'Analysis'**, 'following', 'PeoplePerHour', 'project', 'posted', 'Monday', 'th', 'December', 'PM', 'httpbitlyeeEXU']
+```
+
+While cluster `2` gives us very short tweets about data: 
+```
+['Data', 'Science', 'httptcoJBiTdO', 'bigdata'] 
+
+['Intro', 'Data', 'Science', 'November'] 
+
+['lil', 'data', 'visualization', 'guys'] 
+
+['data', 'science', 'team', 'culturintel'] 
+
+['Rules', 'Live', 'Work', 'DataScience'] 
+```
+
+This indirectly means, that the HashingVectorizer does not only take into account word counts in relation to the entire data, but also somehow gathered that the short tweets above were somehow similar. It's not very intuitive to humans why this works, because it sometimes involves creating a large output for a little input in a high dimensional space, but we thought it was a cool feature nonetheless and added it into column ```tweet_hashvector```. In our version, we increased the function parameter from (length) 8 to 2^10 = 1024 features. 
+
+<br />
+<br />
+
+9. *Tf Idf*
 
 Usage: `--hash_vec` 
 and for number of features for hash vector edit HASH_VECTOR_N_FEATURES in util.py 
 
-### Results
+<br />
+<br />
 
-Can you say something about how the feature values are distributed? Maybe show some plots?
+### Results and interpretation
 
-When we finally ran it successfully with 25 features, we tried it with the SVM classifier, but that took too much time (nearly endless), so we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1 and after some tuning (using more data) to 0.3.
+As a result of our feature extraction, we successfuly extracted 8 unique features to use in the classification step. We also implemented a ```features.csv``` file to examine if the features were extracted correctly, these final columns for classification are shown below. Important note: feature number 8 (HashingVectorizer) is not included here due to its length. 
 
+tweet_charlength	| hashtags_hashtag_count	| tweet_emoji_count |	photos_bool |	video_bool |	tweet_word2vec |	time_hours
+-----------------|-------------------------|-------------------|-------------|------------|----------------|---------
+221.0 | 16.0 |	0.0 |	1.0 |	1.0 |	0.10604091733694077 |	10.0
+100.0 | 1.0 |	0.0 |	0.0 |	0.0 |	0.07567958533763885 |	13.0
+192.0 | 7.0 |	0.0 |	0.0 |	0.0 |	0.0994858369231224 |	20.0
+207.0 | 12.0 |	0.0 |	1.0 |	1.0 |	0.13340184092521667 |	9.0
+74.0  | 2.0 |	0.0 |	1.0 |	1.0 |	0.09417513012886047 |	4.0
 
-### Interpretation
-
-Can we already guess which features may be more useful than others?
+Another important point to mention regarding the HashingVectorizer feauture, is that its probably best to use this feature apart from the others due to its 
+'weight' in this setting compared to the rest. 
 
 ## Dimensionality Reduction
 
-If you didn't use any because you have only few features, just state that here.
-In that case, you can nevertheless apply some dimensionality reduction in order
-to analyze how helpful the individual features are during classification
+Since we only had a handful of features, we did not think that 
 
 ### Design Decisions
 
@@ -263,6 +353,8 @@ candidate values) did you look at? What were your reasons for this?
 
 - SVM
 ### Results
+
+When we finally ran it successfully with 25 features, we tried it with the SVM classifier, but that took too much time (nearly endless), so we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1 and after some tuning (using more data) to 0.3.
 
 The big finale begins: What are the evaluation results you obtained with your
 classifiers in the different setups? Do you overfit or underfit? For the best
