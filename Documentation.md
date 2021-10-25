@@ -141,18 +141,18 @@ tweet | preprocess_col | preprocess_col_tokenized
 Some solid #datascience podcasts here. And one looks super familiar... 😎 Check it out 👇  https://t.co/Lhrkp4FCoc | solid datascience podcasts one looks super familiar check | ['solid', 'datascience', 'podcasts', 'one', 'looks', 'super', 'familiar', 'check'] 
 
 Looking at this from a different perspective, we can count how much of the original dataset was removed solely based on the character count: 
-
+```
 Number of characters before preprocessing: 52686072
 Number of characters after preprocessing: 32090622
 Removed: 20595450 (39.1 %)
-
+```
 At the end of our preprocessing, almost 60% of the original data was used and worked with. 
 
 ## Feature Extraction
 
 The dataset was very variable and we had a lot of features to work with, which gave us the freedom to choose and experiment with these freely. We chose to extract two types of features: 
 
-a) Features about special characters and metadata, and
+a) Features about special characters and metadata, and <br />
 b) Features about natural language, word similarity and frequency
 
 These features are appended to the preprocessed dataset as new columns and can be inspected in the ``` features.csv ``` file in the feature extraction folder. Below we listed all extracted features and their explanation. 
@@ -202,7 +202,7 @@ Because of this, we thought it would be very fitting to add a feature about emoj
 
 This feature was already implemented, so we did not add anything to it. We did find this very interesting though. According to a 2013 [paper](https://www.researchgate.net/publication/262166912_Analyzing_and_predicting_viral_tweets) trying to analyze why tweets became viral, most viral tweets back then had less than 140 characters. This means that a shorter and precise tweet would perform better than a longer tweet conveying more information.
 
-This feature just counts the entire tweet string and adds the value to a new feature column. If we have 5 tweets of different length, an exemplary output could be: ```[[45], [14], [41], [30], [12]]``
+This feature just counts the entire tweet string and adds the value to a new feature column. If we have 5 tweets of different length, an exemplary output could be: ```[[45], [14], [41], [30], [12]]```
 
 <br />
 <br />
@@ -212,10 +212,10 @@ This feature just counts the entire tweet string and adds the value to a new fea
 The last feature about the tweet metadata is about the posting time of the tweet. We wanted to know if there was a difference in the posting times in viral and non-viral tweets. The following two graphs represent the tweet frequency per hour of posting. 
 
 ![time_non_viral](/Documentation/time_non_viral.png)
-&emsp;&emsp;&emsp;&emsp;[1] Hour frequency of non-viral tweets [0-24]
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[1] Hour frequency of non-viral tweets [0-24]
 
 ![time_viral](/Documentation/time_viral.png)
-&emsp;&emsp;&emsp;&emsp;[2] Hour frequency of viral tweets [0-24]
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[2] Hour frequency of viral tweets [0-24]
 
 Interestingly enough, both viral and non-viral tweets are distributed pretty much equally except for a timeframe of about 3 hours in the morning from 7:00 - 10:00. This is where the viral tweets tend to be tweeted more. Using this information, we stripped the hour from the ```time``` column of the raw dataset and added this as a feature in a new column ```time_hours```. So for a time of ```12:05:45``` the feature would just extract the number ```12```. If we have 5 tweets of posting times, an exemplary output could be: ```[[12], [14], [3], [4], [0]]``
 
@@ -227,10 +227,10 @@ Interestingly enough, both viral and non-viral tweets are distributed pretty muc
 We then started to analyze features about semantics and natural language. The first thing that came to mind was seeing if there was a different word usage comparing the viral and non-viral tweets. The two graphs below show the 20 most used words in both categories:
 
 ![word_count_non_viral](/Documentation/word_count_non_viral.png)
-&emsp;&emsp;&emsp;&emsp;[3] Top 20 most used words in non-viral tweets (label == False)
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[3] Top 20 most used words in non-viral tweets (label == False)
 
 ![word_count_viral](/Documentation/word_count_viral.png)
-&emsp;&emsp;&emsp;&emsp;[4] Top 20 most used words in viral tweets (label == True)
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[4] Top 20 most used words in viral tweets (label == True)
 
 What we can gather from this is that both categories seem to use the word ‘data’, followed by ‘datascience’  the most. This is not surprising, as the entire dataset is about data-science related tweets. Applying a word embedding feature using these words would not make much sense, as the feature would score equally high for the majority of both viral and non-viral tweets. So we had to differentiate between the categories and find words that were only present in the top 20 words in viral tweets, and not in non-virals. Since we used a dataset of embedded words from google news ( ```'word2vec-google-news-300'```), the keywords had to be present there and could not be too specific (deepleaning, datascience, etc. did not exist). We then settled with the following words: 
 
@@ -246,7 +246,7 @@ keywords  = ['coding','free','algorithms','statistics']
 ['i', 'love', 'free', 'coding', 'courses'] = 0.1786
 ['i', 'will', 'make', 'some', 'pizza', 'today'] = 0.0890
 ```
-We can see that the first sentence obsioulsy has more to do with the given keywords than the second sentence, and our word2vec score reflects this. 
+We can see that the first sentence obvioulsy has more to do with the given keywords than the second sentence, and our word2vec score reflects this. 
 
 <br />
 <br />
@@ -274,16 +274,16 @@ After experimenting around for a bit, we found that this function yields some in
    0.57735027 -0.57735027]
    ...]
 ```
-Each row representing a vectorized tweet. To see if there was still structure in the data after the hashing, we used the newer cluster algorithm ```DBSCAN``` from ```sklearn``` to cluster this newly formed data and give us some unique labels for us to examine. For the entire data, there seemed to be about 8 unique clusters (-1 being noise): `[0, -1, 6, 1, 2, 5, 3, 4, 7]`. If we now reverse the search and look for each label, we could spot some interesting findings. Taking a look at a few instances of cluster `4`, we can see that almost all of them include the words data analysis in some way: 
+Each row representing a vectorized tweet. To see if there was still structure in the data after the hashing, we used the newer cluster algorithm ```DBSCAN``` from ```sklearn``` to cluster this newly formed data and give us some unique labels for us to examine. For the entire data, there seemed to be about 8 unique clusters (-1 being noise): `[0, -1, 6, 1, 2, 5, 3, 4, 7]`. If we now reverse the search and look for each label, we could spot some interesting findings. Taking a look at a few instances of cluster `4`, we can see that almost all of them include the words 'data analysis' in some way: 
 
 ```
-['email', 'UMich', 'Dean', 'Today', 'Provost', 'told', 'scientists', 'labs', 'closed', 'instead', 'work', 'activities', 'completed', 'remotely', 'writing', 'papers', 'grant', 'proposals', 'completing', **'data', 'analysis'**] 
+['email', 'UMich', 'Dean', 'Today', 'Provost', 'told', 'scientists', 'labs', 'closed', 'instead', 'work', 'activities', 'completed', 'remotely', 'writing', 'papers', 'grant', 'proposals', 'completing', 'data', 'analysis'] 
 
 ['Heres', 'chance', 'identify', 'skills', 'needed', 'future', 'amp', 'plan', 'tomorrow', 'without', 'neglecting', 'today', 'FutureOfWork', 'YourStory', 'set', 'bring', 'together', 'CTOs', 'CPOs', 'data', 'science', 'heads', 'amp', 'tech', 'architects', 'help', 'stay', 'ahead', 'curve', 'FOW'] 
 
-['new', 'DSDimensions', **'data', 'analysis'**, 'HeleneDraux', 'juergenwastl', 'Digital', 'Science', 'Consultancy', 'confirms', 'COVIDs', 'negative', 'impact', 'proportion', 'women', 'first', 'authors', 'journal', 'articles', 'DavidMJourno', 'timeshighered', 'discusses', 'findings'] 
+['new', 'DSDimensions', 'data', 'analysis', 'HeleneDraux', 'juergenwastl', 'Digital', 'Science', 'Consultancy', 'confirms', 'COVIDs', 'negative', 'impact', 'proportion', 'women', 'first', 'authors', 'journal', 'articles', 'DavidMJourno', 'timeshighered', 'discusses', 'findings'] 
 
-['Basic', **'Data', 'Analysis'**, 'following', 'PeoplePerHour', 'project', 'posted', 'Monday', 'th', 'December', 'PM', 'httpbitlyeeEXU']
+['Basic', 'Data', 'Analysis', 'following', 'PeoplePerHour', 'project', 'posted', 'Monday', 'th', 'December', 'PM', 'httpbitlyeeEXU']
 ```
 
 While cluster `2` gives us very short tweets about data: 
@@ -323,36 +323,67 @@ tweet_charlength	| hashtags_hashtag_count	| tweet_emoji_count |	photos_bool |	vi
 192.0 | 7.0 |	0.0 |	0.0 |	0.0 |	0.0994858369231224 |	20.0
 207.0 | 12.0 |	0.0 |	1.0 |	1.0 |	0.13340184092521667 |	9.0
 74.0  | 2.0 |	0.0 |	1.0 |	1.0 |	0.09417513012886047 |	4.0
+... | ... | ... | ... | ... | ... | ...
 
 Another important point to mention regarding the HashingVectorizer feauture, is that its probably best to use this feature apart from the others due to its 
 'weight' in this setting compared to the rest. 
 
 ## Dimensionality Reduction
 
-Since we only had a handful of features, we did not think that 
-
-### Design Decisions
-
-Which dimensionality reduction technique(s) did you pick and why?
-
-### Results
-
-Which features were selected / created? Do you have any scores to report?
-
-### Interpretation
-
-Can we somehow make sense of the dimensionality reduction results?
-Which features are the most important ones and why may that be the case?
+Since we only had a handful of features to work with and thought all of those could be important, we did not want to apply some overkill dimensionaly reduction algorithm. Therefore we only kept the dimensionality reductor that was already implemented, namely being the ```K-Best selector``` using mutual information. 
 
 ## Classification
-First of all we add a new argument: --small 1000 which would just use 1000s tweets.
+
+First of all, before heading straight into classifying, we added a new argument: ```--small 1000``` which would just use 1000s tweets for quick testing. This helped testing out classifiers little by little and also helped with the debugging. Since we did not inherently know which type of classifier would preform the best, we chose to implement as many as possible of which their description still fitted the task at hand. Note: some classifiers required a StandardScaler() function provided form sklearn to work, this pipeline addition is not stated in the points below, but can be traced in the code structure. 
+
 ### Design Decisions
 
-Which classifier(s) did you use? Which hyperparameter(s) (with their respective
-candidate values) did you look at? What were your reasons for this?
+Below are listed all classifiers we used, including their hyperparameter tuning. 
 
-- SVM
+<br />
+<br />
+
+1. *Majority classifier* 
+
+DummyClassifier(strategy="stratified", random_state=args.seed)
+
+* strategy="stratified" : generates predictions by respecting the training set’s class distribution
+* random_state=args.seed : Saving the seed for replicability
+<br />
+
+2. *Frequency classifier*
+DummyClassifier(strategy="most_frequent", random_state=args.seed)
+
+* strategy="most_frequent" : always predicts the most frequent label in the training set
+* random_state=args.seed : Saving the seed for replicability
+<br />
+
+3. *SVC (SVM)*
+
+SVC(probability=True, verbose=verbose)
+
+* probability=True
+<br />
+
+4. *KNN*
+<br />
+
+5. *SGDC classifier*
+<br />
+
+6. *Multinomial NB*
+<br />
+
+7. *Linear SVC*
+<br />
+
+8. *Logistic Regression*
+<br />
+
+
 ### Results
+
+Most classifiers worked fine but some of them took way longer than expected, which 
 
 When we finally ran it successfully with 25 features, we tried it with the SVM classifier, but that took too much time (nearly endless), so we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1 and after some tuning (using more data) to 0.3.
 
@@ -370,8 +401,7 @@ Anything else we may have learned?
 
 ### Design Decisions
 
-Which evaluation metrics did you use and why? 
-Which baselines did you use and why?
+To evaluate our classifiers, we mainly used the integrated ```classification report``` from ```sklearn.metrics```, as well as single metric functions like the ```accuracy_score```, ```balanced_accuracy_score``` and the ```cohen_kappa_score```. 
 
 ### Results
 
