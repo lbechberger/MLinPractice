@@ -299,15 +299,9 @@ While cluster `2` gives us very short tweets about data:
 ['Rules', 'Live', 'Work', 'DataScience'] 
 ```
 
-This indirectly means, that the HashingVectorizer does not only take into account word counts in relation to the entire data, but also somehow gathered that the short tweets above were somehow similar. It's not very intuitive to humans why this works, because it sometimes involves creating a large output for a little input in a high dimensional space, but we thought it was a cool feature nonetheless and added it into column ```tweet_hashvector```. In our version, we increased the function parameter from (length) 8 to 2^10 = 1024 features. 
+This indirectly means, that the HashingVectorizer does not only take into account word counts in relation to the entire data, but also somehow gathered that the short tweets above were somehow similar. It's not very intuitive to humans why this works, because it sometimes involves creating a large output for a little input in a high dimensional space, but we thought it was a cool feature nonetheless and added it into column ```tweet_hashvector```. In normal practical cases, this is used with 2^20 features, which are about 1048576 features. In our version, we increased the function parameter from (length) 8 to 2^10 = 1024 features. 
 
-<br />
-<br />
-
-9. *Tf Idf*
-
-Usage: `--hash_vec` 
-and for number of features for hash vector edit HASH_VECTOR_N_FEATURES in util.py 
+We also found that sklearn has tf idf... 
 
 <br />
 <br />
