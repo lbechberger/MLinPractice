@@ -217,7 +217,7 @@ The last feature about the tweet metadata is about the posting time of the tweet
 ![time_viral](/Documentation/time_viral.png)
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[2] Hour frequency of viral tweets [0-24]
 
-Interestingly enough, both viral and non-viral tweets are distributed pretty much equally except for a timeframe of about 3 hours in the morning from 7:00 - 10:00. This is where the viral tweets tend to be tweeted more. Using this information, we stripped the hour from the ```time``` column of the raw dataset and added this as a feature in a new column ```time_hours```. So for a time of ```12:05:45``` the feature would just extract the number ```12```. If we have 5 tweets of posting times, an exemplary output could be: ```[[12], [14], [3], [4], [0]]``
+Interestingly enough, both viral and non-viral tweets are distributed pretty much equally except for a timeframe of about 3 hours in the morning from 7:00 - 10:00. This is where the viral tweets tend to be tweeted more. Using this information, we stripped the hour from the ```time``` column of the raw dataset and added this as a feature in a new column ```time_hours```. So for a time of ```12:05:45``` the feature would just extract the number ```12```. If we have 5 tweets of posting times, an exemplary output could be: ```[[12], [14], [3], [4], [0]]```
 
 <br />
 <br />
@@ -319,12 +319,11 @@ tweet_charlength	| hashtags_hashtag_count	| tweet_emoji_count |	photos_bool |	vi
 74.0  | 2.0 |	0.0 |	1.0 |	1.0 |	0.09417513012886047 |	4.0
 ... | ... | ... | ... | ... | ... | ...
 
-Another important point to mention regarding the HashingVectorizer feauture, is that its probably best to use this feature apart from the others due to its 
-'weight' in this setting compared to the rest. 
+Another important point to mention regarding the HashingVectorizer feauture, is that because it outputs multiple values (in our case a list of 1024 features per tweet), it had to fit our framework of unique values per feature column. Due to this, we extracted all 1024 features and added them to individual columns alongside the 7 features above, making the feature space of length ( _ ,1031). We also decided to do this to avoid any kind of feature outweighing that might occur. 
 
 ## Dimensionality Reduction
 
-Since we only had a handful of features to work with and thought all of those could be important, we did not want to apply some overkill dimensionaly reduction algorithm. Therefore we only kept the dimensionality reductor that was already implemented, namely being the ```K-Best selector``` using mutual information. 
+At first, we tried reducing the dimensionality using a few methods like the `sklearn` integrated PCA. But when looking at the before and after results, it did not change much, and even changed crucial parts about the HashingVectorizer which even sometimes affected the performance negatively. At the end, we only kept the dimensionality reductor that was already implemented, namely being the ```K-Best selector``` using mutual information. 
 
 ## Classification
 
@@ -407,25 +406,23 @@ Below are listed all classifiers we used, including their hyperparameter tuning.
 <br />
 <br />
 
-### Results
+### Results and interpretation
 
 Most classifiers worked fine but some of them took way longer than expected, which was a little bit of a setback and the reason why we added a new argument: ```--small X``` which would just use X tweets for quick testing. This helped testing out classifiers little by little and also helped with the debugging. 
+
+What we learnt from trying each of the above listed classifiers is that each behaves very differently and not all of them were useful. Starting with the first two, the Majority and Frequency classifier from `sklearn`'s ```DummyClassifier``` were almost completely unusable to us. These are swiftly followed by 
 
 It seems like the best classifier in terms of runtime is ...
 The most notable classifier is ...
 The classifier that made the most sense for our features was ... 
 
-### Interpretation
-
-Which hyperparameter settings are how important for the results?
-How good are we? Can this be used in practice or are we still too bad?
-Anything else we may have learned?
-
 ## Evaluation
 
 ### Design Decisions
 
-To evaluate our classifiers, we mainly used the integrated ```classification report``` (including precision, recall, f1-score) from ```sklearn.metrics```, as well as single metric functions like the ```accuracy_score```, ```balanced_accuracy_score``` and the ```cohen_kappa_score```. 
+For our evaluation and to avoid a combinatorial feature evaluation problem, we only picked our top 3 classifers that worked well within our expectations, namely being the SGDC classifier, linear SVC and logistic regression. 
+
+To evaluate our 3 classifiers, we mainly used the integrated ```classification report``` (including precision, recall, f1-score) from ```sklearn.metrics```, as well as single metric functions like the ```accuracy_score```, ```balanced_accuracy_score``` and the ```cohen_kappa_score```. 
 
 ### Results
 
@@ -434,27 +431,7 @@ Below are listed all evaluations per classifiers we used.
 <br />
 <br />
 
-1. *Majority classifier* 
-
-<br />
-
-2. *Frequency classifier*
-
-<br />
-
-3. *SVC (SVM)*
-
-<br />
-
-4. *KNN*
-
-<br />
-
 5. *SGDC classifier*
-
-<br />
-
-6. *Multinomial NB*
 
 <br />
 
@@ -485,7 +462,7 @@ Test set  |  precision | recall | f1-score | support |
 ----------|------------|--------|----------|---------|
     Flop  |      0.96  |  0.85  |   0.90   |  25627  |
    Viral  |    0.31    | 0.63   | 0.42     | 2697    |
-accuracy  |      -     |     -  |  **0.83**|  28324  |
+accuracy  |      -     |     -  |  0.83    |  28324  |
 macro avg | 0.64       |  0.74  |  0.66    |  28324  | 
 weighted avg | 0.90    | 0.83   | 0.86     | 28324   |
 
