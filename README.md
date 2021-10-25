@@ -202,8 +202,8 @@ Execute it with the script `code/all_in_one_multiple_input_features.sh` :
     but this is not recommended here, especially when using something like HashingVectorizer with 2 ** 22 features, because of time, too much information loss and because during our tests the classifier could easily learn this without dim_red.
 
 * `--classifier`expects a string:
-    - `--classifier` `SGDClassifier` this is fast and good
-    - `--classifier` `MultinomialNB` just use this without negative features
-    - `--classifier` `LogisticRegression` our best results
-    - `--classifier` `LinearSVC` good
-    - `--classifier` `SVC` do not use with more than 10000 samples, because the time increases quadratically.
+    - `--classifier` `SGDClassifier`
+    - `--classifier` `MultinomialNB`
+    - `--classifier` `LogisticRegression`
+    - `--classifier` `LinearSVC`
+    - `--classifier` `SVC`
