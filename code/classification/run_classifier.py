@@ -14,7 +14,6 @@ from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, precisi
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
-from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, precision_score, recall_score
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
