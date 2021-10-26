@@ -11,11 +11,6 @@ Created on Wed Oct  6 13:59:54 2021
 from code.preprocessing.preprocessor import Preprocessor
 import string
 import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
-
 
 class Tokenizer(Preprocessor):
     """Tokenizes the given input column into individual words."""

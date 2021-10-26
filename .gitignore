@@ -138,5 +138,4 @@ dmypy.json
 lid.176.bin
 
 # exclude csv files from data directory
-data/raw/
-data/preprocessing/
+data/
