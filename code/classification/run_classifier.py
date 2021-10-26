@@ -14,6 +14,7 @@ from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, precisi
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
+from mlflow import log_metric, log_param, set_tracking_uri
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -29,38 +30,50 @@ parser.add_argument("-p", "--precision", action = "store_true", help = "evaluate
 parser.add_argument("-r", "--recall", action = "store_true", help = "evaluate using recall")
 parser.add_argument("-ck", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 parser.add_argument("-f1", "--fscore", action = "store_true", help = "evaluate using F-score")
+parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
 args = parser.parse_args()
 
 # load data
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
 
-
+set_tracking_uri(args.log_folder)
 if args.import_file is not None:
     # import a pre-trained classifier
     with open(args.import_file, 'rb') as f_in:
-        classifier = pickle.load(f_in)
+        input_dict = pickle.load(f_in)
+    
+    classifier = input_dict["classifier"]
+    for param, value in input_dict["params"].items():
+        log_param(param, value)
+    
+    log_param("dataset", "validation")
 
 else:   # manually set up a classifier
     
     if args.majority:
         # majority vote classifier
         print("    majority vote classifier")
+        log_param("classifier", "majority")
+        params = {"classifier": "majority"}
         classifier = DummyClassifier(strategy = "most_frequent", random_state = args.seed)
         
     elif args.frequency:
         # label frequency classifier
         print("    label frequency classifier")
+        log_param("classifier", "frequency")
+        params = {"classifier": "frequency"}
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
-        
-    
     elif args.knn is not None:
         print("    {0} nearest neighbor classifier".format(args.knn))
+        log_param("classifier", "knn")
+        log_param("k", args.knn)
+        params = {"classifier": "knn", "k": args.knn}
         standardizer = StandardScaler()
-        knn_classifier = KNeighborsClassifier(args.knn)
+        knn_classifier = KNeighborsClassifier(args.knn, n_jobs = -1)
         classifier = make_pipeline(standardizer, knn_classifier)
-    
     classifier.fit(data["features"], data["labels"].ravel())
+    log_param("dataset", "training")
 
 # now classify the given data
 
@@ -72,7 +85,7 @@ if args.accuracy:
     evaluation_metrics.append(("accuracy", accuracy_score))
 
 if args.kappa:
-    evaluation_metrics.append(("Cohen's kappa", cohen_kappa_score))
+    evaluation_metrics.append(("Cohen_kappa", cohen_kappa_score))
 
 if args.fscore:
     evaluation_metrics.append(("F1 score",f1_score ))
@@ -85,9 +98,12 @@ if args.recall:
 
 # compute and print them
 for metric_name, metric in evaluation_metrics:
-    print("    {0}: {1}".format(metric_name, metric(data["labels"], prediction)))
+    metric_value = metric(data["labels"], prediction)
+    print("    {0}: {1}".format(metric_name, metric_value))
+    log_metric(metric_name, metric_value)
     
 # export the trained classifier if the user wants us to do so
 if args.export_file is not None:
+    output_dict = {"classifier": classifier, "params": params}
     with open(args.export_file, 'wb') as f_out:
-        pickle.dump(classifier, f_out)
+        pickle.dump(output_dict, f_out)
