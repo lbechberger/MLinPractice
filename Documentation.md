@@ -82,8 +82,31 @@ Example:
 Caveat: the above code will actually not produce the desired output, but works in our implementation due to the different format of the input (we pass a `dtype object` as input). This is just to illustrate how our code and punctuation removal in general work.
 
 ### Lemmatization
-Lemmatization modifies an inflected or variant form of a word into its lemma or dictionary form. Through lemmatization, we can make sure that words - on a semantical level - get interpreted in the same way, even when inflected: _walk_ and _walking_, for example, stem from the same word and ultimately carry the same meaning. Lemmatization, as opposed to stemming, which is computationally more effective, tries to take context into account, which is why we chose to implement it instead of stemming.
+Lemmatization modifies an inflected or variant form of a word into its lemma or dictionary form. Through lemmatization, we can make sure that words - on a semantical level - get interpreted in the same way, even when inflected: _walk_ and _walking_, for example, stem from the same word and ultimately carry the same meaning. We decided to use lemmatization as opposed to stemming, although it is computationally more expensive. This is due to lemmatization taking context into account, as it depends on part-of-speech (PoS) tagging.  
 
+To implement this, we used `nltk`'s `pos_tag` to assign PoS tags and WordNet's `WordNetLemmatizer()` class, as well as a manually defined PoS dictionary to reduce the (rather detailed) tags from `pos_tag` to only four different, namely _noun_, _verb_, _adjective_, and _adverb_:
+
+```python
+>>> from nltk.corpus import wordnet
+>>> tag_dict = {"J": wordnet.ADJ,
+				  "N": wordnet.NOUN,
+				  "V": wordnet.VERB,
+				  "R": wordnet.ADV
+				  }
+```
+
+This simplified PoS assignment is important because `pos_tag` returns a tuple, which has to be converted to a format the WordNet lemmatizer can work with, further WordNet lemmatizes differently for different PoS classes and only distinguishes between the above mentioned classes.
+
+Example:
+
+```python
+>>> from nltk import pos_tag
+>>> from nltk.stem import WordNetLemmatizer
+
+>>> sent = 
+>>> lem = WordNetLemmatizer()
+>>> 
+```
 
 gensim.parsing.preprocessing.stem
 https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.stem
