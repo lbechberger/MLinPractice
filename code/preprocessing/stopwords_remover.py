@@ -16,13 +16,18 @@ from code.util import DETECTION_MODEL
 >>>>>>> 49c39fa (resolve the conflict)
 
 
+
 class StopwordsRemover(Preprocessor):
     # constructor
+<<<<<<< HEAD
 <<<<<<< HEAD
     def __init__(self, input_column, output_column):
 =======
     def __init__(self, input_column, output_column): 
 >>>>>>> 49c39fa (resolve the conflict)
+=======
+    def __init__(self, input_column, output_column):
+>>>>>>> 35c7f58 (resolve the conflict)
         # input column "tweet", new output column
         super().__init__([input_column], output_column)
 
@@ -38,6 +43,7 @@ class StopwordsRemover(Preprocessor):
         self._stopwords_fr = stopwords.words('french')
         self._stopwords_es = stopwords.words('spanish')
 <<<<<<< HEAD
+<<<<<<< HEAD
         self._stopwords_da = stopwords.words('danish')
         self._stopwords_nl = stopwords.words('dutch')
         self._stopwords_hu = stopwords.words('hungarian')
@@ -48,6 +54,8 @@ class StopwordsRemover(Preprocessor):
         self._stopwords_ru = stopwords.words('russian')
         self._stopwords_sv = stopwords.words('swedish')
 
+=======
+>>>>>>> 35c7f58 (resolve the conflict)
 
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
@@ -75,6 +83,7 @@ class StopwordsRemover(Preprocessor):
             elif 'fr' in language:
                 tweet_withno_stopwords = [
                     word for word in tweet if word.lower() not in self._stopwords_fr]
+<<<<<<< HEAD
             elif 'ar' in language:
                 tweet_withno_stopwords = [
                     word for word in tweet if word.lower() not in self._stopwords_ar]
@@ -138,3 +147,11 @@ class StopwordsRemover(Preprocessor):
                 tweets_withno_stopwords.append(tweet_withno_stopwords)
         return tweets_withno_stopwords
 >>>>>>> 49c39fa (resolve the conflict)
+=======
+            elif 'es' in language:
+                tweet_withno_stopwords = [
+                    word for word in tweet if word.lower() not in self._stopwords_es]
+
+            tweets_withno_stopwords.append(tweet_withno_stopwords)
+        return tweets_withno_stopwords
+>>>>>>> 35c7f58 (resolve the conflict)
