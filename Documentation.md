@@ -439,21 +439,52 @@ Below are listed all evaluations per classifiers we used.
 <br />
 <br />
 A. *All Features*
+For our first 3 tests with combined in our own sklearn pipeline `all_in_one_multiple_input_features.py` the following features:
+Information about time, videos, photos, tweet length and HashingVectorizer with 2**17 features.
 
 1. *SGDC classifier*
 
+Overall: 
+```
+Convergence after 371 epochs took 41.24 seconds
+accuracy: 0.5681336785125912
+Cohen's kappa: 0.12634914111071838
+balanced accuracy: 0.6766037922018122
+```
+
+Detail:
+```
+     Test set      precision    recall  f1-score   support
+
+        Flop       0.96      0.54      0.69      7665
+       Viral       0.16      0.81      0.27       833
+    accuracy                           0.57      8498
+   macro avg       0.56      0.68      0.48      8498
+weighted avg       0.88      0.57      0.65      8498
+
+```
 <br />
 
 2. *Linear SVC*
 
 Overall: 
 ```
-Accuracy: 0.8959892670526762
-Cohen's kappa: 0.3311179122770793
-Balanced accuracy: 0.6494107104172189
+accuracy: 0.9113909155095317
+Cohen's kappa: 0.204992981717679
+balanced accuracy: 0.5646044719257566
 ```
-Detail:
 
+Detail:
+```
+              precision    recall  f1-score   support
+
+        Flop       0.91      1.00      0.95      7665
+       Viral       0.78      0.13      0.23       833
+    accuracy                           0.91      8498
+   macro avg       0.85      0.56      0.59      8498
+weighted avg       0.90      0.91      0.88      8498
+```
+To have at least some comparable result we set max_iter to 5000. This lead to training time over 20 min, and didn't even converged then.
 
 <br />
 
@@ -520,13 +551,35 @@ balanced accuracy: 0.7396004977333399
    macro avg       0.64      0.74      0.66      8498
 weighted avg       0.89      0.83      0.85      8498
 
+C. *Cheating Features*
+To check if our classifier really works, we tried as a last test to add the features "replies_count", "retweets_count" and "likes_count".
+
+After 1.8 secs:
+accuracy: 1.0
+Cohen's kappa: 1.0
+balanced accuracy: 1.0
+       Test Set       precision    recall  f1-score   support
+
+        Flop       1.00      1.00      1.00      7665
+       Viral       1.00      1.00      1.00       833
+
+    accuracy                           1.00      8498
+   macro avg       1.00      1.00      1.00      8498
+weighted avg       1.00      1.00      1.00      8498
 
 ### Interpretation
 
 When we did our first tests we ran it successfully with 25 features (included HashingVectorizer), we tried it with the SVM classifier, but that took too much time (nearly endless). We read later that runtime increases with SVM quadratic with the number of samples. So we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1. That was a big sucess for us.
 
 Later after long time of hyperparameter tuning and running the code on the grid (thats a big computer network provided by our institut) we observed the given output metrics.
-Indeed, our Logistic Regression classifier performed the best out of the bunch reaching a Cohen's kappa of 0.35 on the test set. 
+Thinks we found interesting:
+- Indeed, our Logistic Regression classifier performed the best out of the bunch reaching a Cohen's kappa of 0.35 on the test set.
+- Without HashingVectorizer Logistic Regression learns something but with a big drop in accuracy. This is maybe because of the big drop of information.
+- Its really interesting that with just HashingVectorizer the Logistic Regression classifier is so good compared to itself with all features.
+- Even though there is a small increase in Cohen kappa when we combine all features, but this comes with a big drop in run time. Case B 1 needs 2.3 sec, B 2 needs 28.9 secs, but combined they need 7.5 min. May this is because sklearns implementation of the FeatureUnion function.
+- LinearSVC works really good on small dataset, but it takes quite a long time for all samples.
+
+- With our Cheating Features every classifier is just outstanding after a few seconds.
 
 
 
