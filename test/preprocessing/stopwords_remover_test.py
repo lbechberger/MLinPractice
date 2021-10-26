@@ -8,11 +8,7 @@ from code.preprocessing.stopwords_remover import StopwordsRemover
 class StopwordsRemoverTest(unittest.TestCase):
 
     def setUp(self):
-<<<<<<< HEAD
         self.INPUT_COLUMN = ["input","language"]
-=======
-        self.INPUT_COLUMN = "input"
->>>>>>> 49c39fa (resolve the conflict)
         self.OUTPUT_COLUMN = "output"
         self.stopwordsremover = StopwordsRemover(self.INPUT_COLUMN, self.OUTPUT_COLUMN)
     
@@ -25,15 +21,9 @@ class StopwordsRemoverTest(unittest.TestCase):
     def test_removing_english_stopwords(self):
         input_text = "this is a sentence that shows an example of a text containing some English stopwords."
         input_text_tokenized = [[input_text.split()]]
-<<<<<<< HEAD
         output_text = "sentence shows example text containing English stopwords."
         output_text_tokenized = output_text.split()
         input_df = pd.DataFrame({self.INPUT_COLUMN[0]: input_text_tokenized, self.INPUT_COLUMN[1]:'en'})
-=======
-        output_text = "sentence shows example text containing english stopwords."
-        output_text_tokenized = output_text.split()
-        input_df = pd.DataFrame(input_text_tokenized, columns=[self.INPUT_COLUMN])
->>>>>>> 49c39fa (resolve the conflict)
         stopwordsremoved = self.stopwordsremover.fit_transform(input_df)
         self.assertListEqual(stopwordsremoved[self.OUTPUT_COLUMN][0], output_text_tokenized)
 
@@ -42,11 +32,7 @@ class StopwordsRemoverTest(unittest.TestCase):
         input_text_tokenized = [[input_text.split()]]
         output_text = "qu'est-ce aimez faire pendant temps libre?"
         output_text_tokenized = output_text.split()
-<<<<<<< HEAD
         input_df = pd.DataFrame({self.INPUT_COLUMN[0]: input_text_tokenized, self.INPUT_COLUMN[1]:'fr'})
-=======
-        input_df = pd.DataFrame(input_text_tokenized, columns=[self.INPUT_COLUMN])
->>>>>>> 49c39fa (resolve the conflict)
         stopwordsremoved = self.stopwordsremover.fit_transform(input_df)
         self.assertListEqual(stopwordsremoved[self.OUTPUT_COLUMN][0], output_text_tokenized)
         
@@ -55,11 +41,7 @@ class StopwordsRemoverTest(unittest.TestCase):
         input_text_tokenized = [[input_text.split()]]
         output_text = "müssen Projekt fertig Ende Woche!"
         output_text_tokenized = output_text.split()
-<<<<<<< HEAD
         input_df = pd.DataFrame({self.INPUT_COLUMN[0]: input_text_tokenized, self.INPUT_COLUMN[1]:'de'})
-=======
-        input_df = pd.DataFrame(input_text_tokenized, columns=[self.INPUT_COLUMN])
->>>>>>> 49c39fa (resolve the conflict)
         stopwordsremoved = self.stopwordsremover.fit_transform(input_df)
         self.assertListEqual(stopwordsremoved[self.OUTPUT_COLUMN][0], output_text_tokenized)
 
@@ -68,14 +50,8 @@ class StopwordsRemoverTest(unittest.TestCase):
         input_text_tokenized = [[input_text.split()]]
         output_text = "would working week busy, let us see work parents' place."
         output_text_tokenized = output_text.split()
-<<<<<<< HEAD
         input_df = pd.DataFrame({self.INPUT_COLUMN[0]: input_text_tokenized, self.INPUT_COLUMN[1]:'en'})
         stopwordsremoved = self.stopwordsremover.fit_transform(input_df)
-=======
-        input_df = pd.DataFrame(input_text_tokenized, columns=[self.INPUT_COLUMN])
-        stopwordsremoved = self.stopwordsremover.fit_transform(input_df)
-        print(stopwordsremoved[self.OUTPUT_COLUMN][0])
->>>>>>> 49c39fa (resolve the conflict)
         self.assertListEqual(stopwordsremoved[self.OUTPUT_COLUMN][0], output_text_tokenized)
 
 if __name__ == '__main__':

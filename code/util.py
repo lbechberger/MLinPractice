@@ -20,9 +20,6 @@ COLUMN_LEMMATIZED = "lemmatized"
 COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 COLUMN_TOKENIZED = "tweet_tokenized"
-<<<<<<< HEAD
-COLUMN_STOPWORDS = "tweet_no_stopwords"
-=======
 COLUMN_STOPWORDS = "tweet_no_stopwords"
 
 
@@ -31,4 +28,3 @@ DETECTION_MODEL = fasttext.load_model("code/models/lid.176.bin")
 # to ignore a deprecation warning
 warnings.simplefilter(action='ignore', category=FutureWarning)
 fasttext.FastText.eprint = lambda x: None
->>>>>>> 49c39fa (resolve the conflict)
