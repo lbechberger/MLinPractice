@@ -159,7 +159,7 @@ def get_text_data(x):
 
 
 def get_numeric_data(x):
-    return x["video"].values.reshape(-1, 1)
+    return x["video"].values.reshape(-1, 1) #"replies_count", "retweets_count", "likes_count"
 
 
 # calculate the length of a tweet
@@ -208,26 +208,26 @@ elif args.feature_extraction == "union":
             FeatureUnion(
                 [
                     ("selector_numeric_data", FunctionTransformer(get_numeric_data)),
-                    ("selector_char_len", FunctionTransformer(get_char_len)),
-                    ("photo_bool", FunctionTransformer(get_photo_bool)),
-                    ("select_hour", FunctionTransformer(get_hour)),
-                    (
-                        "text_features",
-                        Pipeline(
-                            [
-                                ("selector_text", FunctionTransformer(get_text_data)),
-                                (
-                                    "vec",
-                                    HashingVectorizer(
-                                        n_features=HASH_VECTOR_N_FEATURES,
-                                        strip_accents="ascii",
-                                        stop_words="english",
-                                        ngram_range=NGRAM_RANGE,
-                                    ),  # change this to TfidfVectorizer if you want
-                                ),
-                            ]
-                        ),
-                    ),
+                    #("selector_char_len", FunctionTransformer(get_char_len)),
+                    #("photo_bool", FunctionTransformer(get_photo_bool)),
+                    #("select_hour", FunctionTransformer(get_hour)),
+                    #(
+                    #    "text_features",
+                    #    Pipeline(
+                    #        [
+                    #            ("selector_text", FunctionTransformer(get_text_data)),
+                    #            (
+                    #                "vec",
+                    #                HashingVectorizer(
+                    #                    n_features=HASH_VECTOR_N_FEATURES,
+                    #                    strip_accents="ascii",
+                    #                    stop_words="english",
+                    #                    ngram_range=NGRAM_RANGE,
+                    #                ),  # change this to TfidfVectorizer if you want
+                    #            ),
+                    #        ]
+                    #    ),
+                    #),
                 ],
                 verbose=verbose,
             ),
@@ -322,9 +322,9 @@ for metric_name, metric in evaluation_metrics:
 # report table with recall, precision, and f1 score
 if args.classification_report:
     categories = ["Flop", "Viral"]
-    print("Matrix Train set:")
-    print(classification_report(y_train, prediction_train_set, target_names=categories))
-    print("Matrix Test set:")
+    # print("Matrix Train set:")
+    # print(classification_report(y_train, prediction_train_set, target_names=categories))
+    # print("Matrix Test set:")
     print(classification_report(y_test, prediction, target_names=categories))
 
 
