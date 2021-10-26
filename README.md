@@ -130,19 +130,7 @@ The classifier is then evaluated, using the evaluation metrics as specified thro
 - `-p` or `--precision`: Classifier's precision (i.e., computes how many positively classified instances are actually positive. Use it when we want to be certain that an instance is a true positive, for instance, we want an email to go into the spam box only when it is a true positive.
 - `-r` or `--recall`: Classifier's recall, also called senstivity, (i.e., computes how many true positively classified instances are catched. We choose the majority of the predicted files). Use it when we do not tolerate any false negatives, for instance, if we are testing diabetic people, it is unacceptable to get people classified as FN, if they are diabetic.
 - `-f1` or `--fscore`: F-Score (i.e., computes the score using the precision and the recall).
-<<<<<<< HEAD
 - `-k` or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement). It is the best metric for showing the model's reliability, meaning if the model produces the same results under the same conditions. If the value of Cohe's kappa score is 0, it means random agreement among the predicted and the actual results, and if the score is 1, this means a complete agreement among the predicted and the actual results.
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-- `-k` or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement). It is the best metric for showing the model's reliability, meaning if the model produces the same results under the same conditions. If the value of Cohe's kappa score is 0, it means random agreement among the predicted and the actual results, and if the score is 1, this means a complete agreement among the predicted and the actual results.
-=======
-- `-k` or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
->>>>>>> 1c939e8 (modifying README and Documentation)
-=======
-- `-k` or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement). It is the best metric for showing the model's reliability, meaning if the model produces the same results under the same conditions. If the value of Cohe's kappa score is 0, it means random agreement among the predicted and the actual results, and if the score is 1, this means a complete agreement among the predicted and the actual results.
->>>>>>> 4fdc84b (modified the README file)
->>>>>>> d259c2a (add new README)
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
 - `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
