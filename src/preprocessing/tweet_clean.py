@@ -29,6 +29,9 @@ class TweetClean(Preprocessor):
         # remove all non alphabet and nun number to remove emojis encluding punctuation
         # we will not be needing the punctuation remover after this
         column = column.apply(lambda x : re.sub("[^a-zA-Z0-9 ]+","",x))
+        #remove double spaces 
+        column = column.apply(lambda x : re.sub("\s+"," ",x))
+        # removing the space at begenning and end of the sentence is not working
 
         return column
 
