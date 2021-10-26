@@ -438,12 +438,13 @@ Below are listed all evaluations per classifiers we used.
 
 <br />
 <br />
+A. *All Features*
 
-5. *SGDC classifier*
+1. *SGDC classifier*
 
 <br />
 
-7. *Linear SVC*
+2. *Linear SVC*
 
 Overall: 
 ```
@@ -456,32 +457,78 @@ Detail:
 
 <br />
 
-8. *Logistic Regression*
+3. *Logistic Regression*
+
+The training converged after 3850 iterattions and 7.5 min.
 
 Overall:
 ```
-Accuracy: 0.832968507272984
-Cohen's kappa: 0.33451551107436683
-Balanced accuracy: 0.743639191661198
+accuracy: 0.8272534714050365
+Cohen's kappa: 0.3513706313151349
+balanced accuracy: 0.7646028274323429
 ```
 Detail: 
 
-Test set  |  precision | recall | f1-score | support |
-----------|------------|--------|----------|---------|
-    Flop  |      0.96  |  0.85  |   0.90   |  25627  |
-   Viral  |    0.31    | 0.63   | 0.42     | 2697    |
-accuracy  |      -     |     -  |  0.83    |  28324  |
-macro avg | 0.64       |  0.74  |  0.66    |  28324  | 
-weighted avg | 0.90    | 0.83   | 0.86     | 28324   |
+    Test set   precision    recall  f1-score   support
+
+        Flop       0.96      0.84      0.90      7665
+       Viral       0.32      0.69      0.44       833
+
+    accuracy                           0.83      8498
+   macro avg       0.64      0.76      0.67      8498
+weighted avg       0.90      0.83      0.85      8498
 
 <br />
 <br />
+
+B *Specific Features*
+1. *Logistic Regression without HashingVectorizer*
+Here we wanted to test how good the classifier is just with our implemented features with information about time, videos, photos and the tweet length without HashingVectorizer.
+
+accuracy: 0.6114379854083314
+Cohen's kappa: 0.10462497749628208
+balanced accuracy: 0.6283828599933123
+
+    Test set      precision    recall  f1-score   support
+
+        Flop       0.94      0.61      0.74      7665
+       Viral       0.15      0.65      0.25       833
+
+    accuracy                           0.61      8498
+   macro avg       0.55      0.63      0.49      8498
+weighted avg       0.86      0.61      0.69      8498
+
+The training is now extreme fast (2.3s), but the decrease in all metrics is obivious.
+
+<br />
+
+2. *Logistic Regression just with HashingVectorizer*
+Now we checked the outcome just with HashingVectorizer and 2**17 features.
+The training is now finished after 28.9 sec and 200 iterations.
+
+accuracy: 0.8313720875500118
+Cohen's kappa: 0.33444561172888765
+balanced accuracy: 0.7396004977333399
+    
+
+    Test set      precision    recall  f1-score   support
+
+        Flop       0.95      0.85      0.90      7665
+       Viral       0.32      0.63      0.42       833
+
+    accuracy                           0.83      8498
+   macro avg       0.64      0.74      0.66      8498
+weighted avg       0.89      0.83      0.85      8498
+
 
 ### Interpretation
 
-Indeed, our classifier X performed the best out of the bunch reaching a whopping 0.X on the test set. 
+When we did our first tests we ran it successfully with 25 features (included HashingVectorizer), we tried it with the SVM classifier, but that took too much time (nearly endless). We read later that runtime increases with SVM quadratic with the number of samples. So we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1. That was a big sucess for us.
 
-When we finally ran it successfully with 25 features, we tried it with the SVM classifier, but that took too much time (nearly endless), so we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1 and after some tuning (using more data) to 0.3.
+Later after long time of hyperparameter tuning and running the code on the grid (thats a big computer network provided by our institut) we observed the given output metrics.
+Indeed, our Logistic Regression classifier performed the best out of the bunch reaching a Cohen's kappa of 0.35 on the test set. 
+
+
 
 * Increasing the dataset increases the kappa? 
 
