@@ -578,7 +578,10 @@ Thinks we found interesting:
 - Its really interesting that with just HashingVectorizer the Logistic Regression classifier is so good compared to itself with all features.
 - Even though there is a small increase in Cohen kappa when we combine all features, but this comes with a big drop in run time. Case B 1 needs 2.3 sec, B 2 needs 28.9 secs, but combined they need 7.5 min. May this is because sklearns implementation of the FeatureUnion function.
 - LinearSVC works really good on small dataset, but it takes quite a long time for all samples.
-
+- To get some insights into the classifier let's have a look at precision and recall of the viral samples:
+ - SGDClassifier (A.1) has a high recall and low precision, so predicts most of the viral samples right, but just because he classifys something as viral much more often, than it acctuly is (low precision).
+ - LinearSVC is just the opposite: He tends often to classify new samples not as viral even if they are (low recall), but when he does, he is quite sure about that (high precision).
+ - LogisticRegression is something between them both, but still recall is much higher (so similar as SGDClassifier)
 - With our Cheating Features every classifier is just outstanding after a few seconds.
 
 
