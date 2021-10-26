@@ -3,6 +3,10 @@
 - to make the metrics clear, we added when it would be good to apply a certain metric.
 
 ## Proprecessing 
+This application is capable of handling correctly four languages, namely the four most frequent languages: English, Spanish, French and German. For the mentioned languages, we upload for each language and the corresponding lemmatizer and the list of the stopwords.
+
+<img src="imgs/languages.png">
+
 - first we tokenize the tweet into tokens in *code/tokenizer.py*, i.e, on a word-level. In addition, we get rid of the urls, mentions and tags, since we have these in separates columns.
 - after the tokenization, we remove the punctuation within the tokens of the tweet in *code/punctuation_remover.py*
 - after the deletion of the punctuation, we remove stopwords within the tokenised tweet with no punctuation. Therefore, we choose the corresponding stopword list depending on the language of the tweet. For now, we have the nltk's stopwords list of the following languages: German, English, Spanish and French. This happens in *code/stopwords_remover.py*
