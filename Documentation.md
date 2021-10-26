@@ -20,10 +20,12 @@ Group members: Dennis Hesenkamp, Iolanta Martirosov, Yannik Ullrich
 
 This document contains the documentation for our project, which aims to classify tweets as viral/non-viral based on multiple features derived from  
 
-- the meta data of the tweet and
+- the metadata of the tweet and
 - the natural language features of the tweet.
 
-The data set used is Ruchi Bhatia's [Data Science Tweets 2010-2021](https://www.kaggle.com/ruchi798/data-science-tweets) from [Kaggle](https://www.kaggle.com/). The code base on which we built our machine learning pipeline was provided by Lucas Bechberger (lecturer) and can be found [here](https://github.com/lbechberger/MLinPractice).
+The data set used is Ruchi Bhatia's [Data Science Tweets 2010-2021](https://www.kaggle.com/ruchi798/data-science-tweets) from [Kaggle](https://www.kaggle.com/). The code base on which we built our machine learning pipeline was provided by Lucas Bechberger (lecturer) and can be found [here](https://github.com/lbechberger/MLinPractice). 
+
+<p style='color:red'><b>On which basis have the labels in the data set been assigned?</b></p>
 
 
 <!-- Preprocessing section -->
@@ -36,17 +38,30 @@ The data set provides the raw tweet as it has been posted as well as multiple fe
 ### Tokenization
 In the lecture, Lucas implemented a tokenizer to disassemble tweets into individual words using the `nltk` library[^nltk]. This is done to split up the raw tweet into its constituents, i.e. the single words and punctuation signs it contains. By doing so, further processing and feature extraction can be performed by looking at the single components of a sentence/tweet as opposed to working with one long string.
 
-### Stop word removal
+Example:  
 
-### Punctuation removal
-A feature for removing punctuation from the raw tweet has already been implemented by @lbechberger.
+```python
+sent = [These new data will ultimately help scientists more accurately project the fate of the glacier]
+
+# after tokenization:
+sent_token = ['These', 'new', 'data', 'will', 'ultimately', 'help', 'scientists', 'more', 'accurately', 'project', 'the', 'fate', 'of', 'the', 'glacier']
+```
+
+
+### Stopword removal
+To extract meaningful natural language features from a string, it makes sense to first remove any stopwords occuring in that string. Say, for example, one would like to look at the most frequently occuring words in a large corpus. Usually, that means looking at words which actually carry _meaning_ in the given context. According to the OEC[^oec], the largest 21<sup>st</sup>-century English text corpus, the commonest word in English is _the_ - from which we cannot derive any meaning. Hence, it would make sense to remove words such as _the_ and other, non-meaning carrying words (= stopwords) from a corpus (the set of tweets in our case) before doing anything like keyword of occurence frequency analysis.  
+
+There is not one universal stopword list nor are there universal rules on how stopwords should be defined. For the sake of convenience, we decided to use `nltk`'s stopword corpus[^nltk_stopwords], an annotated corpus with 2.400 stopwords from 11 languages which we enhancedations. It contains high-frequency words with little lexical content to which we a few more strings, for instance _https_ or _\&amp;_ to account for link prefixes and special character denotationsadded . Other options would have been `gensim`'s `gensim.parsing.preprocessing.remove_stopwords` function[^gensim_stopwords] or `spaCy`'s stopword list[^spacy_stopwords], but since we already used the `nltk` library, we wanted to stay in that ecosystem.
+
+### Punctuation Removal
+Punctuation removal follows the same rationale as stopword removal: A dot or exclamation mark will probably occur often in the corpus, but without carrying much meaning at first sight (but we can actually also infer features from punctuation, more about that in [Sentiment Analysis](#sentiment_analysis)). A feature for removing punctuation from the raw tweet has already been implemented by Lucas during the lecture using the `string` library. Again, alternatives can be used - for example with `gensim`, which offers a function for punctuation removal[^gensim-punctuation]. We decided not to change anything here, as the implemented method worked fine (and there is not much benefit in looking at a different list of punctuation signs anyways, as opposed to stopword lists, which can very quite a lot).
 
 ### Lemmatization
-Lemmatization modifies an inflected or variant form of a word into its lemma or dictionary form. 
-Through lemmatization, we can make sure that words - on a sematical level - get interpreted in the same way, 
-even when inflected: 'walk' and 'walking', for example, stem from the same word and ultimately have the same meaning. 
-Lemmatization, as opposed to stemming, which is computationally more effective, tries to take context into account, 
-which is why we chose to implement it instead of stemming.
+Lemmatization modifies an inflected or variant form of a word into its lemma or dictionary form. Through lemmatization, we can make sure that words - on a sematical level - get interpreted in the same way, even when inflected: _walk_ and _walking_, for example, stem from the same word and ultimately carry the same meaning. Lemmatization, as opposed to stemming, which is computationally more effective, tries to take context into account, which is why we chose to implement it instead of stemming.
+
+
+gensim.parsing.preprocessing.stem
+https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.stem
 
 <!-- Feature extraction section -->
 <a name='feature_extraction'></a>
@@ -62,7 +77,8 @@ Does the month in which the tweet was published have an impact on its virality? 
 the potential to go viral is higher, e.g. holiday season? Using the `datetime` module, we extract the month in which a 
 tweet was published from the metadata.
 
-### Sentiment analysis
+<a name='sentiment_analysis'></a>
+### Sentiment Analysis
 Using the VADER (Valence Aware Dictionary and sEntiment Reasoner) framework ([PyPI](https://pypi.org/project/vaderSentiment/)) 
 or [homepage](https://github.com/cjhutto/vaderSentiment )), we extract the sentiment of a tweet. VADER was built 
 for social media and takes into account, among other factors, emojis, punctuation, and caps. The `polarity_score()` function 
@@ -84,8 +100,18 @@ unknown words, however, are simply classified as neutral.
 Robust against class imbalance
 
 
+## Conclusion
+Different reserach questions:  
+<p style='color:red'>How does tweet metadata play into virality?</p>
+
+
 
 <!-- Footnotes -->
 [^nltk]: <https://www.nltk.org/>
+[^oec]: <https://web.archive.org/web/20111226085859/http://oxforddictionaries.com/words/the-oec-facts-about-the-language>, retrieved Oct 26, 2021
+[^nltk_stopwords]: <https://www.nltk.org/book/ch02.html>, retrieved Oct 26, 2021
+[^gensim_stopwords]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.remove_stopwords>, retireved Oct 26, 2021
+[^spacy_stopwords]: <https://github.com/explosion/spaCy/blob/master/spacy/lang/en/stop_words.py>, retrieved Oct 26, 2021
+[^gensim-punctuation]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.strip_punctuation>, retrieved Oct 26, 2021
 
 <!-- -->
