@@ -51,6 +51,7 @@ while True:
     # if not terminated: create pandas DataFrame and put it through the pipeline
     df = pd.DataFrame()
     df[COLUMN_TWEET] = [tweet]
+    df["language"] = "en"
     
     prediction = pipeline.predict(df)
     confidence = pipeline.predict_proba(df)
