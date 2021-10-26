@@ -135,6 +135,8 @@ The classifier is then evaluated, using the evaluation metrics as specified thro
 =======
 - `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
 - `-k`or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
+- `-p`or `--precision`: Classifier's precision (i.e., computes how many positively/negatively classified instances are actually positive/negative, respectively. We choose the majority of the predicted files).
+- `-r`or `--recall`: Classifier's recall (i.e., computes how many true positively/negatively classified instances are catched, respectively. We choose the majority of the predicted files).
 - `-f1`or `--fscore`: F-Score (i.e., computes the score using the precision and the recall).
 >>>>>>> 6bee888 (resolve the conflict)
 
