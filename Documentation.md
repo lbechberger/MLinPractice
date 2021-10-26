@@ -1,4 +1,6 @@
+<<<<<<< HEAD
 ## ZeitZeiton Group- MLinPractice
+<<<<<<< HEAD
 
 ## Proprecessing 
 This application is capable of handling correctly four languages, namely the four most frequent languages: English, Spanish, French and German. For the mentioned languages, we upload for each language and the corresponding lemmatizer and the list of the stopwords.
@@ -13,3 +15,11 @@ This application is capable of handling correctly four languages, namely the fou
 
 
 
+=======
+- on the 5.10.21 we added new metrics and strategies to generate the predictions.
+- to make the metrics clear, we added when it would be good to apply a certain metric.
+=======
+ZeitZeiton Group- MLinPractice
+Manar Ali and Reem Farah
+>>>>>>> caaa8dd (add Documentation.md file)
+>>>>>>> 38a5d3d (add documentation file)
