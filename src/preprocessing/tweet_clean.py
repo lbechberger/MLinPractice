@@ -24,7 +24,8 @@ class TweetClean(Preprocessor):
         column = column.apply(lambda x : re.sub("@[A-Za-z0-9_\$\?\'\;\:\@\%\&\.\,]+\s+","",x))
         #remove text starting with @ and at the end of sentence
         column = column.apply(lambda x : re.sub("@[A-Za-z0-9_\$\?\'\;\:\@\%\&\.\,]+","",x))
-        column = column.apply(lambda x : re.sub("http\S+",r' ',x))
+        column = column.apply(lambda x : re.sub("http\S+",r'',x))
+        column = column.apply(lambda x : re.sub("http\S+\s",r'',x))
         # remove all non alphabet and nun number to remove emojis encluding punctuation
         # we will not be needing the punctuation remover after this
         column = column.apply(lambda x : re.sub("[^a-zA-Z0-9 ]+","",x))
