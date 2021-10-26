@@ -12,7 +12,7 @@ from src.preprocessing.preprocessors.column_dropper import ColumnDropper
 from src.preprocessing.preprocessors.non_english_remover import NonEnglishRemover
 from src.preprocessing.punctuation_remover import PunctuationRemover
 from src.preprocessing.tokenizer import Tokenizer
-from src.util import COLUMN_TWEET, SUFFIX_TOKENIZED
+from src.util import COLUMN_MENTIONS, COLUMN_TWEET, SUFFIX_TOKENIZED
 
 
 def main():
@@ -38,6 +38,7 @@ def main():
     # collect all preprocessors
     preprocessors = []
     if args.punctuation:
+        preprocessors.append(MentionsCounter())
         preprocessors.append(PunctuationRemover())
     if args.tokenize:
         preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
