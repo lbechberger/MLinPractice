@@ -16,22 +16,31 @@ class TweetClean(Preprocessor):
     def _get_values(self, inputs):
         column = inputs[0]
 
-        #remove text after # with space at the end
+        # removes hashtags
+        # remove text after # with space at the end
         column = column.apply(lambda x : re.sub("#[A-Za-z0-9_\$\?\'\;\:\@\%\&\.\,]+\s","",x))
-        #remove text starting with # and at the end of sentence
+        # remove text starting with # and at the end of sentence
         column = column.apply(lambda x : re.sub("#[A-Za-z0-9_\$\?\'\;\:\@\%\&\.\,]+","",x))
-        #remove text after @ with space at the end
-        column = column.apply(lambda x : re.sub("@[A-Za-z0-9_\$\?\'\;\:\@\%\&\.\,]+\s+","",x))
+        
+        # removes username handles (e.g. @someusername)
+        # remove text after @ with space at the end
+        column = column.apply(lambda x : re.sub("@[A-Za-z0-9_\$\?\'\;\:\@\%\&\.\,]+\s+","",x))        
         #remove text starting with @ and at the end of sentence
         column = column.apply(lambda x : re.sub("@[A-Za-z0-9_\$\?\'\;\:\@\%\&\.\,]+","",x))
+        
+        # removes URLs starting with http or https
         column = column.apply(lambda x : re.sub("http\S+",r'',x))
         column = column.apply(lambda x : re.sub("http\S+\s",r'',x))
-        # remove all non alphabet and nun number to remove emojis encluding punctuation
+        
+        # remove all non alphabet and non number to remove emojis encluding punctuation
         # we will not be needing the punctuation remover after this
         column = column.apply(lambda x : re.sub("[^a-zA-Z0-9 ]+","",x))
-        #remove double spaces 
+        
+        # remove double spaces 
         column = column.apply(lambda x : re.sub("\s+"," ",x))
-        # removing the space at begenning and end of the sentence is not working
+
+        # removes the space at the beginning and end of the sentence
+        column = column.apply(lambda x : x.strip())
 
         return column
 
