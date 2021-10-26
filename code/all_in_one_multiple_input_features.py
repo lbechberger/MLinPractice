@@ -35,6 +35,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.pipeline import FeatureUnion
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import FunctionTransformer
+from sklearn.preprocessing import StandardScaler
 
 # metrics
 from sklearn.metrics import (
@@ -47,6 +48,7 @@ from sklearn.metrics import (
 from code.util import (
     TEST_SIZE,
     HASH_VECTOR_N_FEATURES,
+    HASH_VECTOR_N_FEATURES_TITLE,
     NGRAM_RANGE,
     KNN_K,
     MAX_ITER_LOGISTIC,
@@ -108,9 +110,7 @@ parser.add_argument("--dim_red", type=str, help="choose a dim_red algo", default
 # classifier
 parser.add_argument("--classifier", type=str, help="choose a classifier", default=None)
 parser.add_argument(
-    "--verbose",
-    action="store_true",
-    help="print information during training",
+    "--verbose", action="store_true", help="print information during training",
 )
 args = parser.parse_args()
 
@@ -157,9 +157,20 @@ my_pipeline = []
 def get_text_data(x):
     return x["preprocess_col"]
 
+def get_title_data(x):
+    return x["name"]
+
+def get_author_data(x):
+    import pdb
+
+    pdb.set_trace()
+    return x["preprocess_col"]
+
 
 def get_numeric_data(x):
-    return x["video"].values.reshape(-1, 1) #"replies_count", "retweets_count", "likes_count"
+    # import pdb
+    # pdb.set_trace()
+    return x[["video", "user_id", "id", "timezone"]]  # x[["video", "user_id"]]   #"replies_count", "retweets_count", "likes_count" x[["video", "user_id"]] x["video"].values.reshape(-1, 1)
 
 
 # calculate the length of a tweet
@@ -207,27 +218,50 @@ elif args.feature_extraction == "union":
             "features",
             FeatureUnion(
                 [
-                    ("selector_numeric_data", FunctionTransformer(get_numeric_data)),
-                    #("selector_char_len", FunctionTransformer(get_char_len)),
-                    #("photo_bool", FunctionTransformer(get_photo_bool)),
-                    #("select_hour", FunctionTransformer(get_hour)),
-                    #(
-                    #    "text_features",
-                    #    Pipeline(
-                    #        [
-                    #            ("selector_text", FunctionTransformer(get_text_data)),
-                    #            (
-                    #                "vec",
-                    #                HashingVectorizer(
-                    #                    n_features=HASH_VECTOR_N_FEATURES,
-                    #                    strip_accents="ascii",
-                    #                    stop_words="english",
-                    #                    ngram_range=NGRAM_RANGE,
-                    #                ),  # change this to TfidfVectorizer if you want
-                    #            ),
-                    #        ]
-                    #    ),
-                    #),
+                    (
+                        "selector_numeric_data",
+                        Pipeline(
+                            [
+                                ("get_numeric", FunctionTransformer(get_numeric_data)),
+                                ("standart", StandardScaler()),
+                            ]
+                        ),
+                    ),
+                    ("selector_char_len", FunctionTransformer(get_char_len)),
+                    ("photo_bool", FunctionTransformer(get_photo_bool)),
+                    ("select_hour", FunctionTransformer(get_hour)),
+                    (
+                        "text_features",
+                        Pipeline(
+                            [
+                                ("selector_text", FunctionTransformer(get_text_data)),
+                                (
+                                    "vec",
+                                    HashingVectorizer(
+                                        n_features=HASH_VECTOR_N_FEATURES,
+                                        strip_accents="ascii",
+                                        stop_words="english",
+                                        ngram_range=NGRAM_RANGE,
+                                    ),  # change this to TfidfVectorizer if you want
+                                ),
+                            ]
+                        ),
+                    ),
+                    (
+                        "title_features",
+                        Pipeline(
+                            [
+                                ("selector_title", FunctionTransformer(get_title_data)),
+                                (
+                                    "vec",
+                                    HashingVectorizer(
+                                        n_features=HASH_VECTOR_N_FEATURES_TITLE,
+                                        ngram_range=NGRAM_RANGE,
+                                    ),  # change this to TfidfVectorizer if you want
+                                ),
+                            ]
+                        ),
+                    ),
                 ],
                 verbose=verbose,
             ),
@@ -269,7 +303,7 @@ elif args.classifier == "LogisticRegression":
             LogisticRegression(
                 class_weight="balanced",
                 n_jobs=-1,
-                random_state=42,
+                # random_state=42,
                 verbose=verbose,
                 max_iter=MAX_ITER_LOGISTIC,
             ),
@@ -322,9 +356,9 @@ for metric_name, metric in evaluation_metrics:
 # report table with recall, precision, and f1 score
 if args.classification_report:
     categories = ["Flop", "Viral"]
-    # print("Matrix Train set:")
-    # print(classification_report(y_train, prediction_train_set, target_names=categories))
-    # print("Matrix Test set:")
+    print("Matrix Train set:")
+    print(classification_report(y_train, prediction_train_set, target_names=categories))
+    print("Matrix Test set:")
     print(classification_report(y_test, prediction, target_names=categories))
 
 
