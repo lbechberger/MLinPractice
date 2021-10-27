@@ -674,7 +674,7 @@ Thinks we found interesting:
    * LogisticRegression is something between them both, but still recall is much higher (so similar as SGDClassifier)
 * With our Cheating Features (C) every classifier is just outstanding after a few seconds.
 
-
+In conclusion, we are very satisfied with our final result. Cohen's kappa of 0.357 and a balanced accuracy of 0.78 on the test set are of course not very high, but it is uncertain to what extent this is even possible in such a task. Future experiments could be conducted with more features or even with a different task. One could try to develop an artificial intelligence that predicts the number of likes and retweets of a tweet instead of just a (non) viral threshold.
 
 ## Tests
 
