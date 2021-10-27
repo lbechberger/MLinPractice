@@ -431,7 +431,7 @@ The classifier that made the most sense for our features was ...
 
 ### Design Decisions
 
-For our evaluation and to avoid a combinatorial feature evaluation problem, we only picked our top 3 classifers that worked well within our expectations, namely being the SGDC classifier, linear SVC and logistic regression. 
+For our evaluation and to avoid a combinatorial feature evaluation problem, we only picked our top 3 classifiers that worked well within our expectations, namely being the SGDCclassifier, linear SVC and logistic regression. 
 
 To evaluate our 3 classifiers, we mainly used the integrated ```classification report``` (including precision, recall, f1-score) from ```sklearn.metrics```, as well as single metric functions like the ```accuracy_score```, ```balanced_accuracy_score``` and the ```cohen_kappa_score```. 
 
@@ -504,7 +504,7 @@ To have at least some comparable result we set max_iter to 5000. This lead to tr
 Overall:
 ```
 
-The training converged after 3850 iterattions and 7.5 min.
+The training converged after 3850 iterations and 7.5 min.
 accuracy: 0.8272534714050365
 Cohen's kappa: 0.3513706313151349
 balanced accuracy: 0.7646028274323429
@@ -556,7 +556,7 @@ Detail:
 weighted avg       0.86      0.61      0.69      8498
 
 ```
-The training is now extreme fast (2.3s), but the decrease in all metrics is obivious.
+The training is now extreme fast (2.3s), but the decrease in all metrics is obvious.
 
 <br />
 
@@ -576,15 +576,56 @@ Detail:
 ```
 
     Test set      precision    recall  f1-score   support
-
-4. *Emoji Counter*
-
+        Flop       0.95      0.85      0.90      7665
+       Viral       0.32      0.63      0.42       833
     accuracy                           0.83      8498
-
    macro avg       0.64      0.74      0.66      8498
 weighted avg       0.89      0.83      0.85      8498
 
 ```
+3. *Logistic Regression with even more features*
+
+We also added more features, like 'user_id', 'id' and 'timezone' to 'all_in_one_multiple_input_features.py', because we thought a viral tweet may depend on its author and other information, which may seem unimportant at first sight.
+
+````
+After 32.3min finished
+accuracy: 0.8216050835490704
+Cohen's kappa: 0.35767682553256674
+balanced accuracy: 0.7776273472223426 
+
+````
+
+Detail
+````
+
+    Test set      precision    recall  f1-score   support
+
+        Flop       0.96      0.83      0.89      3827
+       Viral       0.32      0.72      0.45       422
+
+    accuracy                           0.82      4249
+   macro avg       0.64      0.78      0.67      4249
+weighted avg       0.90      0.82      0.85      4249
+
+````
+4. *What's about overfitting?*
+
+To see to what extent the classifier overfits, we created a table for the training set for all features with the LogisticRegression classifier. Thus, this is the output for the predicted data previously given to the classifier for training. With regard to the parameters it is comparable to the output of the test set above (B 3)
+
+````
+
+Matrix Train set:
+              precision    recall  f1-score   support
+
+        Flop       1.00      0.89      0.94    252744
+       Viral       0.46      0.96      0.63     26247
+
+    accuracy                           0.89    278991
+   macro avg       0.73      0.92      0.78    278991
+weighted avg       0.95      0.89      0.91    278991
+
+````
+
 C. *Cheating Features*
 
 To check if our classifier really works, we tried as a last test to add the features 'replies_count', 'retweets_count' and 'likes_count'.
@@ -614,22 +655,24 @@ weighted avg       1.00      1.00      1.00      8498
 
 ### Interpretation
 
-When we did our first tests we ran it successfully with 25 features (included HashingVectorizer), we tried it with the SVM classifier, but that took too much time (nearly endless). We read later that runtime increases with SVM quadratic with the number of samples. So we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1. That was a big sucess for us.
+When we did our first tests we ran it successfully with 25 features (included HashingVectorizer), we tried it with the SVM classifier, but that took too much time (nearly endless). We read later that runtime increases with SVM quadratic with the number of samples. So we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1. That was a big success for us.
 
-Later after long time of hyperparameter tuning and running the code on the grid (thats the big computer network provided by our Institute) we observed the given output metrics.
+Later after long time of hyperparameter tuning and running the code on the grid (thats the big computer network provided by our Institute) we observed the given output metrics from above (A,B,C).
 
 Thinks we found interesting:
 
 * Indeed, our Logistic Regression classifier performed the best out of the bunch reaching a Cohen's kappa of 0.35 on the test set.
 * Without HashingVectorizer Logistic Regression learns something but with a big drop in accuracy. This is maybe because of the big drop of information.
-* Its really interesting that with just HashingVectorizer the Logistic Regression classifier is so good compared to itself with all features.
+* Its really interesting that with just HashingVectorizer the Logistic Regression classifier is so good compared to itself with all features. 
 * Even though there is a small increase in Cohen kappa when we combine all features, but this comes with a big drop in run time. Case B 1 needs 2.3 sec, B 2 needs 28.9 secs, but combined they need 7.5 min. May this is because sklearns implementation of the FeatureUnion function.
+*  When we added more features (B 3) cohen kappa increase further more by 0.06 and balanced accuracy by 1.5%, so maybe the classifier could find something to learn out of it, but nothing significant. So if we would collect more data, even if it seems unimportant, we could maybe improve the classifier even more.
+* When we look at the output of the tests set compared to train set under B 4, we directly see that the classifier overfits. But as long as the classifier still learns something and can predict new data correct to some extent, are we satisfied.
 * LinearSVC works really good on small dataset, but it takes quite a long time for all samples.
 * To get some insights into the classifier let's have a look at precision and recall of the viral samples:
-   * SGDClassifier (A.1) has a high recall and low precision, so predicts most of the viral samples right, but just because he classifys something as viral much more often, than it acctuly is (low precision).
+   * SGDClassifier (A.1) has a high recall and low precision, so predicts most of the viral samples right, but just because he classifies something as viral much more often, than it actually is (low precision).
    * LinearSVC is just the opposite: He tends often to classify new samples not as viral even if they are (low recall), but when he does, he is quite sure about that (high precision).
    * LogisticRegression is something between them both, but still recall is much higher (so similar as SGDClassifier)
-* With our Cheating Features every classifier is just outstanding after a few seconds.
+* With our Cheating Features (C) every classifier is just outstanding after a few seconds.
 
 
 
@@ -637,7 +680,7 @@ Thinks we found interesting:
 
 We have written tests for tfidf_vec and hash_vector, because even though the sklearn functions themselves naturally have many tests implemented, we want to double check that we are using them correctly and that we are getting the expected output. Therefore, especially 'test_result_shape' is very important, because it checks if the length of the output list matches the number of input elements.  
 
-We added in run_classifier, a number of functions to run from the run_classifier_test.py which tests all classifiers, checks if the data is still equal length, if no classifier is written, try classifier fit, if not, give correct error output. 
+We added in 'run_classifier.py' a number of functions to run this file from the run_classifier_test.py which tests all classifiers, checks if the data is still equal length, tries the classifiers to fit and if not, checks if the file gives the correct error output. 
 
 ## Project Organization
 
