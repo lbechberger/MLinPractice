@@ -157,8 +157,10 @@ my_pipeline = []
 def get_text_data(x):
     return x["preprocess_col"]
 
+
 def get_title_data(x):
     return x["name"]
+
 
 def get_author_data(x):
     import pdb
@@ -170,7 +172,9 @@ def get_author_data(x):
 def get_numeric_data(x):
     # import pdb
     # pdb.set_trace()
-    return x[["video", "user_id", "id", "timezone"]]  # x[["video", "user_id"]]   #"replies_count", "retweets_count", "likes_count" x[["video", "user_id"]] x["video"].values.reshape(-1, 1)
+    return x[
+        ["video", "user_id", "id", "timezone"]
+    ]  # "replies_count", "retweets_count", "likes_count" x[["video", "user_id"]] x["video"].values.reshape(-1, 1)
 
 
 # calculate the length of a tweet
@@ -237,7 +241,7 @@ elif args.feature_extraction == "union":
                                 ("selector_text", FunctionTransformer(get_text_data)),
                                 (
                                     "vec",
-                                    HashingVectorizer(
+                                    HashingVectorizer(  # HashingVectorizer
                                         n_features=HASH_VECTOR_N_FEATURES,
                                         strip_accents="ascii",
                                         stop_words="english",
@@ -303,7 +307,7 @@ elif args.classifier == "LogisticRegression":
             LogisticRegression(
                 class_weight="balanced",
                 n_jobs=-1,
-                # random_state=42,
+                random_state=42,
                 verbose=verbose,
                 max_iter=MAX_ITER_LOGISTIC,
             ),
