@@ -8,11 +8,11 @@ As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) 
 
 In order to install all necessary dependencies, please make sure that you have a local [Conda](https://docs.conda.io/en/latest/) distribution (e.g., Anaconda or miniconda) installed. Begin by creating a new environment called "MLinPractice" that has Python 3.6 installed:
 
-```conda create -y -q --name MLinPractice python=3.6
-
+```
+conda create -y -q --name MLinPractice python=3.6
 ```
 
-You can enter this environment with `conda activate MLinPractice` (or `source activate MLinPractice`, if the former does not work). You can leave it with `conda deactivate` (or `source deactivate`, if the former does not work). Enter the environment and execute the following commands in order to install the necessary dependencies (this may take a while):
+You can enter this environment with `conda activate MLinPractice` (or `source activate MLinPractice` , if the former does not work). You can leave it with `conda deactivate` (or `source deactivate` , if the former does not work). Enter the environment and execute the following commands in order to install the necessary dependencies (this may take a while):
 
 ```
 
@@ -31,28 +31,30 @@ You can double-check that all of these packages have been installed by running `
 
 In order to save some space on your local machine, you can run `conda clean -y -q --all` afterwards to remove any temporary files.
 
-The installed libraries are used for machine learning (`scikit-learn`), visualizations (`matplotlib`), NLP (`nltk`), word embeddings (`gensim`), and IDE (`spyder`), and data handling (`pandas`)
+The installed libraries are used for machine learning ( `scikit-learn` ), visualizations ( `matplotlib` ), NLP ( `nltk` ), word embeddings ( `gensim` ), and IDE ( `spyder` ), and data handling ( `pandas` )
 
 ## Overall Pipeline
 
-The overall pipeline can be executed with the script `code/pipeline.sh`, which executes all of the following shell scripts:
-- The script `code/load_data.sh` downloads the raw csv files containing the tweets and their metadata. They are stored in the folder `data/raw/` (which will be created if it does not yet exist).
-- The script `code/preprocessing.sh` executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
-- The script `code/feature_extraction.sh` takes care of feature extraction.
-- The script `code/dimensionality_reduction.sh` takes care of dimensionality reduction.
-- The script `code/classification.sh` takes care of training and evaluating a classifier.
-- The script `code/application.sh` launches the application example.
+The overall pipeline can be executed with the script `code/pipeline.sh` , which executes all of the following shell scripts:
+* The script `code/load_data.sh` downloads the raw csv files containing the tweets and their metadata. They are stored in the folder `data/raw/` (which will be created if it does not yet exist).
+* The script `code/preprocessing.sh` executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
+* The script `code/feature_extraction.sh` takes care of feature extraction.
+* The script `code/dimensionality_reduction.sh` takes care of dimensionality reduction.
+* The script `code/classification.sh` takes care of training and evaluating a classifier.
+* The script `code/application.sh` launches the application example.
 
-- The script `code/all_in_one_multiple_input_features.sh`is a powerfull extra file, which will launch a hole sklearn pipeline.
+* The script `code/all_in_one_multiple_input_features.sh`is a powerfull extra file, which will launch a entire sklearn pipeline.
 
 ## Preprocessing
 
-All python scripts and classes for the preprocessing of the input data can be found in `code/preprocessing/`.
+All python scripts and classes for the preprocessing of the input data can be found in `code/preprocessing/` .
 
 ### Creating Labels
 
 The script `create_labels.py` assigns labels to the raw data points based on a threshold on a linear combination of the number of likes and retweets. It is executed as follows:
-```python -m code.preprocessing.create_labels path/to/input_dir path/to/output.csv```
+```python -m code.preprocessing.create_labels path/to/input_dir path/to/output.csv
+
+```
 
 Here, `input_dir` is the directory containing the original raw csv files, while `output.csv` is the single csv file where the output will be written.
 The script takes the following optional parameters:
@@ -63,13 +65,17 @@ The script takes the following optional parameters:
 ### Classical Preprocessing
 
 The script `run_preprocessing.py` is used to run various preprocessing steps on the raw data, producing additional columns in the csv file. It is executed as follows:
-```python -m code.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv
+```
+
+python -m code.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv
 
 ```
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
 The preprocessing steps to take can be configured with the following flags:
 - `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
 - `-t`or `--tokenize`: Tokenize the given column (can be specified by `--tokenize_input`, default = "tweet"), and create new column with suffix "_tokenized" containing tokenized tweet.
+- `-s` or `--strings`: Remove stopwords, links and emojis in the "tweet" column of the data frame. (see code/preprocessing/string_remover.py)
+- `--language`: Only keep tweets with the given language argument. Supported strings have to match enires of the "language" column of the data frame (en, fr, de, etc.). This argument is set to keep only english tweets (en). 
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
@@ -90,30 +96,40 @@ The script takes the following optional parameters:
 All python scripts and classes for feature extraction can be found in `code/feature_extraction/` .
 
 The script `extract_features.py` takes care of the overall feature extraction process and can be invoked as follows:
-```python -m code.feature_extraction.extract_features path/to/input.csv path/to/output.pickle
 
 ```
-Here, `input.csv` is the respective training, validation, or test set file created by `split_data.py`. The file `output.pickle` will be used to store the results of the feature extraction process, namely a dictionary with the following entries:
-- `"features"`: a numpy array with the raw feature values (rows are training examples, colums are features)
-- `"feature_names"`: a list of feature names for the columns of the numpy array
-- `"labels"`: a numpy array containing the target labels for the feature vectors (rows are training examples, only column is the label)
+python -m code.feature_extraction.extract_features path/to/input.csv path/to/output.pickle
+```
+
+Here, `input.csv` is the respective training, validation, or test set file created by `split_data.py` . The file `output.pickle` will be used to store the results of the feature extraction process, namely a dictionary with the following entries:
+* `"features"`: a numpy array with the raw feature values (rows are training examples, colums are features)
+* `"feature_names"`: a list of feature names for the columns of the numpy array
+* `"labels"`: a numpy array containing the target labels for the feature vectors (rows are training examples, only column is the label)
 
 The features to be extracted can be configured with the following optional parameters:
-- `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
+* `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
+* `--photo_bool`: Tells whether the tweet contains photos or not from column "photos". (see code/feature_extraction/photo_bool.py)
+* `--video_bool`: Tells whether the tweet contains videos or not from column "videos". (see code/feature_extraction/video_bool.py)
+* `--time`: Extract what hour the tweet was sent from column "time". (see code/feature_extraction/time_feature.py)
+* `--emoji_count`: Count the emojis in a tweet from column "tweet". (see code/feature_extraction/emoji_count.py)
+* `--hashtags`: Count the hashtags in a tweet from column "hashtags". (see code/feature_extraction/hashtag_count.py)
+* `--word2vec`: Compute the semantic distance of words to given keywords from column "preprocess_col_tokenized". (see code/feature_extraction/word2vec.py)
+* `--hash_vec`: Compute the HashingVectorizer from column "preprocess_col" and set number of features in argument HASH_VECTOR_N_FEATURES in util.py. (see code/feature_extraction/hash_vector.py)
+* `--tfidf_vec`: Compute the Tf Idf vector of the tweet "preprocess_col". (see code/feature_extraction/tfidf_vecotr.py)
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
-- `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
-- `-e` or `--export_file`: Export the configured and fitted feature extraction into the given pickle file.
-- `--hash_vec`: use HashingVectorizer from sklearn.
-and for number of features for hash vector edit HASH_VECTOR_N_FEATURES in util.py
+* `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
+* `-e` or `--export_file`: Export the configured and fitted feature extraction into the given pickle file.
 
 ## Dimensionality Reduction
 
-All python scripts and classes for dimensionality reduction can be found in `code/dimensionality_reduction/`.
+All python scripts and classes for dimensionality reduction can be found in `code/dimensionality_reduction/` .
 
 The script `reduce_dimensionality.py` takes care of the overall dimensionality reduction procedure and can be invoked as follows:
 
-```python -m code.dimensionality_reduction.reduce_dimensionality path/to/input.pickle path/to/output.pickle```
+```python -m code.dimensionality_reduction.reduce_dimensionality path/to/input.pickle path/to/output.pickle
+
+```
 
 Here, `input.pickle` is the respective training, validation, or test set file created by `extract_features.py` . 
 The file `output.pickle` will be used to store the results of the dimensionality reduction process, containing `"features"` (which are the selected/projected ones) and `"labels"` (same as in the input file).
@@ -137,31 +153,32 @@ The script `run_classifier.py` can be used to train and/or evaluate a given clas
 ```python -m code.classification.run_classifier path/to/input.pickle
 
 ```
-Here, `input.pickle` is a pickle file of the respective data subset, produced by either `extract_features.py` or `reduce_dimensionality.py`. 
+
+Here, `input.pickle` is a pickle file of the respective data subset, produced by either `extract_features.py` or `reduce_dimensionality.py` . 
 
 By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
-- `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
-- `-f` or `--frequency`: Dummy classifier that makes predictions based on the label frequency in the training data.
+* `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
+* `-f` or `--frequency`: Dummy classifier that makes predictions based on the label frequency in the training data.
 
 The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
-- `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
-- `-k`or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
-- `--small 1000`: use just 1000 tweets.
+* `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
+* `-k`or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
+* `--small 1000`: use just 1000 tweets.
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
-- `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
-- `-e` or `--export_file`: Export the trained classifier into the given pickle file.
+* `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
+* `-e` or `--export_file`: Export the trained classifier into the given pickle file.
 
 Finally, the optional argument `-s` or `--seed` determines the seed for intializing the random number generator (which may be important for some classifiers). 
 Using the same seed across multiple runs ensures reproducibility of the results. If no seed is set, the current system time will be used.
 
 ## Application
 
-All python code for the application demo can be found in `code/application/`.
+All python code for the application demo can be found in `code/application/` .
 
 The script `application.py` provides a simple command line interface, where the user is asked to type in their prospective tweet, which is then analyzed using the trained ML pipeline.
 The script can be invoked as follows:
-```python -m code.application.application path/to/preprocessing.pickle path/to/feature_extraction.pickle path/to/dimensionality_reduction.pickle path/to/classifier.pickle```
+`` `python -m code.application.application path/to/preprocessing.pickle path/to/feature_extraction.pickle path/to/dimensionality_reduction.pickle path/to/classifier.pickle` ``
 
 The four pickle files correspond to the exported versions for the different pipeline steps as created by `run_preprocessing.py` , `extract_features.py` , `reduce_dimensionality.py` , and `run_classifier.py` , respectively, with the `-e` option.
 
@@ -194,8 +211,8 @@ Execute it with the script `code/all_in_one_multiple_input_features.sh` :
     but this is not recommended here, especially when using something like HashingVectorizer with 2 ** 22 features, because of time, too much information loss and because during our tests the classifier could easily learn this without dim_red.
 
 * `--classifier`expects a string:
-    - `--classifier` `SGDClassifier` this is fast and good
-    - `--classifier` `MultinomialNB` just use this without negative features
-    - `--classifier` `LogisticRegression` our best results
-    - `--classifier` `LinearSVC` good
-    - `--classifier` `SVC` do not use with more than 10000 samples, because the time increases quadratically.
+    - `--classifier` `SGDClassifier`
+    - `--classifier` `MultinomialNB`
+    - `--classifier` `LogisticRegression`
+    - `--classifier` `LinearSVC`
+    - `--classifier` `SVC`
