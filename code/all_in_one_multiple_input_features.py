@@ -170,8 +170,6 @@ def get_author_data(x):
 
 
 def get_numeric_data(x):
-    # import pdb
-    # pdb.set_trace()
     return x[
         ["video", "user_id", "id", "timezone"]
     ]  # "replies_count", "retweets_count", "likes_count" x[["video", "user_id"]] x["video"].values.reshape(-1, 1)

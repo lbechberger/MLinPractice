@@ -10,20 +10,16 @@ import numpy as np
 import pandas as pd
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
-# class for extracting the photo-bool as a feature
+
 class Hours(FeatureExtractor):
-    
+    """Create a feature for the hour of creation."""
+
     # constructor
     def __init__(self, input_column):
         super().__init__([input_column], "{0}_hours".format(input_column))
-    
-    # don't need to fit, so don't overwrite _set_variables()
-    
-    # use the replies count column as a feature
-    def _get_values(self, inputs):
-        
-        hours = pd.to_datetime(inputs[0], format='%H:%M:%S').dt.hour
 
+    def _get_values(self, inputs):
+        hours = pd.to_datetime(inputs[0], format="%H:%M:%S").dt.hour
         result = np.array(hours)
-        result = result.reshape(-1,1)
+        result = result.reshape(-1, 1)
         return result

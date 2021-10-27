@@ -37,7 +37,6 @@ text_clf = Pipeline([
 
 text_clf.fit(twenty_train.data, twenty_train.target)
 
-
 docs_test = twenty_test.data
 
 predicted = text_clf.predict(docs_test)

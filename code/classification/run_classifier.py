@@ -99,9 +99,7 @@ def load_args():
         help="evaluate using classification_report",
     )
     parser.add_argument(
-        "--verbose",
-        action="store_true",
-        help="print information during training",
+        "--verbose", action="store_true", help="print information during training",
     )
 
     parser.add_argument(
@@ -182,11 +180,15 @@ def create_classifier(args, data):
                 class_weight=balanced,
                 n_jobs=-1,
                 random_state=args.seed,
-                verbose=verbose,  max_iter=MAX_ITER_LOGISTIC,
+                verbose=verbose,
+                max_iter=MAX_ITER_LOGISTIC,
             )
         elif args.LinearSVC:
             classifier = LinearSVC(
-                class_weight=balanced, random_state=args.seed, verbose=verbose, max_iter=MAX_ITER_LINEAR_SVC,
+                class_weight=balanced,
+                random_state=args.seed,
+                verbose=verbose,
+                max_iter=MAX_ITER_LINEAR_SVC,
             )
 
         try:
