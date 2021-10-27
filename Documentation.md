@@ -439,13 +439,15 @@ What we learnt from trying each of the above listed classifiers is that each beh
 
 ### Design Decisions
 
-For our evaluation and to avoid a combinatorial feature evaluation problem, we only picked our top 3 classifers that worked well within our expectations, namely being the SGDC classifier, linear SVC and logistic regression. 
+For our evaluation and to avoid a combinatorial feature evaluation problem, we only picked our top 3 classifers that worked well within our expectations, namely being the SGDClassifier, linear SVC and logistic regression classifier. 
 
 To evaluate our 3 classifiers, we mainly used the integrated ```classification report``` (including precision, recall, f1-score) from ```sklearn.metrics```, as well as single metric functions like the ```accuracy_score```, ```balanced_accuracy_score``` and the ```cohen_kappa_score```. 
 
+We first used all the described functions in our pipeline. We found that our pipeline has some drawbacks: for example, it can be very complicated, especially for beginners, which output files are used as input in the next file. Also, we had to create a new column in our feature extraction dataset for each dimension to deal with the HashVectorizer. As a result, the pipeline was very slow and the result of the classifier was unsatisfactory. To overcome these challenges, we created a new pipeline by using all the power of a Sklearn pipeline in `all_in_one_multiple_input_features.py`. 
+
 ### Results
 
-Below are listed all evaluations per classifiers we used. 
+The first part of the results is about the results of our old pipeline. In the seccond part we use the new pipeline, which gave us the oppertunity to do many experiences to compare different classiferes and features. 
 
 <br />
 <br />
@@ -455,7 +457,7 @@ Below are listed all evaluations per classifiers we used.
 
 #### A) *New sklearn Pipeline*
 
-For our first 3 tests with combined in our own sklearn pipeline `all_in_one_multiple_input_features.py` the following features: time, videos, photos, tweet length and HashingVectorizer with 2^17 features.
+For our first 3 tests we combined in our new sklearn pipeline `all_in_one_multiple_input_features.py` the following features: time, videos, photos, tweet length and HashingVectorizer with 2^17 features. We didn't use all of our previous features due to lack of time, as we had to re-implement them to integrate them into the new pipeline, and the new experiments show that one feature in particular was critical to the result.
 
 <br />
 
