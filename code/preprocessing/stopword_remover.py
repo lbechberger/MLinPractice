@@ -9,8 +9,7 @@ Created on Thu Oct  7 12:21:12 2021
 """
 
 from code.preprocessing.preprocessor import Preprocessor
-from nltk.corpus import stopwords
-import ast
+import gensim
 
 
 class StopwordRemover(Preprocessor):
@@ -27,15 +26,7 @@ class StopwordRemover(Preprocessor):
     
     def _get_values(self, inputs):
         """Remove stopwords from given column."""
-        # keeps raising invalid syntax error on terminal, works as supposed in jupyter
-        stops = set(stopwords.words('english'))
-        # add user defined stopwords
-        # courtesy to https://www.kaggle.com/docxian/data-science-tweets
-        stops = stops.union(set(['https', 't', 'co', '&amp;', 'amp']))
-        
-        for tweet in inputs[0]:
-            tweet_eval = ast.literal_eval(tweet)
-            column = str([_ for _ in tweet_eval if _ not in stops])
+        column = [gensim.parsing.preprocessing.remove_stopwords(tweet) for tweet in inputs[0]]
         
         return column
     

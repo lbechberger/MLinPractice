@@ -15,7 +15,7 @@ from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.stopword_remover import StopwordRemover
 from code.preprocessing.lemmatizer import Lemmatizer
-from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, SUFFIX_STOPWORDS, SUFFIX_LEMMATIZED
+from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, SUFFIX_STOPWORDS, SUFFIX_LEMMATIZED, SUFFIX_PUNCTUATION
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -24,6 +24,7 @@ parser.add_argument("output_file", help = "path to the output csv file")
 
 # <--- Preprocessing steps --->
 parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
+parser.add_argument("--punctuation_input", help = "input column to remove punctuation from", default = COLUMN_TWEET)
 parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
 parser.add_argument("--tokenize_input", help = "input column to tokenize", default = COLUMN_TWEET)
 parser.add_argument("-s", "--stopwords", action = "store_true", help = "remove common stopwords")
@@ -40,12 +41,16 @@ df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator
 
 # collect all preprocessors
 preprocessors = []
-if args.punctuation:
-    preprocessors.append(PunctuationRemover())
-if args.tokenize:
-    preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
+
 if args.stopwords:
     preprocessors.append(StopwordRemover(args.stopwords_input, args.stopwords_input + SUFFIX_STOPWORDS))
+
+if args.punctuation:
+    preprocessors.append(PunctuationRemover(args.punctuation_input, args.punctuation_input + SUFFIX_PUNCTUATION))
+
+if args.tokenize:
+    preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
+
 if args.lemmatize:
     preprocessors.append(Lemmatizer(args.lemmatize_input, args.lemmatize_input + SUFFIX_LEMMATIZED))
 
