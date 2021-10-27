@@ -6,7 +6,15 @@ Our task involved building and documenting a real-life application of a machine 
 
 Our work consisted of a number of steps in a pipeline, in summary: We loaded and labeled the data using the framework given to us by Bechberger. We then preprocessed the data, mainly the raw tweet, to better fit our feature extraction later. This was done by removing punctuation, stopwords, etc. and also tokenizing into single words. After this, we extracted a handful of features which we found to be of importance, some were already included in the raw dataset columns, some we had to extract ourselves. Since the feature space was not exactly very large and mostly overseeable, we did not apply any dimensionality reduction other than what was already implemented. So after the features, we headed straight into classification using a variety of classifiers and benchmarks for evaluation. 
 
+![1](/Documentation/1.png)
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[1] Hour frequency of non-viral tweets [0-24]
+
 At the end, our best classifier is implemented into an 'application', callable by terminal, which gives the likeliness of an input tweet being viral, having used the features as training. 
+
+![2](/Documentation/2.png)
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[2] Hour frequency of non-viral tweets [0-24]
 
 This pipeline is documented more in detail below.
 
@@ -215,11 +223,11 @@ The last feature about the tweet metadata is about the posting time of the tweet
 
 ![time_non_viral](/Documentation/time_non_viral.png)
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[1] Hour frequency of non-viral tweets [0-24]
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[3] Hour frequency of non-viral tweets [0-24]
 
 ![time_viral](/Documentation/time_viral.png)
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[2] Hour frequency of viral tweets [0-24]
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[4] Hour frequency of viral tweets [0-24]
 
 Interestingly enough, both viral and non-viral tweets are distributed pretty much equally except for a timeframe of about 3 hours in the morning from 7:00 - 10:00. This is where the viral tweets tend to be tweeted more. Using this information, we stripped the hour from the ```time``` column of the raw dataset and added this as a feature in a new column ```time_hours```. So for a time of ```12:05:45``` the feature would just extract the number ```12```. If we have 5 tweets of posting times, an exemplary output could be: ```[[12], [14], [3], [4], [0]]```
 
@@ -232,11 +240,11 @@ We then started to analyze features about semantics and natural language. The fi
 
 ![word_count_non_viral](/Documentation/word_count_non_viral.png)
 
-&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; [3] Top 20 most used words in non-viral tweets (label == False)
+&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; [5] Top 20 most used words in non-viral tweets (label == False)
 
 ![word_count_viral](/Documentation/word_count_viral.png)
 
-&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; [4] Top 20 most used words in viral tweets (label == True)
+&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; [6] Top 20 most used words in viral tweets (label == True)
 
 What we can gather from this is that both categories seem to use the word ‘data’, followed by ‘datascience’  the most. This is not surprising, as the entire dataset is about data-science related tweets. Applying a word embedding feature using these words would not make much sense, as the feature would score equally high for the majority of both viral and non-viral tweets. So we had to differentiate between the categories and find words that were only present in the top 20 words in viral tweets, and not in non-virals. Since we used a dataset of embedded words from google news ( ```'word2vec-google-news-300'``` ), the keywords had to be present there and could not be too specific (deepleaning, datascience, etc. did not exist). We then settled with the following words: 
 
