@@ -310,9 +310,9 @@ While cluster `2` gives us very short tweets about data:
 ['Rules', 'Live', 'Work', 'DataScience'] 
 ```
 
-This indirectly means, that the HashingVectorizer does not only take into account word counts in relation to the entire data, but also somehow gathered that the short tweets above were somehow similar. It's not very intuitive to humans why this works, because it sometimes involves creating a large output for a little input in a high dimensional space, but we thought it was a cool feature nonetheless and added it into column ```tweet_hashvector```. In normal practical cases, this is used with 2^20 features, which are about 1048576 features. In our version, we increased the function parameter from (length) 8 to 2^10 = 1024 features. 
+This indirectly means, that the HashingVectorizer does not only take into account word counts in relation to the entire data, but also somehow gathered that the short tweets above were somehow similar. It's not very intuitive to humans why this works, because it sometimes involves creating a large output for a little input in a high dimensional space, but we thought it was a cool feature nonetheless and added it into column ```tweet_hashvector```. In normal practical cases, this is used with 2^20 features, which are about 1048576 features. In our version, we increased the function parameter from (length) 8 to 2^17 = 131072 features. 
 
-We also found that sklearn has tf idf... 
+We also know that ```sklearn``` has the ```Tf Idf``` ( Term Frequency Inverse Document Frequency ) function, that also generates sparse matrices based on the overall weight of words in documents. But we chose not to use this, as the HashingVectorizer does almost the same thing and we found it to be more meaningful.
 
 <br />
 <br />
@@ -330,11 +330,11 @@ tweet_charlength	| hashtags_hashtag_count	| tweet_emoji_count |	photos_bool |	vi
 74.0  | 2.0 |	0.0 |	1.0 |	1.0 |	0.09417513012886047 |	4.0
 ... | ... | ... | ... | ... | ... | ...
 
-Another important point to mention regarding the HashingVectorizer feauture, is that because it outputs multiple values (in our case a list of 1024 features per tweet), it had to fit our framework of unique values per feature column. Due to this, we extracted all 1024 features and added them to individual columns alongside the 7 features above, making the feature space of length ( _ ,1031). We also decided to do this to avoid any kind of feature outweighing that might occur. 
+Another important point to mention regarding the HashingVectorizer feauture, is that because it outputs multiple values (in our case a list of 1024 features per tweet), it had to fit our framework of unique values per feature column. Due to this, we extracted all 1024 features and added them to individual columns alongside the 7 features above, making the feature space of length ( _ ,131079). We also decided to do this to avoid any kind of feature outweighing that might occur. 
 
 ## Dimensionality Reduction
 
-At first, we tried reducing the dimensionality using a few methods like the `sklearn` integrated PCA. But when looking at the before and after results, it did not change much, and even changed crucial parts about the HashingVectorizer which even sometimes affected the performance negatively. At the end, we only kept the dimensionality reductor that was already implemented, namely being the ```K-Best selector``` using mutual information. 
+At first, we tried reducing the dimensionality using a few methods like the `sklearn` integrated PCA. But when looking at the before and after results, it did not change much, and even changed crucial parts about the HashingVectorizer which even sometimes affected the performance negatively. At the end, we only kept the dimensionality reductor that was already implemented, namely being the ```K-Best selector``` using mutual information or chi2. 
 
 ## Classification
 
@@ -421,17 +421,13 @@ Below are listed all classifiers we used, including their hyperparameter tuning.
 
 Most classifiers worked fine but some of them took way longer than expected, which was a little bit of a setback and the reason why we added a new argument: ```--small X``` which would just use X tweets for quick testing. This helped testing out classifiers little by little and also helped with the debugging. 
 
-What we learnt from trying each of the above listed classifiers is that each behaves very differently and not all of them were useful. Starting with the first two, the Majority and Frequency classifier from `sklearn`'s ```DummyClassifier``` were almost completely unusable to us. These are swiftly followed by the MultinomialNB classifier which does not take negative inputs, rendering it useless due to the negative values from the HashingVectorizer. 
-
-It seems like the best classifier in terms of runtime is ...
-The most notable classifier is ...
-The classifier that made the most sense for our features was ... 
+What we learnt from trying each of the above listed classifiers is that each behaves very differently and not all of them were useful. Starting with the first two, the Majority and Frequency classifier from `sklearn`'s ```DummyClassifier``` were almost completely unusable to us. These are swiftly followed by the `MultinomialNB` classifier which does not take negative inputs, rendering it useless due to the negative values from the HashingVectorizer. The `KNN` classifier worked alright at first, but after tuning it, we did not see any major improvements in performance. It also takes a long time since it keeps the inputs in memory. The normal `SVC (SVM)` worked well with small samples (<10000), but was also almost unusable with the entire dataset, since the time increases quadratically per sample. Using the `LinearSVC` classifier for larger datasets (since it scales better on more samples) turned out to work alright. Another linear classifer was the `SGDClassifier`, which used previous models like the support vector machine (SVM) alongisde stochastic gradient descent (SGD) learning. This classifier was very quick (convergence after 371 epochs took 41.24 seconds) but gave average results. Our best classifer was `LinearRegression` which converged on the training after 3850 iterations and 7.5 min. This is also the classifier that made the most sense for our features by using... 
 
 ## Evaluation
 
 ### Design Decisions
 
-For our evaluation and to avoid a combinatorial feature evaluation problem, we only picked our top 3 classifiers that worked well within our expectations, namely being the SGDCclassifier, linear SVC and logistic regression. 
+For our evaluation and to avoid a combinatorial feature evaluation problem, we only picked our top 3 classifers that worked well within our expectations, namely being the SGDC classifier, linear SVC and logistic regression. 
 
 To evaluate our 3 classifiers, we mainly used the integrated ```classification report``` (including precision, recall, f1-score) from ```sklearn.metrics```, as well as single metric functions like the ```accuracy_score```, ```balanced_accuracy_score``` and the ```cohen_kappa_score```. 
 
@@ -446,11 +442,12 @@ Below are listed all evaluations per classifiers we used.
 
 For our first 3 tests with combined in our own sklearn pipeline `all_in_one_multiple_input_features.py` the following features: time, videos, photos, tweet length and HashingVectorizer with 2^17 features.
 
+<br />
+
 1. *SGDC classifier*
 
-Overall: 
+Summary: 
 ```
-Convergence after 371 epochs took 41.24 seconds
 accuracy: 0.5681336785125912
 Cohen's kappa: 0.12634914111071838
 balanced accuracy: 0.6766037922018122
@@ -473,7 +470,7 @@ weighted avg       0.88      0.57      0.65      8498
 
 2. *Linear SVC*
 
-Overall: 
+Sumary: 
 ```
 
 accuracy: 0.9113909155095317
@@ -501,10 +498,9 @@ To have at least some comparable result we set max_iter to 5000. This lead to tr
 
 3. *Logistic Regression*
 
-Overall:
+Summary:
 ```
 
-The training converged after 3850 iterations and 7.5 min.
 accuracy: 0.8272534714050365
 Cohen's kappa: 0.3513706313151349
 balanced accuracy: 0.7646028274323429
@@ -530,10 +526,12 @@ weighted avg       0.90      0.83      0.85      8498
 <br />
 
 #### B) *Specific Features*
-
+<br />
 1. *Logistic Regression without HashingVectorizer*
 
 Here we wanted to test how good the classifier is just with our implemented features with information about time, videos, photos and the tweet length without HashingVectorizer.
+
+Summary:
 ```
 
 accuracy: 0.6114379854083314
@@ -556,13 +554,15 @@ Detail:
 weighted avg       0.86      0.61      0.69      8498
 
 ```
-The training is now extreme fast (2.3s), but the decrease in all metrics is obvious.
+The training is now extreme fast (2.3s), but the decrease in all metrics is obivious.
 
 <br />
 
-2. *Logistic Regression just with HashingVectorizer*
+2. *Logistic Regression wth just HashingVectorizer*
 
 Now we checked the outcome just with HashingVectorizer and 2**17 features.
+
+Summary: 
 ```
 
 The training is now finished after 28.9 sec and 200 iterations.
@@ -576,60 +576,21 @@ Detail:
 ```
 
     Test set      precision    recall  f1-score   support
-        Flop       0.95      0.85      0.90      7665
-       Viral       0.32      0.63      0.42       833
+
+4. *Emoji Counter*
+
     accuracy                           0.83      8498
+
    macro avg       0.64      0.74      0.66      8498
 weighted avg       0.89      0.83      0.85      8498
 
 ```
-3. *Logistic Regression with even more features*
-
-We also added more features, like 'user_id', 'id' and 'timezone' to 'all_in_one_multiple_input_features.py', because we thought a viral tweet may depend on its author and other information, which may seem unimportant at first sight.
-
-````
-After 32.3min finished
-accuracy: 0.8216050835490704
-Cohen's kappa: 0.35767682553256674
-balanced accuracy: 0.7776273472223426 
-
-````
-
-Detail
-````
-
-    Test set      precision    recall  f1-score   support
-
-        Flop       0.96      0.83      0.89      3827
-       Viral       0.32      0.72      0.45       422
-
-    accuracy                           0.82      4249
-   macro avg       0.64      0.78      0.67      4249
-weighted avg       0.90      0.82      0.85      4249
-
-````
-4. *What's about overfitting?*
-
-To see to what extent the classifier overfits, we created a table for the training set for all features with the LogisticRegression classifier. Thus, this is the output for the predicted data previously given to the classifier for training. With regard to the parameters it is comparable to the output of the test set above (B 3)
-
-````
-
-Matrix Train set:
-              precision    recall  f1-score   support
-
-        Flop       1.00      0.89      0.94    252744
-       Viral       0.46      0.96      0.63     26247
-
-    accuracy                           0.89    278991
-   macro avg       0.73      0.92      0.78    278991
-weighted avg       0.95      0.89      0.91    278991
-
-````
-
+<br />
 C. *Cheating Features*
 
 To check if our classifier really works, we tried as a last test to add the features 'replies_count', 'retweets_count' and 'likes_count'.
 
+Summary:
 ```
 
 After 1.8 secs:
@@ -652,35 +613,33 @@ Detail:
    macro avg       1.00      1.00      1.00      8498
 weighted avg       1.00      1.00      1.00      8498
 ```
-
+<br />
 ### Interpretation
 
-When we did our first tests we ran it successfully with 25 features (included HashingVectorizer), we tried it with the SVM classifier, but that took too much time (nearly endless). We read later that runtime increases with SVM quadratic with the number of samples. So we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1. That was a big success for us.
+When we did our first tests we ran it successfully with 25 features (included HashingVectorizer), we tried it with the SVM classifier, but that took too much time (nearly endless). We read later that runtime increases with SVM quadratic with the number of samples. So we used KNN with 4 NN on a 20000 sample subset and for the first time our Cohen kappa went from 0.0 to 0.1. That was a big sucess for us.
 
-Later after long time of hyperparameter tuning and running the code on the grid (thats the big computer network provided by our Institute) we observed the given output metrics from above (A,B,C).
+Later after long time of hyperparameter tuning and running the code on the grid (thats the big computer network provided by our Institute) we observed the given output metrics.
 
 Thinks we found interesting:
 
 * Indeed, our Logistic Regression classifier performed the best out of the bunch reaching a Cohen's kappa of 0.35 on the test set.
 * Without HashingVectorizer Logistic Regression learns something but with a big drop in accuracy. This is maybe because of the big drop of information.
-* Its really interesting that with just HashingVectorizer the Logistic Regression classifier is so good compared to itself with all features. 
+* Its really interesting that with just HashingVectorizer the Logistic Regression classifier is so good compared to itself with all features.
 * Even though there is a small increase in Cohen kappa when we combine all features, but this comes with a big drop in run time. Case B 1 needs 2.3 sec, B 2 needs 28.9 secs, but combined they need 7.5 min. May this is because sklearns implementation of the FeatureUnion function.
-*  When we added more features (B 3) cohen kappa increase further more by 0.06 and balanced accuracy by 1.5%, so maybe the classifier could find something to learn out of it, but nothing significant. So if we would collect more data, even if it seems unimportant, we could maybe improve the classifier even more.
-* When we look at the output of the tests set compared to train set under B 4, we directly see that the classifier overfits. But as long as the classifier still learns something and can predict new data correct to some extent, are we satisfied.
 * LinearSVC works really good on small dataset, but it takes quite a long time for all samples.
 * To get some insights into the classifier let's have a look at precision and recall of the viral samples:
-   * SGDClassifier (A.1) has a high recall and low precision, so predicts most of the viral samples right, but just because he classifies something as viral much more often, than it actually is (low precision).
+   * SGDClassifier (A.1) has a high recall and low precision, so predicts most of the viral samples right, but just because he classifys something as viral much more often, than it acctuly is (low precision).
    * LinearSVC is just the opposite: He tends often to classify new samples not as viral even if they are (low recall), but when he does, he is quite sure about that (high precision).
    * LogisticRegression is something between them both, but still recall is much higher (so similar as SGDClassifier)
-* With our Cheating Features (C) every classifier is just outstanding after a few seconds.
+* With our Cheating Features every classifier is just outstanding after a few seconds.
 
-In conclusion, we are very satisfied with our final result. Cohen's kappa of 0.357 and a balanced accuracy of 0.78 on the test set are of course not very high, but it is uncertain to what extent this is even possible in such a task. Future experiments could be conducted with more features or even with a different task. One could try to develop an artificial intelligence that predicts the number of likes and retweets of a tweet instead of just a (non) viral threshold.
+
 
 ## Tests
 
 We have written tests for tfidf_vec and hash_vector, because even though the sklearn functions themselves naturally have many tests implemented, we want to double check that we are using them correctly and that we are getting the expected output. Therefore, especially 'test_result_shape' is very important, because it checks if the length of the output list matches the number of input elements.  
 
-We added in 'run_classifier.py' a number of functions to run this file from the run_classifier_test.py which tests all classifiers, checks if the data is still equal length, tries the classifiers to fit and if not, checks if the file gives the correct error output. 
+We added in run_classifier, a number of functions to run from the run_classifier_test.py which tests all classifiers, checks if the data is still equal length, if no classifier is written, try classifier fit, if not, give correct error output. 
 
 ## Project Organization
 
