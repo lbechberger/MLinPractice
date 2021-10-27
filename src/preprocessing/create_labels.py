@@ -11,7 +11,7 @@ Created on Tue Sep 28 15:55:44 2021
 
 import os, argparse, csv
 import pandas as pd
-from code.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_LABEL
+from src.util import COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_PHOTOS, COLUMN_VIDEO, COLUMN_VIRAL, COLUMN_MEDIA
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Creation of Labels")
@@ -20,6 +20,7 @@ parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("-l", '--likes_weight', type = int, help = "weight of likes", default = 1)
 parser.add_argument("-r", '--retweet_weight', type = int, help = "weight of retweets", default = 1)
 parser.add_argument("-t", '--threshold', type = int, help = "threshold to surpass for positive class", default = 50)
+parser.add_argument("-m", '--mediafile', help = "which kind of media file is attached, photo, video or none")
 args = parser.parse_args()
 
 # get all csv files in data_directory
@@ -33,13 +34,20 @@ for file_path in file_paths:
 # join all data into a single DataFrame
 df = pd.concat(dfs)
 
-# compute new column "label" based on likes and retweets
-df[COLUMN_LABEL] = (args.likes_weight * df[COLUMN_LIKES] + args.retweet_weight * df[COLUMN_RETWEETS]) > args.threshold
+# compute new column "viral" based on likes and retweets
+df[COLUMN_VIRAL] = (args.likes_weight * df[COLUMN_LIKES] + args.retweet_weight * df[COLUMN_RETWEETS]) > args.threshold
+
+# adds new column based on video and photo existence
+df[COLUMN_MEDIA] = "None"
+df[COLUMN_MEDIA].mask(df[COLUMN_VIDEO] == 1, other="Video", inplace=True)
+df[COLUMN_MEDIA].mask(df[COLUMN_PHOTOS] != "[]", other="Photo", inplace=True)
 
 # print statistics
 print("Number of tweets: {0}".format(len(df)))
-print("Label distribution:")
-print(df[COLUMN_LABEL].value_counts(normalize = True))
+print("Viral distribution:")
+print(df[COLUMN_VIRAL].value_counts(normalize = True))
+print("Media distribution:")
+print(df[COLUMN_MEDIA].value_counts(normalize = True))
 
 # store the DataFrame into a csv file
 df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_terminator = "\n")

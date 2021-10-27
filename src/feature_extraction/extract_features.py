@@ -11,9 +11,9 @@ Created on Wed Sep 29 11:00:24 2021
 import argparse, csv, pickle
 import pandas as pd
 import numpy as np
-from code.feature_extraction.character_length import CharacterLength
-from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL
+from src.feature_extraction.character_length import CharacterLength
+from src.feature_extraction.feature_collector import FeatureCollector
+from src.util import COLUMN_TWEET, COLUMN_VIRAL
 
 
 # setting up CLI
@@ -53,7 +53,7 @@ else:    # need to create FeatureCollector manually
 feature_array = feature_collector.transform(df)
 
 # get label array
-label_array = np.array(df[COLUMN_LABEL])
+label_array = np.array(df[COLUMN_VIRAL])
 label_array = label_array.reshape(-1, 1)
 
 # store the results

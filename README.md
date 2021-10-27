@@ -50,6 +50,7 @@ The script takes the following optional parameters:
 - `-l` or `--likes_weight` determines the relative weight of the number of likes a tweet has received. Defaults to 1.
 - `-r` or `--retweet_weight` determines the relative weight of the number of retweets a tweet has received. Defaults to 1.
 - `-t` or `--threshold` determines the threshold a data point needs to surpass in order to count as a "viral" tweet. Defaults to 50.
+- `-m` or `--mediafile` determines the attached media file, if it is a `Video`, `Photo` or `None`.
 
 ### Classical Preprocessing
 

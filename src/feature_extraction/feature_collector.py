@@ -9,7 +9,7 @@ Created on Wed Sep 29 12:36:01 2021
 """
 
 import numpy as np
-from code.feature_extraction.feature_extractor import FeatureExtractor
+from src.feature_extraction.feature_extractor import FeatureExtractor
 
 # extend FeatureExtractor for the sake of simplicity
 class FeatureCollector(FeatureExtractor):

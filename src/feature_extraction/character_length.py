@@ -9,7 +9,7 @@ Created on Wed Sep 29 12:29:25 2021
 """
 
 import numpy as np
-from code.feature_extraction.feature_extractor import FeatureExtractor
+from src.feature_extraction.feature_extractor import FeatureExtractor
 
 # class for extracting the character-based length as a feature
 class CharacterLength(FeatureExtractor):
