@@ -450,7 +450,10 @@ Below are listed all evaluations per classifiers we used.
 <br />
 <br />
 
-#### A) *All Features*
+### A) *All Features with old Pipeline*
+
+
+#### A) *New sklearn Pipeline*
 
 For our first 3 tests with combined in our own sklearn pipeline `all_in_one_multiple_input_features.py` the following features: time, videos, photos, tweet length and HashingVectorizer with 2^17 features.
 
@@ -588,15 +591,32 @@ Detail:
 ```
 
     Test set      precision    recall  f1-score   support
-
-4. *Emoji Counter*
-
+        Flop       0.95      0.85      0.90      7665
+       Viral       0.32      0.63      0.42       833
     accuracy                           0.83      8498
-
    macro avg       0.64      0.74      0.66      8498
 weighted avg       0.89      0.83      0.85      8498
 
 ```
+
+3. *What's about overfitting?*
+
+To see to what extent the classifier overfits, we created a table for the training set for all features with the LogisticRegression classifier. Thus, this is the output for the predicted data previously given to the classifier for training. With regard to the parameters it is comparable to the output of the test set above (A 3)
+
+````
+
+Matrix Train set:
+              precision    recall  f1-score   support
+
+        Flop       1.00      0.89      0.94    252744
+       Viral       0.46      0.96      0.63     26247
+
+    accuracy                           0.89    278991
+   macro avg       0.73      0.92      0.78    278991
+weighted avg       0.95      0.89      0.91    278991
+
+````
+
 <br />
 C. *Cheating Features*
 
@@ -636,14 +656,17 @@ Thinks we found interesting:
 
 * Indeed, our Logistic Regression classifier performed the best out of the bunch reaching a Cohen's kappa of 0.35 on the test set.
 * Without HashingVectorizer Logistic Regression learns something but with a big drop in accuracy. This is maybe because of the big drop of information.
-* Its really interesting that with just HashingVectorizer the Logistic Regression classifier is so good compared to itself with all features.
+* Its really interesting that with just HashingVectorizer the Logistic Regression classifier is so good compared to itself with all features. 
 * Even though there is a small increase in Cohen kappa when we combine all features, but this comes with a big drop in run time. Case B 1 needs 2.3 sec, B 2 needs 28.9 secs, but combined they need 7.5 min. May this is because sklearns implementation of the FeatureUnion function.
+* When we look at the output of the tests set compared to train set under (B 3), we directly see that the classifier overfits. But as long as the classifier still learns something and can predict new data correct to some extent, are we satisfied.
 * LinearSVC works really good on small dataset, but it takes quite a long time for all samples.
 * To get some insights into the classifier let's have a look at precision and recall of the viral samples:
-   * SGDClassifier (A.1) has a high recall and low precision, so predicts most of the viral samples right, but just because he classifys something as viral much more often, than it acctuly is (low precision).
+   * SGDClassifier (A.1) has a high recall and low precision, so predicts most of the viral samples right, but just because he classifies something as viral much more often, than it actually is (low precision).
    * LinearSVC is just the opposite: He tends often to classify new samples not as viral even if they are (low recall), but when he does, he is quite sure about that (high precision).
    * LogisticRegression is something between them both, but still recall is much higher (so similar as SGDClassifier)
-* With our Cheating Features every classifier is just outstanding after a few seconds.
+* With our Cheating Features (C) every classifier is just outstanding after a few seconds.
+
+In conclusion, we are very satisfied with our final result. Cohen's kappa of 0.35 and a balanced accuracy of 0.76 (A 3) on the test set are of course not very high, but it is uncertain to what extent this is even possible in such a task. Future experiments could be conducted with more features (such as title or the author) or even with a different task. One could try to develop an artificial intelligence that predicts the number of likes and retweets of a tweet instead of just a (non) viral threshold.
 
 
 
@@ -651,7 +674,8 @@ Thinks we found interesting:
 
 We have written tests for tfidf_vec and hash_vector, because even though the sklearn functions themselves naturally have many tests implemented, we want to double check that we are using them correctly and that we are getting the expected output. Therefore, especially 'test_result_shape' is very important, because it checks if the length of the output list matches the number of input elements.  
 
-We added in run_classifier, a number of functions to run from the run_classifier_test.py which tests all classifiers, checks if the data is still equal length, if no classifier is written, try classifier fit, if not, give correct error output.  
+We added in 'run_classifier.py' a number of functions to run this file from the run_classifier_test.py which tests all classifiers, checks if the data is still equal length, tries the classifiers to fit and if not, checks if the file gives the correct error output. 
+
 
 ## Project Organization
 
