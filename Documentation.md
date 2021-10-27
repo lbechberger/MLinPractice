@@ -8,7 +8,7 @@ Our work consisted of a number of steps in a pipeline, in summary: We loaded and
 
 ![1](/Documentation/1.png)
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[1] From preprocessing to evaluation
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[1] From preprocessing to evaluation
 
 <br />
 
@@ -16,7 +16,7 @@ At the end, our best classifier is implemented into an 'application', callable b
 
 ![2](/Documentation/2.png)
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[2] Generalizing new instances via the application
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[2] Generalizing new instances via the application
 
 <br />
 
