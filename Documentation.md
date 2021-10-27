@@ -1,7 +1,7 @@
 # Documentation
 Machine Learning in Practice block seminar, winter term 2021/22 @ [UOS](https://www.uni-osnabrueck.de/startseite/).  
 Held by Lucas Bechberger, M.Sc.  
-Group members: Dennis Hesenkamp, Iolanta Martirosov, Yannik Ullrich
+Group members: Dennis Hesenkamp, Yannik Ullrich
 
 ---
 ### Table of contents
@@ -45,11 +45,11 @@ Example:
 
 >>> sent = 'There is great genius behind all this.'
 >>> nltk.word_tokenize(sent)
-['There', 'is', 'great', 'genius', 'behind', 'all', 'this', '.']
+# ['There', 'is', 'great', 'genius', 'behind', 'all', 'this', '.']
 ```
 
 
-### Stopword removal
+### Stopword Removal
 To extract meaningful natural language features from a string, it makes sense to first remove any stopwords occuring in that string. Say, for example, one would like to look at the most frequently occuring words in a large corpus. Usually, that means looking at words which actually carry _meaning_ in the given context. According to the OEC[^oec], the largest 21<sup>st</sup>-century English text corpus, the commonest word in English is _the_ - from which we cannot derive any meaning. Hence, it would make sense to remove words such as _the_ and other, non-meaning carrying words (= stopwords) from a corpus (the set of tweets in our case) before doing anything like keyword of occurence frequency analysis.  
 
 There is not one universal stopword list nor are there universal rules on how stopwords should be defined. For the sake of convenience, we decided to use `gensim`'s `gensim.parsing.preprocessing.remove_stopwords` function[^gensim_stopwords], which uses `gensim`'s built-in stopword list containing high-frequency words with little lexical content.  
@@ -61,7 +61,7 @@ Example:
 
 >>> sent = 'There is great genius behind all this.'
 >>> gensim.parsing.preprocessing.remove_stopwords(sent)
-'There great genius this.'
+# 'There great genius this.'
 ```
 
 Other options would have been `nltk`'s stopword corpus[^nltk_stopwords], an annotated corpus with 2.400 stopwords from 11 languages or `spaCy`'s stopword list[^spacy_stopwords], but we faced problems implementing the former one while `gensim`'s corpus apparently contains more words and leads to better results compared to the latter.
@@ -77,7 +77,7 @@ Example:
 >>> sent = "O, that my tongue were in the thunder's mouth!"
 >>> punctuation = '[{}]'.format(string.punctuation)
 >>> sent.replace(punctuation, '')
-"O that my tongue were in the thunders mouth"
+# "O that my tongue were in the thunders mouth"
 ```
 Caveat: the above code will actually not produce the desired output, but works in our implementation due to the different format of the input (we pass a `dtype object` as input). This is just to illustrate how our code and punctuation removal in general work.
 
@@ -88,6 +88,7 @@ To implement this, we used `nltk`'s `pos_tag` to assign PoS tags and WordNet's `
 
 ```python
 >>> from nltk.corpus import wordnet
+
 >>> tag_dict = {"J": wordnet.ADJ,
 				  "N": wordnet.NOUN,
 				  "V": wordnet.VERB,
@@ -103,22 +104,37 @@ Example:
 >>> from nltk import pos_tag
 >>> from nltk.stem import WordNetLemmatizer
 
->>> sent = 
+>>> sent = ['These', 'newer', 'data', 'help', 'scientists', 'accurately', 'project', 'how', 'quickly', 'glaciers', 'are', 'retreating', '.']
 >>> lem = WordNetLemmatizer()
->>> 
+>>> lemmatized = []
+>>> for word in sent:
+>>> 	lemmatized.append(lem.lemmatize(word.lower(), tag_dict.get(tag, wordnet.NOUN)))
+# ['these', 'newer', 'data', 'help', 'scientist', 'accurately', 'project', 'how', 'quickly', 'glacier', 'be', 'retreat', '.']
 ```
 
-gensim.parsing.preprocessing.stem
-https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.stem
+Whenever the PoS tagging encounters an unknown tag or a tag which the lemmatizer cannot handle, the default tag to be used is `wordnet.NOUN`.
+
+As mentioned in the beginning, alternatively to lemmatization we could use the computationally cheaper stemming, which only reduces an inflected word to its stem (e.g. _accurately_ becomes _accur_). This could be done with `gensim.parsing.preprocessing.stem`[^gensim_stemming]
+
+<https://www.machinelearningplus.com/nlp/lemmatization-examples-python/#wordnetlemmatizerwithappropriatepostag>
+
 
 <!-- Feature extraction section -->
 <a name='feature_extraction'></a>
 
 ## Feature Extraction
+After the preprocessing of the data is done, we can move on to extracting features from the dataset.
 
-### Character length
-Do shorter or longer tweets potentially go more viral? Character length extraction has been implemented as a first 
-feature by @lbechberger.
+### Character Length
+The length of a tweet might influence its chance of going viral as people might prefer shorter texts on social media (or longer, more complex ones). This feature was already implemented by Lucas as an example, using `len()`.
+
+Example:
+
+```python
+>>> sent = 'There is great genius behind all this.'
+>>> len(sent)
+# 38
+```
 
 ### Month
 Does the month in which the tweet was published have an impact on its virality? Are there times of the year in which 
@@ -127,12 +143,13 @@ tweet was published from the metadata.
 
 <a name='sentiment_analysis'></a>
 ### Sentiment Analysis
-Using the VADER (Valence Aware Dictionary and sEntiment Reasoner) framework ([PyPI](https://pypi.org/project/vaderSentiment/)) 
-or [homepage](https://github.com/cjhutto/vaderSentiment )), we extract the sentiment of a tweet. VADER was built 
-for social media and takes into account, among other factors, emojis, punctuation, and caps. The `polarity_score()` function 
-returns a value for positive, negative, and neutral polarity, as well as an additional compound value with -1 representing 
-the most negative and +1 the most positive sentiment. The classifier does not need training as it is pre-trained, 
-unknown words, however, are simply classified as neutral.
+Using the VADER (Valence Aware Dictionary and sEntiment Reasoner)[^vader_pypi][^vader_homepage] framework, we extract the compound sentiment of a tweet. VADER was built for social media and takes into account, among other factors, emojis, punctuation, and caps. The `polarity_score()` function returns a value for positive, negative, and neutral polarity, as well as an additional compound value with $-1$ representing the most negative and $+1$ the most positive sentiment. The classifier does not need training as it is pre-trained, unknown words, however, are simply classified as neutral. Because VADER can work with punctuation, we use the unmodified tweets as input. This also ensures that we do not artificially modify the sentiment by changing the original tweet, as we, for example, do with lemmatization and stopword removal.
+
+Example:
+
+```python
+
+```
 
 <!-- Classifier section -->
 <a name='classification'></a>
@@ -161,5 +178,7 @@ Different reserach questions:
 [^gensim_stopwords]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.remove_stopwords>, retireved Oct 26, 2021
 [^spacy_stopwords]: <https://github.com/explosion/spaCy/blob/master/spacy/lang/en/stop_words.py>, retrieved Oct 26, 2021
 [^gensim-punctuation]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.strip_punctuation>, retrieved Oct 26, 2021
-
+[^gensim_stemming]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.stem>, retrieved Oct 26, 2021
+[^vader_pypi]: <https://pypi.org/project/vaderSentiment/>
+[^vader_homepage]: <https://github.com/cjhutto/vaderSentiment>
 <!-- -->
