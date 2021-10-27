@@ -8,13 +8,15 @@ Our work consisted of a number of steps in a pipeline, in summary: We loaded and
 
 ![1](/Documentation/1.png)
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[1] Hour frequency of non-viral tweets [0-24]
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[1] From preprocessing to evaluation
 
 At the end, our best classifier is implemented into an 'application', callable by terminal, which gives the likeliness of an input tweet being viral, having used the features as training. 
 
 ![2](/Documentation/2.png)
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[2] Hour frequency of non-viral tweets [0-24]
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[2] Generalizing new instances via the application
+
+<br />
 
 This pipeline is documented more in detail below.
 
