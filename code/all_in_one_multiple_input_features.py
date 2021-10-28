@@ -110,7 +110,9 @@ parser.add_argument("--dim_red", type=str, help="choose a dim_red algo", default
 # classifier
 parser.add_argument("--classifier", type=str, help="choose a classifier", default=None)
 parser.add_argument(
-    "--verbose", action="store_true", help="print information during training",
+    "--verbose",
+    action="store_true",
+    help="print information during training",
 )
 args = parser.parse_args()
 
@@ -170,9 +172,11 @@ def get_author_data(x):
 
 
 def get_numeric_data(x):
-    return x[
-        ["video", "user_id", "id", "timezone"]
-    ]  # "replies_count", "retweets_count", "likes_count" x[["video", "user_id"]] x["video"].values.reshape(-1, 1)
+    return x["video"].values.reshape(
+        -1, 1
+    )  # "replies_count", "retweets_count", "likes_count" x["video"].values.reshape(-1, 1)
+    # for extra feature "user_id", "id", "timezone" use the following, but is not jet integrated in documentation
+    # return x[["video", "user_id", "id", "timezone"]]
 
 
 # calculate the length of a tweet
@@ -249,21 +253,22 @@ elif args.feature_extraction == "union":
                             ]
                         ),
                     ),
-                    (
-                        "title_features",
-                        Pipeline(
-                            [
-                                ("selector_title", FunctionTransformer(get_title_data)),
-                                (
-                                    "vec",
-                                    HashingVectorizer(
-                                        n_features=HASH_VECTOR_N_FEATURES_TITLE,
-                                        ngram_range=NGRAM_RANGE,
-                                    ),  # change this to TfidfVectorizer if you want
-                                ),
-                            ]
-                        ),
-                    ),
+                    # extra feature data about title, not jet integrated in documentation
+                    # (
+                    #     "title_features",
+                    #     Pipeline(
+                    #         [
+                    #             ("selector_title", FunctionTransformer(get_title_data)),
+                    #             (
+                    #                 "vec",
+                    #                 HashingVectorizer(
+                    #                     n_features=HASH_VECTOR_N_FEATURES_TITLE,
+                    #                     ngram_range=NGRAM_RANGE,
+                    #                 ),  # change this to TfidfVectorizer if you want
+                    #             ),
+                    #         ]
+                    #     ),
+                    # ),
                 ],
                 verbose=verbose,
             ),
