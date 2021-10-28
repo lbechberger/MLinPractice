@@ -10,6 +10,23 @@ This application is capable of handling correctly four languages, namely the fou
 - after the deletion of the punctuation, we remove stopwords within the tokenised tweet with no punctuation. Therefore, we choose the corresponding stopword list depending on the language of the tweet. For now, we have the nltk's stopwords list of the following languages: German, English, Spanish and French. This happens in *code/stopwords_remover.py*
 - the last step of the preprocessing is the lemmatization, we use lemmatization instead of stemming, because it is more accurate but we are aware of the price for this accuracy to pay is the time needed for the computations. It is not a big problem, since we run the preprocessing step only one time. The lemmitzation is implemented in *code/lemmatizer.py*.
 
+# Classifier 
+Implemented are the following classifiers:
+* Majority vote 
+* Label frequency
+* k-nearest neighbour
+* Random forest
+* Linear Support Vector Machine
+* Logistic Regression 
+
+
+
+
+
+# ----------------------
+# ----------------------
+# ----------------------
+
 # Documentation Example
 
 Some introductory sentence(s). Data set and task are relatively fixed, so 
