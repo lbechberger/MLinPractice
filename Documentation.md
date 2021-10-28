@@ -47,6 +47,21 @@ property. It is '1', not just if the tweet contains a video, but a photo as well
 
 Maybe show a short example what your preprocessing does.
 
+#### Daytime Example
+
+adds new column based on the time the tweet was sent
+The end hours of every daytime can be changed within the `-d` or `--daytime` argument.
+By default, this is:
+0  - 6  -> night
+6  - 12 -> morning 
+12 - 18 -> afternoon
+18 - 0  -> evening
+295806    18:29:04  ->  Evening
+295807    07:46:31  ->  Morning
+295808    03:24:09  ->  Night
+295809    00:29:44  ->  Night
+295810    19:45:15  ->  Evening
+
 ### Interpretation
 
 Probably, no real interpretation possible, so feel free to leave this section out.
