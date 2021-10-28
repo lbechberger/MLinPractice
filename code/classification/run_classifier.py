@@ -14,6 +14,7 @@ from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, precisi
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
+from sklearn.ensemble import RandomForestClassifier
 from mlflow import log_metric, log_param, set_tracking_uri
 
 # setting up CLI
@@ -24,7 +25,8 @@ parser.add_argument("-e", "--export_file", help = "export the trained classifier
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
-parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
+parser.add_argument("-n", "--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
+parser.add_argument("-rf", "--forest", type = int, help = "random forest classifier with the specified number of trees", default = None)
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-p", "--precision", action = "store_true", help = "evaluate using precision")
 parser.add_argument("-r", "--recall", action = "store_true", help = "evaluate using recall")
@@ -37,9 +39,12 @@ args = parser.parse_args()
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
 
+# setup logging 
 set_tracking_uri(args.log_folder)
+
+# import a pre-trained classifier
 if args.import_file is not None:
-    # import a pre-trained classifier
+    
     with open(args.import_file, 'rb') as f_in:
         input_dict = pickle.load(f_in)
     
@@ -48,6 +53,7 @@ if args.import_file is not None:
         log_param(param, value)
     
     log_param("dataset", "validation")
+
 
 else:   # manually set up a classifier
     
@@ -64,7 +70,9 @@ else:   # manually set up a classifier
         log_param("classifier", "frequency")
         params = {"classifier": "frequency"}
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
+
     elif args.knn is not None:
+        # k nearest neighbor classifier 
         print("    {0} nearest neighbor classifier".format(args.knn))
         log_param("classifier", "knn")
         log_param("k", args.knn)
@@ -72,6 +80,16 @@ else:   # manually set up a classifier
         standardizer = StandardScaler()
         knn_classifier = KNeighborsClassifier(args.knn, n_jobs = -1)
         classifier = make_pipeline(standardizer, knn_classifier)
+
+    elif args.forest is not None:
+        # random forest classifier 
+        print("     random forest classifier with {0} trees".format(args.forest))
+        log_param("classifier", "random_forest")
+        log_param("n_trees", args.forest)
+        params = {"classifier":"random_forest", "n_trees": args.forest}
+        classifier = RandomForestClassifier(n_estimators = args.forest)
+
+    # fit classifier to data 
     classifier.fit(data["features"], data["labels"].ravel())
     log_param("dataset", "training")
 
