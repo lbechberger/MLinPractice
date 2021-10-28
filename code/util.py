@@ -14,7 +14,8 @@ COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
 COLUMN_PHOTOS = "photos"
 COLUMN_VIDEO = "video"
-COLUMN_REPLIES = "replies_count"
+COLUMN_HASHTAGS = "hashtags"
+COLUMN_TIME = "time"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
@@ -31,7 +32,7 @@ HASH_VECTOR_N_FEATURES = 2**20
 HASH_VECTOR_N_FEATURES_TITLE = 2**3
 NGRAM_RANGE = (1, 2)
 
-# classifier 
+# classifier
 KNN_K = 5
 MAX_ITER_LOGISTIC = 50000
 MAX_ITER_LINEAR_SVC = 5000
