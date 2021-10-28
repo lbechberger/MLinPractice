@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {            
+            "name": "Python: Attach",
+            "type": "python",
+            "request": "attach",
+            "connect": {
+              "host": "localhost",
+              "port": 5678
+            }            
+        },
+        {
+            "name": "Python: Module",
+            "type": "python",
+            "request": "launch",
+            "module": "code",
+            "cwd": "${workspaceFolder}",
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            // "pythonArgs": [
+            //     "-m", 
+            //     "src.feature_extraction.test.feature_extraction_test", 
+            //     "E:\\MyPC\\code\\git\\myforkMLiP\\MLinPractice\\src\\feature_extraction\\test\\feature_extraction_test.py"
+            // ],
+            // "env": {
+            //     "PYTHONPATH": "${workspaceFolder}/code"
+            // }
+        }
+    ]
+}
