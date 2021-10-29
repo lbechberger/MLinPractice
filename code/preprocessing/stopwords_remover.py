@@ -10,7 +10,7 @@ Created on Wed Sep 29 09:45:56 2021
 import contractions
 from nltk.corpus import stopwords
 from code.preprocessing.preprocessor import Preprocessor
-
+ 
 
 class StopwordsRemover(Preprocessor):
     # constructo
@@ -100,4 +100,3 @@ class StopwordsRemover(Preprocessor):
             tweets_withno_stopwords.append(tweet_withno_stopwords)
         return tweets_withno_stopwords
 
-    
