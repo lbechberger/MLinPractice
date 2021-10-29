@@ -2,21 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Oct  7 14:30:41 2021
-<<<<<<< HEAD
-<<<<<<< HEAD
-@author: ml
-=======
-<<<<<<< HEAD
 
-@author: rfarah
-=======
 @author: ml
->>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
->>>>>>> a9f1bb1 (resolve merge conflicts)
-=======
-
-@author: rfarah
->>>>>>> 0a0cfa3 (changes in the bigram)
 """
 
 import unittest
