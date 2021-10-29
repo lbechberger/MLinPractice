@@ -12,7 +12,6 @@ inspired by https://www.machinelearningplus.com/nlp/lemmatization-examples-pytho
 from code.preprocessing.preprocessor import Preprocessor
 import nltk
 import ast
-from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 
 

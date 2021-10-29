@@ -5,7 +5,7 @@ from code.preprocessing.preprocessor import Preprocessor
 
 class Stemmer(Preprocessor):
     def __init__(self, input_columns, output_column):
-        super().__init__(input_columns, output_column)
+        super().__init__([input_columns], output_column)
 
     def _set_variables(self, inputs):
         self._arabic_stemmer = SnowballStemmer(language='arabic')
@@ -31,33 +31,33 @@ class Stemmer(Preprocessor):
             if isinstance(tweet, str):
                 tweet = ast.literal_eval(tweet)
             if 'en' in language:
-                tweet_stemmed = [self._english_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._english_stemmer.stem(word) for word in tweet]
             elif 'ar' in language:
-                tweet_stemmed = [self._arabic_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._arabic_stemmer.stem(word) for word in tweet]
             elif 'fr' in language:
-                tweet_stemmed = [self._french_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._french_stemmer.stem(word) for word in tweet]
             elif 'de' in language:
-                tweet_stemmed = [self._german_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._german_stemmer.stem(word) for word in tweet]
             elif 'es' in language:
-                tweet_stemmed = [self._spanish_stemmer.stemm(word) for word in tweet]
-            elif 'da' in language:
-                tweet_stemmed = [self._danish_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._spanish_stemmer.stem(word) for word in tweet]
+            elif 'da' in language: 
+                tweet_stemmed = [self._danish_stemmer.stem(word) for word in tweet]
             elif 'nl' in language:
-                tweet_stemmed = [self._dutch_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._dutch_stemmer.stem(word) for word in tweet]
             elif 'hu' in language:
-                tweet_stemmed = [self._hungarian_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._hungarian_stemmer.stem(word) for word in tweet]
             elif 'it' in language:
-                tweet_stemmed = [self._italian_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._italian_stemmer.stem(word) for word in tweet]
             elif 'no' in language:
-                tweet_stemmed = [self._norwegian_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._norwegian_stemmer.stem(word) for word in tweet]
             elif 'po' in language:
-                tweet_stemmed = [self._portuguese_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._portuguese_stemmer.stem(word) for word in tweet]
             elif 'ro' in language:
-                tweet_stemmed = [self._romanian_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._romanian_stemmer.stem(word) for word in tweet]
             elif 'ru' in language:
-                tweet_stemmed = [self._russian_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._russian_stemmer.stem(word) for word in tweet]
             elif 'sv' in language:
-                tweet_stemmed = [self._swedish_stemmer.stemm(word) for word in tweet]
+                tweet_stemmed = [self._swedish_stemmer.stem(word) for word in tweet]
 
             tweets_stemmed.append(tweet_stemmed)
         return tweets_stemmed
