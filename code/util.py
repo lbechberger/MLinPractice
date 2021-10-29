@@ -5,7 +5,6 @@ Utility file for collecting frequently used constants and helper functions.
 Created on Wed Sep 29 10:50:36 2021
 @author: lbechberger
 """
-import fasttext, warnings
 
 # column names for the original data frame
 COLUMN_TWEET = "tweet"
@@ -18,6 +17,7 @@ COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 COLUMN_TOKENIZED = "tweet_tokenized"
 COLUMN_STOPWORDS = "tweet_no_stopwords"
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 SUFFIX_TOKENIZED = "_tokenized"
@@ -31,3 +31,5 @@ DETECTION_MODEL = fasttext.load_model("code/models/lid.176.bin")
 warnings.simplefilter(action='ignore', category=FutureWarning)
 fasttext.FastText.eprint = lambda x: None
 >>>>>>> 2854caf (modified files and testing added)
+=======
+>>>>>>> fe92cf0 (fixed error in the stopword remover)

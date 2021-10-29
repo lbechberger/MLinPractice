@@ -30,9 +30,9 @@ class StopwordsRemover(Preprocessor):
         inputs = inputs[0]
         # replace stopwords and punctuations with empty string
         tweets_withno_stopwords = []
-        language = inputs.language.values[0]
-
-        for tweet in inputs.input[0]:
+        language = inputs.iloc[:,1][0]
+        for tweet in inputs.iloc[:,0]:
+            tweet = tweet[0]
             if tweet:
                 tweet_withno_stopwords = []
                 if 'en' in language:
@@ -41,10 +41,10 @@ class StopwordsRemover(Preprocessor):
                     tweet_withno_stopwords_splitted = [splitted if isinstance(word, list) else word for word in tweet_withno_stopwords for splitted in word]
                     tweet_withno_stopwords = [word for word in tweet_withno_stopwords_splitted if word not in self._stopwords_en]
                 elif 'de' in language:
-                    tweet_withno_stopwords = [word for word in tweet if word not in self._stopwords_de]
+                    tweet_withno_stopwords = [word for word in tweet if word.lower() not in self._stopwords_de]
                 elif 'fr' in language:
-                    tweet_withno_stopwords = [word for word in tweet if word not in self._stopwords_fr]
+                    tweet_withno_stopwords = [word for word in tweet if word.lower() not in self._stopwords_fr]
                 elif 'es' in language:
-                    tweet_withno_stopwords = [word for word in tweet if word not in self._stopwords_es]
+                    tweet_withno_stopwords = [word for word in tweet if word.lower() not in self._stopwords_es]
                 tweets_withno_stopwords.append(tweet_withno_stopwords)
         return tweets_withno_stopwords
