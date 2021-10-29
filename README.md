@@ -58,9 +58,10 @@ The script `run_preprocessing.py` is used to run various preprocessing steps on 
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
 The preprocessing steps to take can be configured with the following flags:
 - `-p` or `--punctuation_removing`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the tokenised tweet. (Can be specified by `--punctuation_removing_input`, default = "tweet")
-- `-t` or `--tokenize`: Tokenize the given column (can be specified by `--tokenize_input`, default = "tweet_tokenized"), and create new column with suffix "_tokenized" containing tokenized tweet.
-- `-sw` or `--stopwords_removing`: Remove the stopword the given column using the stopword list of the tweet's language (can be specified by `--stopwords_removing_input`, default = "tweet_no_punctuation" and "language"), and create new column with suffix "_stopwords_removed" containing the tweet without the stopwords.
-- `-l` or `--lemmatize`: Lemmatizes the final preprocessed tweet and creates a new column with th suffix "_lemmatized". Can be specified by `--punctuation_removing_input`, default = "tweet_no_stopwords")
+- `-t` or `--tokenize`: Tokenize the given column (can be specified by `--tokenize_input`, default = "tweet_tokenized"), and create new column "tweet_no_stopwords" containing tokenized tweet.
+- `-sw` or `--stopwords_removing`: Removed the stopword the given column using the stopword list of the tweet's language (can be specified by `--stopwords_removing_input`, default = "tweet_no_punctuation" and "language"), and create new column "tweet_no_stopwords" containing the tweet without the stopwords.
+- `-l` or `--lemmatize`: Lemmatizes the final preprocessed tweet and creates a new column "tweet_lemmatized". Can be specified by `--punctuation_removing_input`, default = "tweet_no_stopwords"). It works well only when the tweet's language is English.
+- `-s` or `--stemming`: Stems the final preprocessed tweet and creates a new column "tweet_stemmed". (can be specified by `--stemming_input`, default = "tweet_no_stopwords" and "language"), and creates new column "tweet_stemmed".
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
 
