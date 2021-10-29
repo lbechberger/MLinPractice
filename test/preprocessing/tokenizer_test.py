@@ -30,13 +30,13 @@ class TokenizerTest(unittest.TestCase):
     def test_tokenization_single_sentence(self):
         input_text = "This is an example sentence"
         output_text = "['This', 'is', 'an', 'example', 'sentence']"
-
+        
         input_df = pd.DataFrame()
         input_df[self.INPUT_COLUMN] = [input_text]
-
+        
         tokenized = self.tokenizer.fit_transform(input_df)
         self.assertEqual(tokenized[self.OUTPUT_COLUMN][0], output_text)
-
+    
 
 if __name__ == '__main__':
     unittest.main()
