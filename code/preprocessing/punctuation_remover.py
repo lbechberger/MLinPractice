@@ -13,18 +13,18 @@ from code.preprocessing.preprocessor import Preprocessor
 
 
 class PunctuationRemover(Preprocessor):
-    """Removes punctuation from the tweet and turn contractions into a whole word"""
+    """Removes punctuation from the tweet and turns contractions into a whole word."""
 
     def __init__(self, input_column, output_column):
-        """Initialize the PunctuationRemover with the given input and output column."""
+        """Initializes the PunctuationRemover with the given input and output column."""
         super().__init__([input_column], output_column)
 
     def _set_variables(self, inputs):
-        """Store punctuation for later reference."""
+        """Stores punctuation for later reference."""
         self._punctuation = [x for x in string.punctuation[1:-1]]
 
     def _get_values(self, inputs):
-        """Replace punctuation with empty string."""
+        """Replaces punctuation with empty string."""
 
         output = []
         for tweet in inputs[0]:

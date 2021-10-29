@@ -26,7 +26,7 @@ class Tokenizer(Preprocessor):
         self.punctuation = [x for x in string.punctuation[1:-1]]
 
     def _get_values(self, inputs):
-        """Tokenize the tweet."""
+        """Tokenizes the tweet and get rid of mentions, hashtags and numbers"""
 
         tokenized = []
         for tweet in inputs[0]:

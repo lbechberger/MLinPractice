@@ -8,6 +8,7 @@ class Stemmer(Preprocessor):
         super().__init__([input_columns], output_column)
 
     def _set_variables(self, inputs):
+         # loads the stemmers for 14 languages, since Snowball Stemmer only offer these.
         self._arabic_stemmer = SnowballStemmer(language='arabic')
         self._english_stemmer = SnowballStemmer(language="english")
         self._french_stemmer = SnowballStemmer(language='french')
@@ -24,6 +25,7 @@ class Stemmer(Preprocessor):
         self._swedish_stemmer = SnowballStemmer(language='swedish')
 
     def _get_values(self, inputs):
+        # returns the tweet but with the stemms of the tweets.
         inputs = inputs[0]
         tweets_stemmed = []
 
