@@ -5,8 +5,11 @@ mkdir -p data/preprocessing/split/
 
 # need to install all NLTK models
 python -m nltk.dowloader all
+<<<<<<< HEAD
 
 # python -m nltk.downloader all
+=======
+>>>>>>> de1e52e (Update the branch with origin.)
 
 # add labels
 echo "  creating labels"

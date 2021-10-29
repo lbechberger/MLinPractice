@@ -3,6 +3,7 @@
 """
 Tokenize the tweet into individual words.
 <<<<<<< HEAD
+<<<<<<< HEAD
 Created on Wed Oct  6 07:49:27 2021
 =======
 
@@ -14,10 +15,13 @@ Created on Wed Oct  6 13:59:54 2021
 =======
 @author: lbechberger/rfarah
 >>>>>>> 0898e45 (add the lemmatizer and its test)
+=======
+Created on Wed Oct  6 07:49:27 2021
+@author: lbechberger
+>>>>>>> de1e52e (Update the branch with origin.)
 """
 
 from code.preprocessing.preprocessor import Preprocessor
-import string
 import nltk
 
 
