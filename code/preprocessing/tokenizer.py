@@ -2,7 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 Tokenize the tweet into individual words.
+<<<<<<< HEAD
 Created on Wed Oct  6 07:49:27 2021
+=======
+
+Created on Wed Oct  6 13:59:54 2021
+
+>>>>>>> c9d63eb (created Tokenizer class)
 @author: lbechberger
 """
 
