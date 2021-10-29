@@ -8,8 +8,12 @@ Created on Wed Oct  6 07:49:27 2021
 
 Created on Wed Oct  6 13:59:54 2021
 
+<<<<<<< HEAD
 >>>>>>> c9d63eb (created Tokenizer class)
 @author: lbechberger
+=======
+@author: lbechberger/rfarah
+>>>>>>> 0898e45 (add the lemmatizer and its test)
 """
 
 from code.preprocessing.preprocessor import Preprocessor
@@ -43,7 +47,11 @@ class Tokenizer(Preprocessor):
         self.urls = ["http", "https", "www"]
         self.special_characters = ['@', '#']
         self.punctuation = [x for x in string.punctuation[1:-1]]
+<<<<<<< HEAD
 >>>>>>> a3333a8 (modified the tokenizer)
+=======
+
+>>>>>>> 0898e45 (add the lemmatizer and its test)
     def _get_values(self, inputs):
         """Tokenize the tweet."""
 <<<<<<< HEAD
@@ -75,7 +83,7 @@ class Tokenizer(Preprocessor):
                 words = self._delete_mentions(words)
                 remove_urls_hashtags_mentions = [
                     word for word in words if word[0] not in self.punctuation and word[:4] not in self.urls and word[:3] not in self.urls]
-                
+
                 tokenized_tweet += remove_urls_hashtags_mentions
 
             tokenized.append(tokenized_tweet)
@@ -83,17 +91,20 @@ class Tokenizer(Preprocessor):
         return tokenized
 
     def _delete_mentions(self, words):
-        """Deletes the hashtags and the mentions"""
-        
+        """Deletes the hashtags, the mentions and numbers"""
+
         no_mentions = []
 
         for i in range(len(words)):
             if words[i][0] not in self.special_characters:
                 if i > 0:
-                    if words[i-1][0] not in self.special_characters:
+                    if words[i-1][0] not in self.special_characters and words[i].lower().islower():
                         no_mentions.append(words[i])
-                elif i == 0:
+                elif i == 0 and words[i].lower().islower():
                     no_mentions.append(words[i])
 
         return no_mentions
+<<<<<<< HEAD
 >>>>>>> a3333a8 (modified the tokenizer)
+=======
+>>>>>>> 0898e45 (add the lemmatizer and its test)

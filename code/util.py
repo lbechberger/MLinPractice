@@ -11,11 +11,13 @@ COLUMN_TWEET = "tweet"
 COLUMN_LANGUAGE = "language"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
+COLUMN_LEMMATIZED = "lemmatized"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 COLUMN_TOKENIZED = "tweet_tokenized"
+<<<<<<< HEAD
 COLUMN_STOPWORDS = "tweet_no_stopwords"
 <<<<<<< HEAD
 
@@ -33,3 +35,6 @@ fasttext.FastText.eprint = lambda x: None
 >>>>>>> 2854caf (modified files and testing added)
 =======
 >>>>>>> fe92cf0 (fixed error in the stopword remover)
+=======
+COLUMN_STOPWORDS = "tweet_no_stopwords"
+>>>>>>> 0898e45 (add the lemmatizer and its test)
