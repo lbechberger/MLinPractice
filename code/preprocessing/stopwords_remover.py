@@ -21,7 +21,7 @@ class StopwordsRemover(Preprocessor):
 
     # set internal variables based on input columns
     def _set_variables(self, inputs):
-        # load the punctuation list and the stopword lists for the following four languages
+        # loads the punctuation list and the stopword lists for the following four languages
         self._stopwords_ar = stopwords.words('arabic')
         self._stopwords_en = stopwords.words('english')
         self._stopwords_de = stopwords.words('german')
@@ -40,7 +40,7 @@ class StopwordsRemover(Preprocessor):
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
         inputs = inputs[0]
-        # replace stopwords and punctuations with empty string
+        # replaces stopwords and punctuations with empty string
         tweets_withno_stopwords = []
         language = inputs.iloc[:, 1][0]
         for tweet in inputs.iloc[:, 0]:

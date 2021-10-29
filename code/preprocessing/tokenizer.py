@@ -67,11 +67,15 @@ class Tokenizer(Preprocessor):
 
 >>>>>>> 0898e45 (add the lemmatizer and its test)
     def _get_values(self, inputs):
+<<<<<<< HEAD
         """Tokenize the tweet."""
 <<<<<<< HEAD
         tokenized = []
 
 =======
+=======
+        """Tokenizes the tweet and get rid of mentions, hashtags and numbers"""
+>>>>>>> acba8f0 (modified the comments of the files)
 
         tokenized = []
 >>>>>>> 2854caf (modified files and testing added)
