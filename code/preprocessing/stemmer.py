@@ -31,8 +31,7 @@ class Stemmer(Preprocessor):
         for tweet in inputs.iloc[:, 0]:
             if isinstance(tweet, list) and len(tweet) == 1:
                 tweet = tweet[0]
-            if isinstance(tweet, str):
-                tweet = ast.literal_eval(tweet)
+
             if 'en' in language:
                 tweet_stemmed = [self._english_stemmer.stem(
                     word) for word in tweet]

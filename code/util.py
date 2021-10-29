@@ -13,6 +13,7 @@ COLUMN_LANGUAGE = "language"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
 COLUMN_LEMMATIZED = "lemmatized"
+COLUMN_STEMMED = "stemmed"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
@@ -36,8 +37,6 @@ SUFFIX_STOPWORDS_REMOVED = "_stopwords_removed"
 COLUMN_STOPWORDS = "tweet_no_stopwords"
 
 >>>>>>> 7105dbc (resolve the conflict)
-
-DETECTION_MODEL = fasttext.load_model("code/models/lid.176.bin")
 
 # to ignore a deprecation warning
 warnings.simplefilter(action='ignore', category=FutureWarning)

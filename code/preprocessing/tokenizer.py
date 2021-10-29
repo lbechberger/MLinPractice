@@ -20,6 +20,7 @@ from code.preprocessing.preprocessor import Preprocessor
 import string
 import nltk
 
+
 class Tokenizer(Preprocessor):
     """Tokenizes the given input column into individual words."""
 <<<<<<< HEAD
