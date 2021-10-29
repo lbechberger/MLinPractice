@@ -4,6 +4,7 @@
 Created on Thu Oct  7 14:53:52 2021
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> a7c7fdb (unit test and TDD example)
@@ -12,6 +13,8 @@ Created on Thu Oct  7 14:53:52 2021
 =======
 >>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
 >>>>>>> a9f1bb1 (resolve merge conflicts)
+=======
+>>>>>>> 0a0cfa3 (changes in the bigram)
 @author: ml
 """
 
@@ -19,6 +22,7 @@ import ast
 import nltk
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -32,6 +36,8 @@ class BigramFeature(FeatureExtractor):
 =======
 =======
 >>>>>>> a9f1bb1 (resolve merge conflicts)
+=======
+>>>>>>> 0a0cfa3 (changes in the bigram)
 class BigramFeature(FeatureExtractor):
     
     
@@ -66,36 +72,37 @@ class BigramFeature(FeatureExtractor):
 
         freq_list = []
 
-        for tweet in inputs:
-            tweet_bigram_freq = []
-            tweet = ast.literal_eval(tweet.item())
-            bigrams = list(nltk.bigrams(tweet))
+        # for tweet in inputs:
+        #     tweet_bigram_freq = []
+        #     tweet = ast.literal_eval(tweet.item())
+        #     bigrams = list(nltk.bigrams(tweet))
 
-            for bigram in bigrams:
-                tweet_bigram_freq.append((bigram,self._dictionary_of_all_tweets.get(bigram)))
+        #     for bigram in bigrams:
+        #         tweet_bigram_freq.append((bigram,self._dictionary_of_all_tweets.get(bigram)))
 
-            tweet_bigram_freq.sort(key=lambda x: x[1], reverse=True)
-            print(tweet_bigram_freq)
+        #     tweet_bigram_freq.sort(key=lambda x: x[1], reverse=True)
+        #     print(tweet_bigram_freq)
             
-            freq_list.append(tweet_bigram_freq)
-        return freq_list
+        #     freq_list.append(tweet_bigram_freq)
+        # return freq_list
  
 
-    # def _get_values(self, inputs):
-    #     freq_list = []
+    def _get_values(self, inputs):
+        freq_list = []
 
-    #     for tweet in inputs:
-    #         tweet_bigram_freq = []
-    #         bigrams = nltk.bigrams(tweet)
-    #         for bigram in bigrams:
-    #             tweet_bigram_freq.append((bigram,self._dictionary_of_all_tweets(bigram)))
-    #         tweet_bigram_freq.sort(key=lambda x: x[1], reverse=True)
+        for tweet in inputs:
+            tweet_bigram_freq = []
+            bigrams = nltk.bigrams(tweet)
+            for bigram in bigrams:
+                tweet_bigram_freq.append((bigram,self._dictionary_of_all_tweets(bigram)))
+            tweet_bigram_freq.sort(key=lambda x: x[1], reverse=True)
             
-    #         freq_list.append(tweet_bigram_freq)
-    #     print("here")
-    #     return freq_list
+            freq_list.append(tweet_bigram_freq)
+        print("here")
+        return freq_list
 
         
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 45da034 (modify bigram)
 =======
@@ -116,3 +123,5 @@ class BigramFeature(FeatureExtractor):
         self._bigrams = nltk.bigrams(overall_text)
 >>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
 >>>>>>> a9f1bb1 (resolve merge conflicts)
+=======
+>>>>>>> 0a0cfa3 (changes in the bigram)

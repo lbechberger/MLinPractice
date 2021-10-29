@@ -3,6 +3,7 @@
 """
 Created on Thu Oct  7 14:30:41 2021
 <<<<<<< HEAD
+<<<<<<< HEAD
 @author: ml
 =======
 <<<<<<< HEAD
@@ -12,6 +13,10 @@ Created on Thu Oct  7 14:30:41 2021
 @author: ml
 >>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
 >>>>>>> a9f1bb1 (resolve merge conflicts)
+=======
+
+@author: rfarah
+>>>>>>> 0a0cfa3 (changes in the bigram)
 """
 
 import unittest
@@ -26,29 +31,16 @@ class TokenizerTest(unittest.TestCase):
         self.OUTPUT_COLUMN = "output"
         self.tokenizer = Tokenizer(self.INPUT_COLUMN, self.OUTPUT_COLUMN)
 
-<<<<<<< HEAD
     def test_input_columns(self):
         self.assertEqual(self.tokenizer._input_columns, [
             self.INPUT_COLUMN])
-=======
-    def test_boolean(self):
-        self.assertEqual(True, not False)
-
-    def test_input_columns(self):
-        self.assertListEqual(self.tokenizer._input_columns, [
-                             self.INPUT_COLUMN])
->>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
 
     def test_output_column(self):
         self.assertEqual(self.tokenizer._output_column, self.OUTPUT_COLUMN)
 
     def test_tokenization_single_sentence(self):
         input_text = "This is an example sentence"
-<<<<<<< HEAD
         output_text = ['this', 'is', 'an', 'example', 'sentence']
-=======
-        output_text = "['This', 'is', 'an', 'example', 'sentence']"
->>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
 
         input_df = pd.DataFrame()
         input_df[self.INPUT_COLUMN] = [input_text]
@@ -56,7 +48,6 @@ class TokenizerTest(unittest.TestCase):
         tokenized = self.tokenizer.fit_transform(input_df)
         self.assertEqual(tokenized[self.OUTPUT_COLUMN][0], output_text)
 
-<<<<<<< HEAD
     def test_tokenization_several_sentences(self):
         input_text = ["This is an example sentence",
                       "I want for my tweet to go viral", "Can we talk about global warming?"]
@@ -80,9 +71,6 @@ class TokenizerTest(unittest.TestCase):
         tokenized = self.tokenizer.fit_transform(input_df)
         for i in range(3):
             self.assertEqual(tokenized[self.OUTPUT_COLUMN][i], output_text[i])
-
-=======
->>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
 
 if __name__ == '__main__':
     unittest.main()

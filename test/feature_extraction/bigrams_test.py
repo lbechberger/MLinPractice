@@ -17,13 +17,13 @@ import pandas as pd
 import nltk
 from code.feature_extraction.bigrams import BigramFeature
 
-
 class BigramFeatureTest(unittest.TestCase):
-
+    
     def setUp(self):
         self.INPUT_COLUMN = "input"
         self.bigram_feature = BigramFeature(self.INPUT_COLUMN)
         self.df = pd.DataFrame()
+        self.df[self.INPUT_COLUMN] = ['["This", "is", "a", "tweet", "This", "is", "also", "a", "test"]']
 
     
     def test_input_columns(self):
@@ -36,8 +36,6 @@ class BigramFeatureTest(unittest.TestCase):
         self.bigram_feature.fit(self.df)
         self.assertGreaterEqual(len(list(self.bigram_feature._bigrams_of_all_tweets)), 0)
 
-        self.df[self.INPUT_COLUMN] = [
-            '["This", "is", "a", "tweet", "This", "is", "also", "a", "test"]']
 
     def test_input_columns(self):
         self.assertEqual(self.bigram_feature._input_columns,
@@ -51,6 +49,7 @@ class BigramFeatureTest(unittest.TestCase):
         self.bigram_feature.fit(self.df)
         self.assertGreaterEqual(len(list(self.bigram_feature._bigrams)), 0)
 
+
     def test_list_of_bigrams_most_frequent_correct(self):
         self.bigram_feature.fit(self.df)
         EXPECTED_BIGRAM = ('This', 'is')
@@ -59,7 +58,7 @@ class BigramFeatureTest(unittest.TestCase):
         freq_list = list(freq_dist.items())
         freq_list.sort(key = lambda x: x[1], reverse = True)
         
-        # self.assertEqual(freq_list[0][0], EXPECTED_BIGRAM)
+        self.assertEqual(freq_list[0][0], EXPECTED_BIGRAM)
 
 if __name__ == '__main__':
     unittest.main()
