@@ -3,13 +3,10 @@
 # create directory if not yet existing
 mkdir -p data/preprocessing/split/
 
-<<<<<<< HEAD
 # need to install all NLTK models
 python -m nltk.dowloader all
-=======
-# install all NLTK models
-python -m nltk.downloader all
->>>>>>> 05062c3 (implemented tweet tokenization)
+
+# python -m nltk.downloader all
 
 # add labels
 echo "  creating labels"
@@ -17,7 +14,7 @@ python -m code.preprocessing.create_labels data/raw/ data/preprocessing/labeled.
 
 # other preprocessing (removing punctuation etc.)
 echo "  general preprocessing"
-python -m code.preprocessing.run_preprocessing data/preprocessing/labeled.csv data/preprocessing/preprocessed.csv --punctuation --tokenize -e data/preprocessing/pipeline.pickle
+python -m code.preprocessing.run_preprocessing data/preprocessing/preprocessed.csv data/preprocessing/preprocessed.csv --tokenize --punctuation_remover --stopwords_remover -e data/preprocessing/pipeline.pickle
 
 # split the data set
 echo "  splitting the data set"

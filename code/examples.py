@@ -10,7 +10,8 @@ Created on Thu Oct  7 09:20:09 2021
 import csv
 import pandas as pd
 
-df = pd.read_csv("data/preprocessing/preprocessed.csv", quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
+
+df = pd.read_csv("./data/preprocessing/preprocessed.csv", quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
 
 df["language"].value_counts().plot(kind = 'bar')
 df["language"].value_counts().plot(kind = 'bar', logy = True)

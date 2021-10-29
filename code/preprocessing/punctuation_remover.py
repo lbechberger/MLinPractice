@@ -9,27 +9,27 @@ Created on Wed Sep 29 09:45:56 2021
 """
 
 import string
-import warnings
-from code.preprocessing.preprocessor import Preprocessor
-from code.util import COLUMN_TWEET, COLUMN_PUNCTUATION
 
-# removes punctuation from the original tweet
-# inspired by https://stackoverflow.com/a/45600350
+from code.preprocessing.preprocessor import Preprocessor
+
 class PunctuationRemover(Preprocessor):
+    """Removes punctuation from the tweet and turn contractions into a whole word"""
     
-    # constructor
-    def __init__(self):
-        # input column "tweet", new output column
-        super().__init__([COLUMN_TWEET], COLUMN_PUNCTUATION)
+    def __init__(self, input_column, output_column): 
+        """Initialize the PunctuationRemover with the given input and output column."""
+        super().__init__([input_column], output_column)
     
-    # set internal variables based on input columns
     def _set_variables(self, inputs):
-        # store punctuation for later reference
-        self._punctuation = "[{}]".format(string.punctuation)
+        """Store punctuation for later reference."""
+        self._punctuation = [x for x in string.punctuation[1:-1]]
     
-    # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
-        # replace punctuation with empty string
-        warnings.simplefilter(action='ignore', category=FutureWarning)
-        column = inputs[0].str.replace(self._punctuation, "")
-        return column
+        """Replace punctuation with empty string."""
+        output = []
+        for tweet in inputs[0]:
+            column = [word for word in tweet if word not in string.punctuation]
+            if column:
+                output.append(column)
+        # tmp = [word if for word in column in word]
+
+        return output
