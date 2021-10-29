@@ -31,8 +31,7 @@ class LemmatizerTest(unittest.TestCase):
         output_text_tokenized = word_tokenize(output_text)
         input_df = pd.DataFrame(input_text_tokenized, columns=[self.INPUT_COLUMN])
         lemmatized = self.lemmatizer.fit_transform(input_df)
-        # print(lemmatized)
-        # self.assertListEqual(lemmatized[self.OUTPUT_COLUMN][0], output_text_tokenized)
+        self.assertListEqual(lemmatized[self.OUTPUT_COLUMN][0], output_text_tokenized)
 
 if __name__ == '__main__':
     unittest.main()
