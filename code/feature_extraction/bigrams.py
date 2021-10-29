@@ -2,19 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Oct  7 14:53:52 2021
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> a7c7fdb (unit test and TDD example)
-=======
-
-=======
->>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
->>>>>>> a9f1bb1 (resolve merge conflicts)
-=======
->>>>>>> 0a0cfa3 (changes in the bigram)
 @author: ml
 """
 
