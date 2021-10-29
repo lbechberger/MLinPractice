@@ -31,6 +31,7 @@ parser.add_argument("-m", "--majority", action = "store_true", help = "majority 
 parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
 parser.add_argument("-u", "--uniform", action = "store_true", help = "uniform (random) classifier")
 parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
+parser.add_argument("--knn_weights", type = str, help = "weight function of knn, uniform or distance", default = "uniform")
 parser.add_argument("--tree", type = int, help = "decision tree classifier with the specified value as max depth", default = None)
 parser.add_argument("--svm", type = str, help = "support vector machine with specified kernel: linear, polynomial, rbf, or sigmoid", default = None)
 parser.add_argument("--randforest", type = int, help = "random forest classifier with specified value as # of trees in forest", default = None)
@@ -87,14 +88,15 @@ else:   # manually set up a classifier
     
     elif args.knn is not None:
         # k nearest neighbour classifier
-        print("    {0} nearest neighbor classifier".format(args.knn))
+        print("    {0} nearest neighbor classifier with {1} weights".format(args.knn, args.knn_weights))
         
         log_param("classifier", "knn")
         log_param("k", args.knn)
-        params = {"classifier": "knn", "k": args.knn}
+        log_param("weights", args.knn_weights)
+        params = {"classifier": "knn", "k": args.knn, "weights": args.knn_weights}
         
         standardizer = StandardScaler()
-        knn_classifier = KNeighborsClassifier(args.knn, n_jobs = -1)
+        knn_classifier = KNeighborsClassifier(n_neighbors = args.knn, weights = args.knn_weights, n_jobs = -1)
         classifier = make_pipeline(standardizer, knn_classifier)
         
     elif args.tree is not None:
