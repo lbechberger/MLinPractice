@@ -42,10 +42,11 @@ In the lecture, Lucas implemented a tokenizer to disassemble tweets into individ
 Example:  
 
 ```python
->>> import nltk
+import nltk
 
->>> sent = 'There is great genius behind all this.'
->>> nltk.word_tokenize(sent)
+sent = 'There is great genius behind all this.'
+nltk.word_tokenize(sent)
+
 # ['There', 'is', 'great', 'genius', 'behind', 'all', 'this', '.']
 ```
 
@@ -58,10 +59,11 @@ There is not one universal stopword list nor are there universal rules on how st
 Example:  
 
 ```python
->>> import gensim
+import gensim
 
->>> sent = 'There is great genius behind all this.'
->>> gensim.parsing.preprocessing.remove_stopwords(sent)
+sent = 'There is great genius behind all this.'
+gensim.parsing.preprocessing.remove_stopwords(sent)
+
 # 'There great genius this.'
 ```
 
@@ -74,11 +76,12 @@ Punctuation removal follows the same rationale as stopword removal: A dot, hyphe
 Example:
 
 ```python
->>> import string
+import string
 
->>> sent = "O, that my tongue were in the thunder's mouth!"
->>> punctuation = '[{}]'.format(string.punctuation)
->>> sent.replace(punctuation, '')
+sent = "O, that my tongue were in the thunder's mouth!"
+punctuation = '[{}]'.format(string.punctuation)
+sent.replace(punctuation, '')
+
 # "O that my tongue were in the thunders mouth"
 ```
 Caveat: the above code will actually not produce the desired output, but works in our implementation due to the different format of the input (we pass a `dtype object` as input). This is just to illustrate how our code and punctuation removal in general work.
@@ -90,13 +93,12 @@ Lemmatization modifies an inflected or variant form of a word into its lemma or 
 To implement this, we used `nltk`'s `pos_tag` to assign PoS tags and WordNet's `WordNetLemmatizer()` class, as well as a manually defined PoS dictionary to reduce the (rather detailed) tags from `pos_tag` to only four different, namely _noun_, _verb_, _adjective_, and _adverb_:
 
 ```python
->>> from nltk.corpus import wordnet
+from nltk.corpus import wordnet
 
->>> tag_dict = {"J": wordnet.ADJ,
-				  "N": wordnet.NOUN,
-				  "V": wordnet.VERB,
-				  "R": wordnet.ADV
-				  }
+tag_dict = {"J": wordnet.ADJ,
+			"N": wordnet.NOUN,
+			"V": wordnet.VERB,
+			"R": wordnet.ADV}
 ```
 
 This simplified PoS assignment is important because `pos_tag` returns a tuple, which has to be converted to a format the WordNet lemmatizer can work with, further WordNet lemmatizes differently for different PoS classes and only distinguishes between the above mentioned classes. Courtesy to [this blog entry](https://www.machinelearningplus.com/nlp/lemmatization-examples-python/#wordnetlemmatizerwithappropriatepostag) by Selva Prabhakaran for the idea and the code.
@@ -104,15 +106,18 @@ This simplified PoS assignment is important because `pos_tag` returns a tuple, w
 Example:
 
 ```python
->>> from nltk import pos_tag
->>> from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
+from nltk.stem import WordNetLemmatizer
 
->>> sent = ['These', 'newer', 'data', 'help', 'scientists', 'accurately', 'project', 'how', 'quickly', 'glaciers', 'are', 'retreating', '.']
->>> lem = WordNetLemmatizer()
->>> lemmatized = []
->>> for word in sent:
-		tag = pos_tag([word])[0][1][0].upper()
-		lemmatized.append(lem.lemmatize(word.lower(), tag_dict.get(tag, wordnet.NOUN)))
+sent = ['These', 'newer', 'data', 'help', 'scientists', 'accurately', 'project', 'how', 'quickly', 'glaciers', 'are', 'retreating', '.']
+lem = WordNetLemmatizer()
+lemmatized = []
+
+for word in sent:
+	# get the part-of-speech tag
+	tag = pos_tag([word])[0][1][0].upper()
+	lemmatized.append(lem.lemmatize(word.lower(), tag_dict.get(tag, wordnet.NOUN)))
+	
 # ['these', 'newer', 'data', 'help', 'scientist', 'accurately', 'project', 'how', 'quickly', 'glacier', 'be', 'retreat', '.']
 ```
 
@@ -145,10 +150,13 @@ The length of a tweet might influence its chance of going viral as people might 
 Example:
 
 ```python
->>> sent = 'There is great genius behind all this.'
->>> len(sent)
+sent = 'There is great genius behind all this.'
+len(sent)
+
 # 38
 ```
+
+This is, however simple it may be, a difficult to interpret feature: for most of its existence, Twitter has had a character limit of 140 characters per tweet. In 2017, the maximum character limit was raised to 280[^twitter_charlength], which lead to an almost immediate drop of the prevalence of tweets with around 140 characters while, at the same time, tweets approaching 280 characters appear to be snytactically and semantically similar to tweets around 140 characters from before the change __(Gligoric, Anderson, West, 2020)__.
 
 <a name='month'></a>
 ### Month
@@ -157,10 +165,11 @@ We thought that the month in which a tweet was published could have (some minor?
 We extracted the month from the `date` column of the dataframe using the `datetime` package as follows:
 
 ```python
->>> import datetime
+import datetime
 
->>> date = "2021-04-14"
->>> datetime.datetime.strptime(date, "%Y-%m-%d").month
+date = "2021-04-14"
+datetime.datetime.strptime(date, "%Y-%m-%d").month
+
 # 4
 ```
 
@@ -175,16 +184,17 @@ Using the VADER (Valence Aware Dictionary and sEntiment Reasoner)[^vader_pypi] [
 Example:
 
 ```python
->>> from nltk.sentiment.vader import SentimentIntensityAnalyzer
->>> 
->>> sia = SentimentIntensityAnalyzer()
->>> sentences = ["The service here is good.", 
-				"The service here is extremely good.", 
-				"The service here is extremely good!!!", 
-				"The service here is extremely good!!! ;)"]
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
->>> for s in sentences:
-	 	print(sia.polarity_scores(s)['compound'])
+sia = SentimentIntensityAnalyzer()
+sentences = ["The service here is good.", 
+			"The service here is extremely good.", 
+			"The service here is extremely good!!!", 
+			"The service here is extremely good!!! ;)"]
+
+for s in sentences:
+ 	print(sia.polarity_scores(s)['compound'])
+ 	
 # 0.4404
 # 0.4927
 # 0.6211
@@ -212,26 +222,26 @@ The time sections are roughly equally sized, with afternoon being the only excep
 We extracted the time from the `time` column of the dataframe and simply used the `split()` method to extract the hour from the string it is stored in, then checked whether the extracted value falls into a predefined range and appened the respective value to a new column. We then one-hot encoded the result to retrieve a binary classification for every entry with `pandas`' `get_dummies()` function.
 
 ```python
->>> import pandas as pd
+import pandas as pd
 
->>> time = ["05:15:01", "07:11:31", "16:04:59", "23:12:00"]
->>> hours = [t.split(":")[0] for t in time]
+time = ["05:15:01", "07:11:31", "16:04:59", "23:12:00"]
+hours = [t.split(":")[0] for t in time]
 # ['05', '07', '16', '23']
 
->>> result = []
->>> for h in hours:
-		if hour in range(0, 6):
-			result.append(0)
-		elif hour in range(6, 11):
-			result.append(1)  
-		elif hour in range(11, 15):
-			result.append(2)
-		elif hour in range(15, 19):
-			result.append(3)  
-		elif hour in range(19, 24):
-			result.append(4)
+result = []
+for h in hours:
+	if hour in range(0, 6):
+		result.append(0)
+	elif hour in range(6, 11):
+		result.append(1)  
+	elif hour in range(11, 15):
+		result.append(2)
+	elif hour in range(15, 19):
+		result.append(3)  
+	elif hour in range(19, 24):
+		result.append(4)
 		
->>> pd.get_dummies(result) 
+pd.get_dummies(result) 
 
 #	05	07	16	23
 #0	1	0	0	0
@@ -248,9 +258,10 @@ In this section, we evaluate whether any of the above have been attached to a tw
 Example with URL:
 
 ```python
->>> urls = ["[]", "['https://www.sciencenews.org/article/climate-thwaites-glacier-under-ice-shelf-risks-warm-water']", "[]"]
+urls = ["[]", "['https://www.sciencenews.org/article/climate-thwaites-glacier-under-ice-shelf-risks-warm-water']", "[]"]
 
->>> result = [0 if len(url) <= 2 else 1 for url in urls]
+result = [0 if len(url) <= 2 else 1 for url in urls]
+
 # [0, 1, 0]
 ```
 
@@ -261,10 +272,11 @@ Important: although being stored in lists, the column entries get still evaluate
 We also figured that the number of replies has an influence on the virality: the more people engage with a tweet and reply to it, the more people see it in their news feed, which again increases reach and interactions. The number of replies are stored as float in the column `replies_count` of the dataframe, so we just have to access that column, make a copy, transform it to a `numpy.array`, and reshape it so the classifier can work with the data later on:
 
 ```python
->>> import numpy as np
+import numpy as np
 
->>> replies = [0.0, 7.0, 2.0, 49.0]
->>> np.array(replies).reshape(-1, 1)
+replies = [0.0, 7.0, 2.0, 49.0]
+np.array(replies).reshape(-1, 1)
+
 # array([[ 0.],
 #		[ 7.],
 #		[ 2.],
@@ -275,46 +287,89 @@ We also figured that the number of replies has an influence on the virality: the
 ### Retweets and Likes
 Retweets and likes follow the same rationale as replies. These are the most obvious features to consider when measuring virality and we just implented them for the purpose of testing. We did not use them for training our model (since that easily results in an accuracy $>99\%$ and does not tell us anything about _why_ the tweet went viral). The procedure is the same as above: access the respective column, convert it to a `numpy.array` and reshape it.
 
+<!-- Dimensionality reduction section -->
+<a name='dimensionality_reduction'></a>
+
+## Dimensionality Reduction
+
 
 <!-- Classifier section -->
 <a name='classification'></a>
 
-## Classification
+## Classifier
 
 ### _k_ - Nearest Neighbour
 ```python
->>> from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier
 ```
 The _k_-NN classifier was implemented by Lucas during the lecture. We use it with only one hyperparameter - _k_ - for our binary classification task. This algorithm is an example for instance-based learning. It relies on the distance between data points for classification, hence it requires standardization of feature vectors.
 
-To not introduce unnecessary complexity, we decided to use the classifier with its default settings:
+We decided to additionally implement a way to change the weight function. As default, the `KNeighborsClassifier` works with uniform weights, i.e. all features are equally important. Having an additional option for distance-weighted classification where nearer neighbors are more important than those further away made sense for us (and it also improved our results, as can be seen later).
 
-- Uniform weights: all features are equally important, 
+Other than that, though, we left the classifier with default settings. A notable alternative could have been the choice of the algorithm for computation of the nearest neighbors, options being a brute-force search, _k_-dimensional tree search, and ball tree search. The default option is `auto`, where the classifier picks the method it deems fittest for the task at hand.
 
+
+<a name='decision_tree'></a>
 ### Decision Tree
+```python
+from sklearn.tree import DecisionTreeClassifier
+```
+
+Further, we implemented a decision tree classifier. Due to its nature of learning decision rules from the dataset, it does neither require standardization of data nor does it make assumptions on the data distribution.
+
+We added the option to define a maximum depth of the tree, which is extremely important to cope with overfitting. Further, the criterion for measuring split quality can be choosen between Gini impurity and entropy/information gain. The former is usually preferred for classification and regression trees (CART) while the latter is used for the ID3 variant[^id3] of decision trees. Although `sklearn` employs a version of the CART algorithm, it nonetheless works with entropy as measure.
+
+Decision trees generally have difficulties working with continuous data and we have the compound sentiment (see [Sentiment Analysis](#sentiment_analysis)) as feature of such nature which is continuous in the range $[-1, 1]$ (although a case could be made for it being a discrete feature since it is rounded to four decimal places).
 
 
 ### Random Forest
+```python
+from sklearn.ensemble import RandomForestClassifier
+```
+
+Random forest classifiers represent an ensemble of multiple decision trees. They are often more robust and accurate than single decision trees and less prone to overfitting and can, therefore, better generalize on new, unseen data.
+
+We implemented it such that we can modify the number of trees per forest, the maximum depth per tree, as well as the criterion based on which a split occurs. The options for this are the same as for single decision trees - Gini impurity and entropy. The first two are the main parameters to look at when constructing a forest according to `sklearn`'s user guide on classifiers[^sklearn_forest]. Being able to manipulate both the maximum depth as well as the split criterion further allows us to compare the forest to our single decision tree classifier, since we can use the same parametrization for both.
 
 
 ### Support Vector Machine
+```python
+from sklearn.svm import SVC
+```
 
+We also added a support vector machine
 
 
 <!-- Evaluation section -->
 <a name='evaluation'></a>
 
-## Evaluation
+## Evaluation Metrics
 We implemented multiple evaluation metrics to see how well our classification works.
 
-### Cohen's kappa
+### Accuracy
+
+
+### Balanced Accuracy
+
+
+### Cohen's Kappa
 Robust against class imbalance
+
+### F<sub>1</sub> - Score
+
+
+
+## Hyperparameter Optimization
+knn: only odd k values
 
 
 ## Conclusion
 Different reserach questions:  
 <p style='color:red'>How does tweet metadata play into virality?</p>
 
+
+## Resources
+<https://towardsdatascience.com/comparative-study-on-classic-machine-learning-algorithms-24f9ff6ab222>
 
 
 <!-- Footnotes -->
@@ -327,4 +382,6 @@ Different reserach questions:
 [^gensim_stemming]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.stem>, retrieved Oct 26, 2021
 [^vader_pypi]: <https://pypi.org/project/vaderSentiment/>
 [^vader_homepage]: <https://github.com/cjhutto/vaderSentiment>
+[^twitter_charlength]: <https://blog.twitter.com/official/en_us/topics/product/2017/Giving-you-more-characters-to-express-yourself.html>
+[^sklearn_forest]: <https://scikit-learn.org/stable/modules/ensemble.html#forest>
 <!-- -->
