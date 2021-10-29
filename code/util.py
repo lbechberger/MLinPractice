@@ -14,9 +14,8 @@ COLUMN_RETWEETS = "retweets_count"
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
+COLUMN_STOPWORDS = "tweet_no_stopwords"
 
-<<<<<<< HEAD
 SUFFIX_TOKENIZED = "_tokenized"
-=======
-SUFFIX_TOKENIZED = "_tokenized"
->>>>>>> 05062c3 (implemented tweet tokenization)
+SUFFIX_STOPWORDS_REMOVED = "_stopwords_removed"
+
