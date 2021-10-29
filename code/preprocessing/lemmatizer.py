@@ -42,8 +42,6 @@ class Lemmatizer(Preprocessor):
         lemmatized = []
 
         for tweet in inputs[0]:
-            if isinstance(tweet, str):
-                tweet = ast.literal_eval(tweet)
             pos_tweet = self._get_wordnet_pos(tweet)
             row = [self.lemmatizer.lemmatize(word, pos) if pos else self.lemmatizer.lemmatize(
                 word) for word, pos in pos_tweet.items()]
