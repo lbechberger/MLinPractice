@@ -143,4 +143,5 @@ mlruns/
 
 # classifier.pickle file gets too big after certain number of features to classify with
 data/classification/classifier.pickle
-data/classification/classifier.pickle
+
+data/feature_extraction/
