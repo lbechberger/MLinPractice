@@ -19,7 +19,8 @@ class LemmatizerTest(unittest.TestCase):
         self.lemmatizer = Lemmatizer(self.INPUT_COLUMN, self.OUTPUT_COLUMN)
 
     def test_input_columns(self):
-        self.assertListEqual(self.lemmatizer._input_columns, [self.INPUT_COLUMN])
+        self.assertListEqual(self.lemmatizer._input_columns, [
+                             self.INPUT_COLUMN])
 
     def test_output_column(self):
         self.assertEqual(self.lemmatizer._output_column, self.OUTPUT_COLUMN)
@@ -29,11 +30,12 @@ class LemmatizerTest(unittest.TestCase):
         input_text_tokenized = [[word_tokenize(input_text)]]
         output_text = "my uncle's cat like play at our yard where there be many tree."
         output_text_tokenized = word_tokenize(output_text)
-        input_df = pd.DataFrame(input_text_tokenized, columns=[self.INPUT_COLUMN])
+        input_df = pd.DataFrame(input_text_tokenized,
+                                columns=[self.INPUT_COLUMN])
         lemmatized = self.lemmatizer.fit_transform(input_df)
-        self.assertListEqual(lemmatized[self.OUTPUT_COLUMN][0], output_text_tokenized)
+        self.assertListEqual(
+            lemmatized[self.OUTPUT_COLUMN][0], output_text_tokenized)
+
 
 if __name__ == '__main__':
     unittest.main()
-
-

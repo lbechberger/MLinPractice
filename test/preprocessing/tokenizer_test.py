@@ -16,9 +16,10 @@ class TokenizerTest(unittest.TestCase):
         self.INPUT_COLUMN = "input"
         self.OUTPUT_COLUMN = "output"
         self.tokenizer = Tokenizer(self.INPUT_COLUMN, self.OUTPUT_COLUMN)
+
     def test_input_columns(self):
         self.assertEqual(self.tokenizer._input_columns, [
-                             self.INPUT_COLUMN])
+            self.INPUT_COLUMN])
 
     def test_output_column(self):
         self.assertEqual(self.tokenizer._output_column, self.OUTPUT_COLUMN)
