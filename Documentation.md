@@ -1,14 +1,22 @@
 ## ZeitZeiton Group- MLinPractice
 
 ## Proprecessing 
-This application is capable of handling correctly four languages, namely the four most frequent languages: English, Spanish, French and German. For the mentioned languages, we upload for each language and the corresponding lemmatizer and the list of the stopwords.
+This application is capable of handling correctly 14 languages, since the used Snowball Stemmer supports the following 14 languages: Arabic, English, Spanish, French, German, Norwegian, Danish, Dutch, Swedish, Italian, Hungarian, Portuguese, Russian and Romanian.
+For the mentioned languages, we upload for each language and the corresponding stemmer and the list of the stopwords.
 
-<img src="imgs/languages.png">
+<p align="center"> <img src="imgs/supported_languages.png"> </p>
+
+The supported languages make up most of the tweets in the dataset. We process the other languages but we are more sure of the accuracy of the results of the supported languages.
+
+<p align="center"> <img src="imgs/comparison.png"> </p>
 
 - first we tokenize the tweet into tokens in *code/tokenizer.py*, i.e, on a word-level. In addition, we get rid of the urls, mentions and tags, since we have these in separates columns.
 - after the tokenization, we remove the punctuation within the tokens of the tweet in *code/punctuation_remover.py*
-- after the deletion of the punctuation, we remove stopwords within the tokenised tweet with no punctuation. Therefore, we choose the corresponding stopword list depending on the language of the tweet. For now, we have the nltk's stopwords list of the following languages: German, English, Spanish and French. This happens in *code/stopwords_remover.py*
-- the last step of the preprocessing is the lemmatization, we use lemmatization instead of stemming, because it is more accurate but we are aware of the price for this accuracy to pay is the time needed for the computations. It is not a big problem, since we run the preprocessing step only one time. The lemmitzation is implemented in *code/lemmatizer.py*.
+- after the deletion of the punctuation, we remove stopwords within the tokenised tweet with no punctuation. Therefore, we choose the corresponding stopword list depending on the language of the tweet. For now, we have the nltk's stopwords list of the previously mentioned languages. This happens in *code/stopwords_remover.py*
+- the last step of the preprocessing:
+  - is either the lemmatization. It is only provided for English and it is indeed better than the stemmer, because it is more accurate but we are aware of the price for this accuracy to pay is the time needed for the computations. But unfortunately, we could not find multilingual Lemmatizezr in NLTK, therefore we used a Stemmer. The code is in *code/lemmatizer.py*.
+  - or the stemming. We used the SnowballStemmer, since it supports the highest number of languages, namely the 14 mentioned languages. It supposed to remove the stopwords, but it turned out it can not do that well, so we kept the removing of the stopwords. The stemmer is within *code/stemmer.py*.
+
 # Documentation Example
 
 Some introductory sentence(s). Data set and task are relatively fixed, so 
