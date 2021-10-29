@@ -1,5 +1,9 @@
 # Machine Learning in Practice
+<<<<<<< HEAD
 Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrück University in the winter term 2021/2022 at the Insitute of Cognitive Science.
+=======
+Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabr�ck University in the winter term 2021/2022 at the Insitute of Cognitive Science.
+>>>>>>> e59f08d (Update README.md)
 
 As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) by Ruchi Bhatia from [Kaggle](https://www.kaggle.com/ruchi798/data-science-tweets). The goal of our example project is to predict which tweets will go viral, i.e., receive many likes and retweets.
 
@@ -129,8 +133,13 @@ By default, this data is used to train a classifier, which is specified by one o
 
 The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
 - `-a` or `-accuracy`: Classifier's accurracy, also called The Probability of agreement, (i.e., percentage of correctly classified examples). Use this metric, when the false negatives and false positives are close in value.
+<<<<<<< HEAD
 - `-p` or `--precision`: Classifier's precision (i.e., computes how many positively classified instances are actually positive. Use it when we want to be certain that an instance is a true positive, for instance, we want an email to go into the spam box only when it is a true positive.
 - `-r` or `--recall`: Classifier's recall, also called senstivity, (i.e., computes how many true positively classified instances are catched. We choose the majority of the predicted files). Use it when we do not tolerate any false negatives, for instance, if we are testing diabetic people, it is unacceptable to get people classified as FN, if they are diabetic.
+=======
+- `-p` or `--precision`: Classifier's precision (i.e., computes how many positively/negatively classified instances are actually positive/negative, respectively. We choose the majority of the predicted files). Use it when we want to be certain that an instance is a true positive, for instance, we want an email to go into the spam box only when it is a true positive.
+- `-r` or `--recall`: Classifier's recall, also called senstivity, (i.e., computes how many true positively/negatively classified instances are catched, respectively. We choose the majority of the predicted files). Use it when we do not tolerate any false negatives, for instance, if we are testing diabetic people, it is unacceptable to get people classified as FN, if they are diabetic.
+>>>>>>> e59f08d (Update README.md)
 - `-f1` or `--fscore`: F-Score (i.e., computes the score using the precision and the recall).
 - `-k` or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement). It is the best metric for showing the model's reliability, meaning if the model produces the same results under the same conditions. If the value of Cohe's kappa score is 0, it means random agreement among the predicted and the actual results, and if the score is 1, this means a complete agreement among the predicted and the actual results.
 
