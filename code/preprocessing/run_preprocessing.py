@@ -19,47 +19,7 @@ from code.preprocessing.stemmer import Stemmer
 from code.util import COLUMN_TWEET, COLUMN_TOKENIZED, COLUMN_PUNCTUATION, COLUMN_STOPWORDS, COLUMN_LANGUAGE, COLUMN_LEMMATIZED, COLUMN_STEMMED
 
 # setting up CLI
-<<<<<<< HEAD
-<<<<<<< HEAD
-parser = argparse.ArgumentParser(description="Various preprocessing steps")
-parser.add_argument("input_file", help="path to the input csv file")
-parser.add_argument("output_file", help="path to the output csv file")
-parser.add_argument("-p", "--punctuation",
-                    action="store_true", help="remove punctuation")
-parser.add_argument("-t", "--tokenize", action="store_true",
-                    help="tokenize given column into individual words")
-parser.add_argument("--tokenize_input",
-                    help="input column used for tokenization", default=COLUMN_TWEET)
-parser.add_argument("-e", "--export_file",
-                    help="create a pipeline and export to the given location", default=None)
-=======
-parser = argparse.ArgumentParser(description = "Various preprocessing steps")
-parser.add_argument("input_file", help = "path to the input csv file")
-parser.add_argument("output_file", help = "path to the output csv file")
-parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
-parser.add_argument("--tokenize_input", help = "input column to tokenize", default = COLUMN_TWEET)
-parser.add_argument("-p", "--punctuation_removing", action = "store_true", help = "remove punctuation")
-parser.add_argument("--punctuation_removing_input", help = "input column to stopword_remover", default = COLUMN_TOKENIZED)
-parser.add_argument("-sw", "--stopwords_removing", action = "store_true", help = "remove stopwords from the given column")
-parser.add_argument("--stopwords_removing_input", help = "input column to stopword_remover", default = [COLUMN_PUNCTUATION, COLUMN_LANGUAGE])
-parser.add_argument("-l", "--lemmatize", action = "store_true", help = "extract the lemmas from the given column")
-parser.add_argument("--lemmatize_input", help = "input column to lemmatizer", default = COLUMN_STOPWORDS)
-parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
-<<<<<<< HEAD
->>>>>>> 3021bf2 (create a stopwords remover)
-=======
-parser.add_argument("-d", "--debug_limit", help = "limit data points to be preprocessed to given number", default = None)
->>>>>>> 26ed0d9 (Fix preprocessing)
-args = parser.parse_args()
 
-# load data
-<<<<<<< HEAD
-df = pd.read_csv(args.input_file, quoting=csv.QUOTE_NONNUMERIC,
-                 lineterminator="\n")
-=======
-df = pd.read_csv(args.input_file, low_memory=False, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
->>>>>>> 2854caf (modified files and testing added)
-=======
 parser = argparse.ArgumentParser(description="Various preprocessing steps")
 parser.add_argument("input_file", help="path to the input csv file")
 parser.add_argument("output_file", help="path to the output csv file")
@@ -92,35 +52,13 @@ args = parser.parse_args()
 # load data
 df = pd.read_csv(args.input_file, low_memory=False,
                  quoting=csv.QUOTE_NONNUMERIC, lineterminator="\n")
->>>>>>> 8d16252 (modified some files)
 
 # collect all preprocessors
 preprocessors = []
 if args.tokenize:
-<<<<<<< HEAD
-<<<<<<< HEAD
-    preprocessors.append(Tokenizer(args.tokenize_input,
-                         args.tokenize_input + SUFFIX_TOKENIZED))
-=======
     preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
 if args.stopwords_remover:
-    preprocessors.append(StopwordsRemover(args.tokenize_input, args.tokenize_input + SUFFIX_STOPWORDS_REMOVED))
->>>>>>> 3021bf2 (create a stopwords remover)
-=======
     preprocessors.append(Tokenizer(args.tokenize_input, COLUMN_TOKENIZED))
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-if args.punctuation_remover:
-    preprocessors.append(PunctuationRemover(args.punctuation_remover_input, COLUMN_PUNCTUATION))
-if args.stopwords_remover:
-    preprocessors.append(StopwordsRemover(args.stopwords_remover_input, COLUMN_STOPWORDS))
->>>>>>> 2854caf (modified files and testing added)
-=======
-=======
->>>>>>> 7105dbc (resolve the conflict)
-=======
->>>>>>> 828d2d3 (fix merge issues)
 if args.punctuation_removing:
     preprocessors.append(PunctuationRemover(
         args.punctuation_removing_input, COLUMN_PUNCTUATION))
@@ -129,24 +67,8 @@ if args.stopwords_removing:
         args.stopwords_removing_input, COLUMN_STOPWORDS))
 if args.lemmatize:
     preprocessors.append(Lemmatizer(args.lemmatize_input, COLUMN_LEMMATIZED))
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 0898e45 (add the lemmatizer and its test)
-=======
-=======
-if args.punctuation_remover:
-    preprocessors.append(PunctuationRemover(args.punctuation_remover_input, COLUMN_PUNCTUATION))
-if args.stopwords_remover:
-    preprocessors.append(StopwordsRemover(args.stopwords_remover_input, COLUMN_STOPWORDS))
->>>>>>> 49c39fa (resolve the conflict)
->>>>>>> 7105dbc (resolve the conflict)
-=======
->>>>>>> 828d2d3 (fix merge issues)
-=======
 if args.stemming:
     preprocessors.append(Stemmer(args.stemming_input, COLUMN_STEMMED))
->>>>>>> 8d16252 (modified some files)
 
 # check if data point number should be limited for debug purposes
 if (args.debug_limit is not None) and (int(args.debug_limit) > 0):
