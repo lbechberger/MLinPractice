@@ -15,7 +15,6 @@ from code.preprocessing.preprocessor import Preprocessor
 class StopwordsRemover(Preprocessor):
     # constructor
     def __init__(self, input_column, output_column):
-        # input column "tweet", new output column
         super().__init__([input_column], output_column)
 
     # set internal variables based on input columns
