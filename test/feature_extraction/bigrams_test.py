@@ -2,13 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Oct  7 14:51:00 2021
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 
-=======
->>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
->>>>>>> a9f1bb1 (resolve merge conflicts)
 @author: ml
 """
 
