@@ -329,7 +329,9 @@ from sklearn.ensemble import RandomForestClassifier
 
 Random forest classifiers represent an ensemble of multiple decision trees. They are often more robust and accurate than single decision trees and less prone to overfitting and can, therefore, better generalize on new, unseen data.
 
-We implemented it such that we can modify the number of trees per forest, the maximum depth per tree, as well as the criterion based on which a split occurs. The options for this are the same as for single decision trees - Gini impurity and entropy. The first two are the main parameters to look at when constructing a forest according to `sklearn`'s user guide on classifiers[^sklearn_forest]. Being able to manipulate both the maximum depth as well as the split criterion further allows us to compare the forest to our single decision tree classifier, since we can use the same parametrization for both.
+We implemented it such that we can modify the number of trees per forest, the maximum depth per tree, as well as the criterion based on which a split occurs. The options for this are the same as for single decision trees - Gini impurity and entropy. The first two are the main parameters to look at when constructing a forest according to `sklearn`'s user guide on classifiers[^sklearn_forest]. Usually, the classification is obtained via majority vote of the trees in a forest, but this implementation averages over the probabilistic class prediction of the single classifiers.
+
+Being able to manipulate both the maximum depth as well as the split criterion further allows us to compare the forest to our single decision tree classifier, since we can use the same parametrization for both.
 
 
 ### Support Vector Machine
@@ -337,7 +339,7 @@ We implemented it such that we can modify the number of trees per forest, the ma
 from sklearn.svm import SVC
 ```
 
-We also added a support vector machine
+We also added a support vector machine. This classifier aims to maximise the decision boundaries between different classes.
 
 
 <!-- Evaluation section -->
@@ -361,6 +363,8 @@ Robust against class imbalance
 
 ## Hyperparameter Optimization
 knn: only odd k values
+
+forest: large number of trees = high accuracy Usually
 
 
 ## Conclusion

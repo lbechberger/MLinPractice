@@ -145,9 +145,7 @@ else:   # manually set up a classifier
                   "max depth": args.forest_max_depth,
                   "criterion": args.forest_criterion}
         
-        #standardizer = StandardScaler()
         classifier = RandomForestClassifier(n_estimators = args.randforest, criterion = args.forest_criterion, max_depth = args.forest_max_depth, n_jobs = -1)
-        #classifier = make_pipeline(standardizer, randforest_classifier)
         
     classifier.fit(data["features"], data["labels"].ravel())
     log_param("dataset", "training")
