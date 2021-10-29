@@ -12,9 +12,11 @@ from nltk.corpus import stopwords
 from code.preprocessing.preprocessor import Preprocessor
 
 
+
 class StopwordsRemover(Preprocessor):
-    # constructor
+    # constructo
     def __init__(self, input_column, output_column):
+
         # input column "tweet", new output column
         super().__init__([input_column], output_column)
 
@@ -96,6 +98,10 @@ class StopwordsRemover(Preprocessor):
             elif 'sv' in language:
                 tweet_withno_stopwords = [
                     word for word in tweet if word.lower() not in self._stopwords_sv]
+            elif 'es' in language:
+                tweet_withno_stopwords = [
+                    word for word in tweet if word.lower() not in self._stopwords_es]
 
             tweets_withno_stopwords.append(tweet_withno_stopwords)
         return tweets_withno_stopwords
+
