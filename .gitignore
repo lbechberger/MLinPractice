@@ -133,6 +133,7 @@ data/raw/
 data/preprocessing/
 data/classification/mlflow
 mlruns/
+data/feature_extraction/
 
 # exlcude OSX specific files
 .DS_Store
@@ -143,5 +144,7 @@ mlruns/
 
 # classifier.pickle file gets too big after certain number of features to classify with
 data/classification/classifier.pickle
-
-data/feature_extraction/
+data/feature_extraction/validation.pickle
+data/classification/classifier.pickle
+data/feature_extraction/test.pickle
+data/feature_extraction/training.pickle
