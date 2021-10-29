@@ -26,6 +26,7 @@ class Tokenizer(Preprocessor):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     def __init__(self, input_column, output_column):
         """Initialize the Tokenizer with the given input and output colum."""
@@ -44,6 +45,10 @@ class Tokenizer(Preprocessor):
     def __init__(self, input_column, output_column): 
 >>>>>>> 49c39fa (resolve the conflict)
 >>>>>>> 7105dbc (resolve the conflict)
+=======
+
+    def __init__(self, input_column, output_column):
+>>>>>>> 828d2d3 (fix merge issues)
         """Initialize the Tokenizer with the given input and output column."""
 >>>>>>> 2854caf (modified files and testing added)
         super().__init__([input_column], output_column)
@@ -68,26 +73,6 @@ class Tokenizer(Preprocessor):
 
 =======
 
-<<<<<<< HEAD
-=======
-        # all_input_tokenized = []
-        # print(len(inputs), inputs[0])
-        # if len(inputs) > 1:
-        #     inputs = inputs[0]
-        #     print(inputs)
-        #     for tweet in inputs:
-        #         tokenized = []
-        #         sentences = nltk.sent_tokenize(tweet)
-        #         for sentence in sentences:
-        #             words = nltk.word_tokenize(sentence)
-        #             tokenized.append(words)
-        #     tokenized = [token for sublist in tokenized for token in sublist]
-        #     all_input_tokenized.append(tokenized)
-        # else:
-        #     words = nltk.word_tokenize(inputs[0][0])
-
-        #     all_input_tokenized.append(words)
->>>>>>> 49c39fa (resolve the conflict)
         tokenized = []
 >>>>>>> 2854caf (modified files and testing added)
         for tweet in inputs[0]:
@@ -95,6 +80,7 @@ class Tokenizer(Preprocessor):
             tokenized_tweet = []
             for sentence in sentences:
                 words = nltk.word_tokenize(sentence)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 tokenized_tweet += words
@@ -112,6 +98,8 @@ class Tokenizer(Preprocessor):
 =======
 =======
 >>>>>>> 7105dbc (resolve the conflict)
+=======
+>>>>>>> 828d2d3 (fix merge issues)
                 words = self._delete_mentions(words)
                 remove_urls_hashtags_mentions = [
                     word for word in words if word[0] not in self.punctuation and word[:4] not in self.urls and word[:3] not in self.urls]
@@ -138,6 +126,7 @@ class Tokenizer(Preprocessor):
         return no_mentions
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> a3333a8 (modified the tokenizer)
 =======
 >>>>>>> 0898e45 (add the lemmatizer and its test)
@@ -150,3 +139,5 @@ class Tokenizer(Preprocessor):
         return tokenized
 >>>>>>> 49c39fa (resolve the conflict)
 >>>>>>> 7105dbc (resolve the conflict)
+=======
+>>>>>>> 828d2d3 (fix merge issues)

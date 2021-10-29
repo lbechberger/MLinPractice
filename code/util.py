@@ -19,6 +19,7 @@ COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 COLUMN_TOKENIZED = "tweet_tokenized"
 <<<<<<< HEAD
+<<<<<<< HEAD
 COLUMN_STOPWORDS = "tweet_no_stopwords"
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -30,6 +31,8 @@ SUFFIX_STOPWORDS_REMOVED = "_stopwords_removed"
 =======
 =======
 =======
+=======
+>>>>>>> 828d2d3 (fix merge issues)
 COLUMN_STOPWORDS = "tweet_no_stopwords"
 
 >>>>>>> 7105dbc (resolve the conflict)
@@ -40,6 +43,7 @@ DETECTION_MODEL = fasttext.load_model("code/models/lid.176.bin")
 warnings.simplefilter(action='ignore', category=FutureWarning)
 fasttext.FastText.eprint = lambda x: None
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 2854caf (modified files and testing added)
 =======
 >>>>>>> fe92cf0 (fixed error in the stopword remover)
@@ -49,3 +53,5 @@ COLUMN_STOPWORDS = "tweet_no_stopwords"
 =======
 >>>>>>> 49c39fa (resolve the conflict)
 >>>>>>> 7105dbc (resolve the conflict)
+=======
+>>>>>>> 828d2d3 (fix merge issues)

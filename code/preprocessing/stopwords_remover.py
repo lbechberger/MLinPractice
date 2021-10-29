@@ -10,22 +10,13 @@ Created on Wed Sep 29 09:45:56 2021
 import contractions
 from nltk.corpus import stopwords
 from code.preprocessing.preprocessor import Preprocessor
-<<<<<<< HEAD
-=======
-from code.util import DETECTION_MODEL
->>>>>>> 7103423 (resolve the conflict)
 
 
 
 class StopwordsRemover(Preprocessor):
-<<<<<<< HEAD
     # constructo
     def __init__(self, input_column, output_column):
 
-=======
-    # constructor
-    def __init__(self, input_column, output_column):
->>>>>>> 7103423 (resolve the conflict)
         # input column "tweet", new output column
         super().__init__([input_column], output_column)
 
@@ -33,10 +24,6 @@ class StopwordsRemover(Preprocessor):
     def _set_variables(self, inputs):
         # load the punctuation list and the stopword lists for the following four languages
         self._stopwords_ar = stopwords.words('arabic')
-<<<<<<< HEAD
-=======
-        self._stopwords_ar = stopwords.words('arabic')
->>>>>>> 7103423 (resolve the conflict)
         self._stopwords_en = stopwords.words('english')
         self._stopwords_de = stopwords.words('german')
         self._stopwords_fr = stopwords.words('french')

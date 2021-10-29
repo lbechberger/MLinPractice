@@ -14,11 +14,7 @@ python -m code.preprocessing.create_labels data/raw/ data/preprocessing/labeled.
 
 # other preprocessing (removing punctuation etc.)
 echo "  general preprocessing"
-<<<<<<< HEAD
 python -m code.preprocessing.run_preprocessing data/preprocessing/preprocessed.csv data/preprocessing/preprocessed.csv --tokenize --punctuation_removing --stopwords_removing --lemmatize -e data/preprocessing/pipeline.pickle
-=======
-python -m code.preprocessing.run_preprocessing data/preprocessing/preprocessed.csv data/preprocessing/preprocessed.csv --tokenize --punctuation_remover --stopwords_remover -e data/preprocessing/pipeline.pickle
->>>>>>> 49c39fa (resolve the conflict)
 
 # split the data set
 echo "  splitting the data set"

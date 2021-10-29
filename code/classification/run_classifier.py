@@ -37,10 +37,6 @@ args = parser.parse_args()
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
 
-<<<<<<< HEAD
-=======
-set_tracking_uri(args.log_folder)
->>>>>>> dcd00f9 (added grid search)
 
 if args.import_file is not None:
     # import a pre-trained classifier
@@ -113,8 +109,4 @@ for metric_name, metric in evaluation_metrics:
 if args.export_file is not None:
     output_dict = {"classifier": classifier, "params": params}
     with open(args.export_file, 'wb') as f_out:
-<<<<<<< HEAD
-        pickle.dump(classifier, f_out)
-=======
         pickle.dump(output_dict, f_out)
->>>>>>> dcd00f9 (added grid search)
