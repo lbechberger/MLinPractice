@@ -111,7 +111,8 @@ Example:
 >>> lem = WordNetLemmatizer()
 >>> lemmatized = []
 >>> for word in sent:
->>> 	lemmatized.append(lem.lemmatize(word.lower(), tag_dict.get(tag, wordnet.NOUN)))
+		tag = pos_tag([word])[0][1][0].upper()
+		lemmatized.append(lem.lemmatize(word.lower(), tag_dict.get(tag, wordnet.NOUN)))
 # ['these', 'newer', 'data', 'help', 'scientist', 'accurately', 'project', 'how', 'quickly', 'glacier', 'be', 'retreat', '.']
 ```
 
@@ -272,7 +273,7 @@ We also figured that the number of replies has an influence on the virality: the
 
 
 ### Retweets and Likes
-Retweets and likes follow the same rationale as replies. These are the most obvious features to consider when measuring virality and we just implented them for the purpose of testing. We did not use them for training our model. The procedure is the same as above: access the respective column, convert it to a `numpy.array` and reshape it.
+Retweets and likes follow the same rationale as replies. These are the most obvious features to consider when measuring virality and we just implented them for the purpose of testing. We did not use them for training our model (since that easily results in an accuracy $>99\%$ and does not tell us anything about _why_ the tweet went viral). The procedure is the same as above: access the respective column, convert it to a `numpy.array` and reshape it.
 
 
 <!-- Classifier section -->
@@ -280,10 +281,31 @@ Retweets and likes follow the same rationale as replies. These are the most obvi
 
 ## Classification
 
+### _k_ - Nearest Neighbour
+```python
+>>> from sklearn.neighbors import KNeighborsClassifier
+```
+The _k_-NN classifier was implemented by Lucas during the lecture. We use it with only one hyperparameter - _k_ - for our binary classification task. This algorithm is an example for instance-based learning. It relies on the distance between data points for classification, hence it requires standardization of feature vectors.
+
+To not introduce unnecessary complexity, we decided to use the classifier with its default settings:
+
+- Uniform weights: all features are equally important, 
+
+### Decision Tree
+
+
+### Random Forest
+
+
+### Support Vector Machine
+
+
+
 <!-- Evaluation section -->
 <a name='evaluation'></a>
 
 ## Evaluation
+We implemented multiple evaluation metrics to see how well our classification works.
 
 ### Cohen's kappa
 Robust against class imbalance

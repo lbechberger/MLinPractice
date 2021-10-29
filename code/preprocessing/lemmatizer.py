@@ -18,16 +18,20 @@ from ast import literal_eval
 class Lemmatizer(Preprocessor):
     """Lemmatize given input column."""
     
+    
     def __init__(self, input_column, output_column):
         """Init with given input and output column"""
         super().__init__([input_column], output_column)
     
+    
     # implementation of _set_variables() not necessary
+    
     
     # inspired by https://www.machinelearningplus.com/nlp/lemmatization-examples-python/    
     def _get_values(self, inputs):
         """Lemmatize given input based on WordNet. Also changes to lowercase."""
         lemmatizer = WordNetLemmatizer()
+        
         # dict to map PoS to arg accepted by lemmatize()
         tag_dict = {"J": wordnet.ADJ,
                     "N": wordnet.NOUN,
@@ -41,6 +45,7 @@ class Lemmatizer(Preprocessor):
             lemmatized = []
             
             for word in tweet_eval:
+                # get first letter of PoS tag to retrieve entry from dict
                 tag = pos_tag([word])[0][1][0].upper()
                 lemmatized.append(lemmatizer.lemmatize(word.lower(), tag_dict.get(tag, wordnet.NOUN)))
             column.append(lemmatized)

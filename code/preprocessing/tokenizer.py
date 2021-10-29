@@ -20,6 +20,7 @@ class Tokenizer(Preprocessor):
         """Initialize the Tokenizer with the given input and output column."""
         super().__init__([input_column], output_column)
     
+    
     # don't need to implement _set_variables(), since no variables to set
     
     
