@@ -12,7 +12,6 @@ from nltk.corpus import stopwords
 from code.preprocessing.preprocessor import Preprocessor
 
 
-
 class StopwordsRemover(Preprocessor):
     # constructo
     def __init__(self, input_column, output_column):
