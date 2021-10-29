@@ -33,6 +33,7 @@ parser.add_argument("-u", "--uniform", action = "store_true", help = "uniform (r
 parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
 parser.add_argument("--knn_weights", type = str, help = "weight function of knn, uniform or distance", default = "uniform")
 parser.add_argument("--tree", type = int, help = "decision tree classifier with the specified value as max depth", default = None)
+parser.add_argument("--tree_criterion", type = str, help = "criterion to measure split quality, gini or entropy", default = "gini")
 parser.add_argument("--svm", type = str, help = "support vector machine with specified kernel: linear, polynomial, rbf, or sigmoid", default = None)
 parser.add_argument("--randforest", type = int, help = "random forest classifier with specified value as # of trees in forest", default = None)
 
@@ -101,14 +102,15 @@ else:   # manually set up a classifier
         
     elif args.tree is not None:
         # decision tree classifier
-        print("    decision tree with max depth of {0}".format(args.tree))
+        print("    decision tree with max depth of {0} and {1} split criterion".format(args.tree, args.tree_criterion))
         
         log_param("classifier", "tree")
+        log_param("criterion", args.tree_criterion)
         log_param("max_depth", args.tree)
-        params = {"classifier": "tree", "max_depth": args.tree}
+        params = {"classifier": "tree", "criterion": args.tree_criterion, "max_depth": args.tree}
         
         #standardizer = StandardScaler()
-        classifier = DecisionTreeClassifier(max_depth = args.tree)
+        classifier = DecisionTreeClassifier(criterion = args.tree_criterion, max_depth = args.tree)
         #classifier = make_pipeline(standardizer, decision_tree)
     
     elif args.svm is not None:
