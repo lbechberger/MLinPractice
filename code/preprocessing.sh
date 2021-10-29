@@ -3,8 +3,13 @@
 # create directory if not yet existing
 mkdir -p data/preprocessing/split/
 
+<<<<<<< HEAD
 # need to install all NLTK models
 python -m nltk.dowloader all
+=======
+# install all NLTK models
+python -m nltk.downloader all
+>>>>>>> 05062c3 (implemented tweet tokenization)
 
 # add labels
 echo "  creating labels"

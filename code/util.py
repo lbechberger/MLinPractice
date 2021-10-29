@@ -15,4 +15,8 @@ COLUMN_RETWEETS = "retweets_count"
 COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 
+<<<<<<< HEAD
 SUFFIX_TOKENIZED = "_tokenized"
+=======
+SUFFIX_TOKENIZED = "_tokenized"
+>>>>>>> 05062c3 (implemented tweet tokenization)

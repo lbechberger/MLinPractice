@@ -16,6 +16,7 @@ from code.preprocessing.tokenizer import Tokenizer
 from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED
 
 # setting up CLI
+<<<<<<< HEAD
 parser = argparse.ArgumentParser(description="Various preprocessing steps")
 parser.add_argument("input_file", help="path to the input csv file")
 parser.add_argument("output_file", help="path to the output csv file")
@@ -27,6 +28,15 @@ parser.add_argument("--tokenize_input",
                     help="input column used for tokenization", default=COLUMN_TWEET)
 parser.add_argument("-e", "--export_file",
                     help="create a pipeline and export to the given location", default=None)
+=======
+parser = argparse.ArgumentParser(description = "Various preprocessing steps")
+parser.add_argument("input_file", help = "path to the input csv file")
+parser.add_argument("output_file", help = "path to the output csv file")
+parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
+parser.add_argument("-t", "--tokenize", action = "store_true", help = "tokenize given column into individual words")
+parser.add_argument("--tokenize_input", help = "input column to tokenize", default = COLUMN_TWEET)
+parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
+>>>>>>> 05062c3 (implemented tweet tokenization)
 args = parser.parse_args()
 
 # load data
@@ -38,8 +48,12 @@ preprocessors = []
 if args.punctuation:
     preprocessors.append(PunctuationRemover())
 if args.tokenize:
+<<<<<<< HEAD
     preprocessors.append(Tokenizer(args.tokenize_input,
                          args.tokenize_input + SUFFIX_TOKENIZED))
+=======
+    preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
+>>>>>>> 05062c3 (implemented tweet tokenization)
 
 # call all preprocessing steps
 for preprocessor in preprocessors:
