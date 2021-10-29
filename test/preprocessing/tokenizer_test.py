@@ -16,7 +16,11 @@ class TokenizerTest(unittest.TestCase):
         self.INPUT_COLUMN = "input"
         self.OUTPUT_COLUMN = "output"
         self.tokenizer = Tokenizer(self.INPUT_COLUMN, self.OUTPUT_COLUMN)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 49c39fa (resolve the conflict)
     def test_input_columns(self):
         self.assertEqual(self.tokenizer._input_columns, [
                              self.INPUT_COLUMN])
@@ -26,8 +30,13 @@ class TokenizerTest(unittest.TestCase):
 
     def test_tokenization_single_sentence(self):
         input_text = "This is an example sentence"
+<<<<<<< HEAD
         output_text = ['this', 'is', 'an', 'example', 'sentence']
 
+=======
+        output_text = ['This', 'is', 'an', 'example', 'sentence']
+        
+>>>>>>> 49c39fa (resolve the conflict)
         input_df = pd.DataFrame()
         input_df[self.INPUT_COLUMN] = [input_text]
 
@@ -35,6 +44,7 @@ class TokenizerTest(unittest.TestCase):
         self.assertEqual(tokenized[self.OUTPUT_COLUMN][0], output_text)
 
     def test_tokenization_several_sentences(self):
+<<<<<<< HEAD
         input_text = ["This is an example sentence",
                       "I want for my tweet to go viral", "Can we talk about global warming?"]
         output_text = [['this', 'is', 'an', 'example', 'sentence'], ["i", "want", "for", "my", "tweet", "to", "go", "viral"],
@@ -52,12 +62,27 @@ class TokenizerTest(unittest.TestCase):
         output_text = [['this', 'is', 'an', 'example', 'sentence'], ["i", "want", "for", "my", "tweet", "to", "go", "viral"],
                        ["can", "we", 'talk', 'about', 'global', 'warming']]
 
+=======
+        input_text = ["This is an example sentence", "I want for my tweet to go viral", "Can we talk about global warming?"]
+        output_text = [['This', 'is', 'an', 'example', 'sentence'], ["I", "want", "for", "my", "tweet", "to", "go", "viral"],
+                        ["Can", "we", 'talk', 'about', 'global', 'warming', '?']]
+        
+>>>>>>> 49c39fa (resolve the conflict)
         input_df = pd.DataFrame(input_text, columns=[self.INPUT_COLUMN])
 
         tokenized = self.tokenizer.fit_transform(input_df)
         for i in range(3):
+<<<<<<< HEAD
             self.assertEqual(tokenized[self.OUTPUT_COLUMN][i], output_text[i])
 
 
 if __name__ == '__main__':
     unittest.main()
+=======
+            self.assertEquals(tokenized[self.OUTPUT_COLUMN][i], output_text[i])
+    
+
+if __name__ == '__main__':
+    unittest.main()
+    
+>>>>>>> 49c39fa (resolve the conflict)
