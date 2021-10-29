@@ -17,7 +17,8 @@ class BigramFeatureTest(unittest.TestCase):
         self.INPUT_COLUMN = "input"
         self.bigram_feature = BigramFeature(self.INPUT_COLUMN)
         self.df = pd.DataFrame()
-        self.df[self.INPUT_COLUMN] = ['["This", "is", "a", "tweet", "This", "is", "also", "a", "test"]']
+        self.df[self.INPUT_COLUMN] = ['["This", "is", "a", "tweet", "This", "is", "also", "a", "test"]',
+        '["This", "is", "a", "beautiful", "cat"]']
 
     
     def test_input_columns(self):

@@ -56,8 +56,6 @@ df = pd.read_csv(args.input_file, low_memory=False,
 # collect all preprocessors
 preprocessors = []
 if args.tokenize:
-    preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
-if args.stopwords_remover:
     preprocessors.append(Tokenizer(args.tokenize_input, COLUMN_TOKENIZED))
 if args.punctuation_removing:
     preprocessors.append(PunctuationRemover(

@@ -10,6 +10,7 @@ Created on Wed Oct  6 07:49:27 2021
 
 from code.preprocessing.preprocessor import Preprocessor
 import nltk
+import string
 
 
 class Tokenizer(Preprocessor):
