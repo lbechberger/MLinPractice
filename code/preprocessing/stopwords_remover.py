@@ -10,8 +10,6 @@ Created on Wed Sep 29 09:45:56 2021
 import contractions
 from nltk.corpus import stopwords
 from code.preprocessing.preprocessor import Preprocessor
-from code.util import DETECTION_MODEL
-
 
 
 class StopwordsRemover(Preprocessor):
@@ -100,6 +98,10 @@ class StopwordsRemover(Preprocessor):
                     word for word in tweet if word.lower() not in self._stopwords_sv]
 
             tweets_withno_stopwords.append(tweet_withno_stopwords)
+<<<<<<< HEAD
         return tweets_withno_stopwords
 
     
+=======
+        return tweets_withno_stopwords
+>>>>>>> f567365 (modified the stopwords)
