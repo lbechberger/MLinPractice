@@ -3,9 +3,15 @@
 """
 Created on Thu Oct  7 14:53:52 2021
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> a7c7fdb (unit test and TDD example)
+=======
+
+=======
+>>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
+>>>>>>> a9f1bb1 (resolve merge conflicts)
 @author: ml
 """
 
@@ -13,6 +19,7 @@ import ast
 import nltk
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 class BigramFeature(FeatureExtractor):
@@ -23,6 +30,8 @@ class BigramFeature(FeatureExtractor):
     def _set_variables(self, inputs):
 
 =======
+=======
+>>>>>>> a9f1bb1 (resolve merge conflicts)
 class BigramFeature(FeatureExtractor):
     
     
@@ -87,4 +96,23 @@ class BigramFeature(FeatureExtractor):
     #     return freq_list
 
         
+<<<<<<< HEAD
 >>>>>>> 45da034 (modify bigram)
+=======
+=======
+
+class BigramFeature(FeatureExtractor):
+
+    def __init__(self, input_column):
+        super().__init__([input_column], "{0}_bigrams".format(input_column))
+
+    def _set_variables(self, inputs):
+
+        overall_text = []
+        for line in inputs:
+            tokens = ast.literal_eval(line.item())
+            overall_text += tokens
+
+        self._bigrams = nltk.bigrams(overall_text)
+>>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
+>>>>>>> a9f1bb1 (resolve merge conflicts)
