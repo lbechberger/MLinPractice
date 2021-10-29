@@ -43,7 +43,11 @@ parser.add_argument("--stopwords_removing_input", help = "input column to stopwo
 parser.add_argument("-l", "--lemmatize", action = "store_true", help = "extract the lemmas from the given column")
 parser.add_argument("--lemmatize_input", help = "input column to lemmatizer", default = COLUMN_STOPWORDS)
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
+<<<<<<< HEAD
 >>>>>>> 3021bf2 (create a stopwords remover)
+=======
+parser.add_argument("-d", "--debug_limit", help = "limit data points to be preprocessed to given number", default = None)
+>>>>>>> 26ed0d9 (Fix preprocessing)
 args = parser.parse_args()
 
 # load data
@@ -100,6 +104,11 @@ if args.stopwords_remover:
 >>>>>>> 7105dbc (resolve the conflict)
 =======
 >>>>>>> 828d2d3 (fix merge issues)
+
+# check if data point number should be limited for debug purposes
+if (args.debug_limit is not None) and (int(args.debug_limit) > 0):
+    print("running with limited amount of datapoints: " + str(args.debug_limit))
+    df = df.iloc[:int(args.debug_limit)]
 
 # call all preprocessing steps
 for preprocessor in preprocessors:
