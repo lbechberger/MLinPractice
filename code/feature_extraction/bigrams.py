@@ -22,22 +22,7 @@ import ast
 import nltk
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-class BigramFeature(FeatureExtractor):
-
-    def __init__(self, input_column):
-        super().__init__([input_column], "{0}_bigrams".format(input_column))
-
-    def _set_variables(self, inputs):
-
-=======
-=======
->>>>>>> a9f1bb1 (resolve merge conflicts)
-=======
->>>>>>> 0a0cfa3 (changes in the bigram)
 class BigramFeature(FeatureExtractor):
     
     
@@ -52,20 +37,7 @@ class BigramFeature(FeatureExtractor):
     
             all_the_tweets += tokens
         
-<<<<<<< HEAD
->>>>>>> a7c7fdb (unit test and TDD example)
-        overall_text = []
-        for line in inputs:
-            tokens = ast.literal_eval(line.item())
-            overall_text += tokens
-<<<<<<< HEAD
 
-        self._bigrams = nltk.bigrams(overall_text)
-=======
-        
-        self._bigrams = nltk.bigrams(overall_text)
->>>>>>> a7c7fdb (unit test and TDD example)
-=======
         self._bigrams_of_all_tweets = nltk.bigrams(all_the_tweets)
         self._freq_dist = nltk.FreqDist(self._bigrams_of_all_tweets)
         self._dictionary_of_all_tweets = {item[0]:item[1] for item in self._freq_dist.items()}
@@ -100,28 +72,3 @@ class BigramFeature(FeatureExtractor):
             freq_list.append(tweet_bigram_freq)
         print("here")
         return freq_list
-
-        
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 45da034 (modify bigram)
-=======
-=======
-
-class BigramFeature(FeatureExtractor):
-
-    def __init__(self, input_column):
-        super().__init__([input_column], "{0}_bigrams".format(input_column))
-
-    def _set_variables(self, inputs):
-
-        overall_text = []
-        for line in inputs:
-            tokens = ast.literal_eval(line.item())
-            overall_text += tokens
-
-        self._bigrams = nltk.bigrams(overall_text)
->>>>>>> 33bd5e7 (Update with origin (feature-preprocessing tests))
->>>>>>> a9f1bb1 (resolve merge conflicts)
-=======
->>>>>>> 0a0cfa3 (changes in the bigram)
