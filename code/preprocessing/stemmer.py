@@ -75,6 +75,8 @@ class Stemmer(Preprocessor):
             elif 'sv' in language:
                 tweet_stemmed = [self._swedish_stemmer.stem(
                     word) for word in tweet]
+            else:
+                tweet_stemmed = tweet
 
             tweets_stemmed.append(tweet_stemmed)
         return tweets_stemmed

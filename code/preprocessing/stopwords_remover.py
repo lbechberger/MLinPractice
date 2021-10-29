@@ -10,7 +10,7 @@ Created on Wed Sep 29 09:45:56 2021
 import contractions
 from nltk.corpus import stopwords
 from code.preprocessing.preprocessor import Preprocessor
- 
+
 
 class StopwordsRemover(Preprocessor):
     # constructor
@@ -96,7 +96,7 @@ class StopwordsRemover(Preprocessor):
             elif 'sv' in language:
                 tweet_withno_stopwords = [
                     word for word in tweet if word.lower() not in self._stopwords_sv]
-
+            else:
+                tweet_withno_stopwords = tweet
             tweets_withno_stopwords.append(tweet_withno_stopwords)
         return tweets_withno_stopwords
-

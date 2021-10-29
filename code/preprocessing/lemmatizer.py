@@ -16,7 +16,7 @@ from nltk.stem import WordNetLemmatizer
 
 
 class Lemmatizer(Preprocessor):
-    """Provides the lemmas of the words of the tweet using their POS."""
+    """Provides the lemmas of the words of the tweet using their POS. Works only for English"""
 
     def __init__(self, input_column, output_column):
         """Initialize the LemmatizeUsingPOS with the given input and output column."""
