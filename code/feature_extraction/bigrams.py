@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Oct  7 14:53:52 2021
-
 @author: ml
 """
 
@@ -41,10 +40,20 @@ class BigramFeature(FeatureExtractor):
             tweet_bigram_freq = list(
                 filter(None, list(set(tweet_bigram_freq))))
             tweet_bigram_freq.sort(key=lambda x: x[1], reverse=True)
-            frequencies = [frequency[1] for frequency in tweet_bigram_freq]
-            self._freq_list.append(sum(frequencies))
+            self._freq_list.append(tweet_bigram_freq)
 
     def _get_values(self, inputs):
+        all_the_tweets = []
+        ## need to recompute the frequency distribution, case we have new input as the validation set
+        for tweet in inputs[0]:
+            tokens = ast.literal_eval(tweet)
+            all_the_tweets += tokens
+        self._bigrams_of_all_tweets = list(nltk.bigrams(all_the_tweets))
+        self._freq_dist_of_all_tweets = nltk.FreqDist(
+            self._bigrams_of_all_tweets)
+        self._dictionary_of_all_tweets = {
+            item[0]: item[1] for item in self._freq_dist_of_all_tweets.items()}
+
         self._freq_list = []
         for tweet in inputs[0]:
             tweet_bigram_freq = []
@@ -52,14 +61,15 @@ class BigramFeature(FeatureExtractor):
             bigrams = list(nltk.bigrams(tweet))
             for bigram in bigrams:
                 tweet_bigram_freq.append(
-                    (self._dictionary_of_all_tweets.get(bigram)))
+                    (bigram, self._dictionary_of_all_tweets.get(bigram)))
+
             # remove duplicates
             tweet_bigram_freq = list(
                 filter(None, list(set(tweet_bigram_freq))))
-            tweet_bigram_freq.sort(key=lambda x: x, reverse=True)
-            frequencies = [frequency for frequency in tweet_bigram_freq]
+            # print(tweet_bigram_freq)
+            tweet_bigram_freq.sort(key=lambda x: x[1], reverse=True)
+            frequencies = [frequency[1] for frequency in tweet_bigram_freq]
             # sum the frequencies
             self._freq_list.append(sum(frequencies))
-
         frequent = np.array(self._freq_list)
         return frequent.reshape(-1, 1)

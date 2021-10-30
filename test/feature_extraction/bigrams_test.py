@@ -8,8 +8,8 @@ Created on Thu Oct  7 14:51:00 2021
 
 import unittest
 import pandas as pd
-import nltk
 from code.feature_extraction.bigrams import BigramFeature
+
 
 class BigramFeatureTest(unittest.TestCase):
     
@@ -48,8 +48,10 @@ class BigramFeatureTest(unittest.TestCase):
     def test_list_of_bigrams_most_frequent_correct(self):
         self.bigram_feature.fit(self.df)
         EXPECTED_BIGRAM = [('This', 'is'), 3, ('is', 'a'), 2, ('lovely', 'cat'), 2]
-        
-        freq_dist = self.bigram_feature.transform(self.df)
+        SUM_OF_FREQUENCIES = 8
+        freq_dist = self.bigram_feature._freq_list
+        sum_of_freq = self.bigram_feature.transform(self.df)
+
         for i in range(2):
             j = 0
             self.assertEqual(freq_dist[0][j][i], EXPECTED_BIGRAM[i])
@@ -58,3 +60,4 @@ class BigramFeatureTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    

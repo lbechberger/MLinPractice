@@ -15,8 +15,9 @@ import pandas as pd
 import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.bigrams import BigramFeature
+from code.feature_extraction.images_counter import Images
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_STEMMED, COLUMN_UNIQUE_BIGRAMS
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_STEMMED, COLUMN_IMAGES
 
 
 # setting up CLI
@@ -31,6 +32,8 @@ parser.add_argument("-b", "--bigram", action="store_true",
                     help="get the bigrams")
 parser.add_argument("-c", "--char_length", action="store_true",
                     help="compute the number of characters in the tweet")
+parser.add_argument("-p", "--photos_attached", action="store_true",
+                    help="compute the number of photos attached to the tweet")
 args = parser.parse_args()
 
 # load data
@@ -51,6 +54,8 @@ else:    # need to create FeatureCollector manually
         features.append(CharacterLength(COLUMN_TWEET))
     if args.bigram:
         features.append(BigramFeature(COLUMN_STEMMED))
+    if args.photos_attached:
+        features.append(Images(COLUMN_IMAGES))
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
 

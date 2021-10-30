@@ -134,6 +134,7 @@ The classifier is then evaluated, using the evaluation metrics as specified thro
 - `-f1` or `--fscore`: F-Score (i.e., computes the score using the precision and the recall).
 - `-k` or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement). It is the best metric for showing the model's reliability, meaning if the model produces the same results under the same conditions. If the value of Cohe's kappa score is 0, it means random agreement among the predicted and the actual results, and if the score is 1, this means a complete agreement among the predicted and the actual results.
 
+
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
 - `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
 - `-e` or `--export_file`: Export the trained classifier into the given pickle file.

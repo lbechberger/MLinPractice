@@ -3,21 +3,21 @@
 """
 Tokenize the tweet into individual words.
 
-Created on Wed Oct  6 07:49:27 2021
+Created on Wed Oct  6 13:59:54 2021
 
-@author: lbechberger
+@author: lbechberger/rfarah
 """
 
 from code.preprocessing.preprocessor import Preprocessor
-import nltk
 import string
+import nltk
 
 
 class Tokenizer(Preprocessor):
     """Tokenizes the given input column into individual words."""
 
     def __init__(self, input_column, output_column):
-        """Initialize the Tokenizer with the given input and output colum."""
+        """Initialize the Tokenizer with the given input and output column."""
         super().__init__([input_column], output_column)
 
     def _set_variables(self, inputs):
@@ -27,7 +27,7 @@ class Tokenizer(Preprocessor):
 
     def _get_values(self, inputs):
         """Tokenizes the tweet and get rid of mentions, hashtags and numbers"""
-        
+
         tokenized = []
         for tweet in inputs[0]:
             sentences = nltk.sent_tokenize(tweet.lower())

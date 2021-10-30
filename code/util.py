@@ -22,3 +22,4 @@ COLUMN_STOPWORDS = "tweet_no_stopwords"
 
 # column names of novel columns for feature extracting
 COLUMN_UNIQUE_BIGRAMS = "tweet_unique_bigrams"
+COLUMN_IMAGES = "photos"
