@@ -251,6 +251,11 @@ pd.get_dummies(result)
 # only yields encoding for 4 variables in this case because 5th category not used
 ```
 
+### Named Entity Recognition
+Caveat: computationally quiet expensive
+alternatively md, lg model
+https://spacy.io/models
+
 
 ### URLs, Photos, Mentions, Hashtags
 In this section, we evaluate whether any of the above have been attached to a tweet as a binary (1 if attached, 0 else). Our thinking here was that additional media, be it a link, pictures, mentions of another account, or hashtags, might influence the potential virality of a tweet. We accessed the respective columns of the dataframe (`url`, `photos`, `mentions`, `hashtags`), in which the entries are stored in a list. Hence, we could simply evaluate the length of the entries. If they exceed a length of 2, the column contains more than just the empty brackets and the tweet contains the respective feature:
@@ -350,6 +355,15 @@ from sklearn.svm import SVC
 We also added a support vector machine. This classifier aims to maximise the decision boundaries between different classes.
 
 
+### Multilayer Perceptron
+```python
+from sklearn.neural_network import MLPClassifier
+```
+
+Maximum iterations 200, if no convergence training will be stopped
+https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html#sklearn.neural_network.MLPClassifier
+
+
 <!-- Evaluation section -->
 <a name='evaluation'></a>
 
@@ -397,8 +411,8 @@ Different reserach questions:
 [^spacy_stopwords]: <https://github.com/explosion/spaCy/blob/master/spacy/lang/en/stop_words.py>, retrieved Oct 26, 2021
 [^gensim-punctuation]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.strip_punctuation>, retrieved Oct 26, 2021
 [^gensim_stemming]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.stem>, retrieved Oct 26, 2021
-[^vader_pypi]: <https://pypi.org/project/vaderSentiment/>
-[^vader_homepage]: <https://github.com/cjhutto/vaderSentiment>
+[^vader_pypi]: <https://pypi.org/project/vaderSentiment/>, retrieved Oct 15, 2021
+[^vader_homepage]: <https://github.com/cjhutto/vaderSentiment>, retrieved Oct 15, 2021
 [^twitter_charlength]: <https://blog.twitter.com/official/en_us/topics/product/2017/Giving-you-more-characters-to-express-yourself.html>
 [^sklearn_forest]: <https://scikit-learn.org/stable/modules/ensemble.html#forest>
 [^mlflow]: <https://mlflow.org/docs/latest/index.html#>
