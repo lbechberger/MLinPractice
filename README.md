@@ -20,6 +20,8 @@ conda install -y -q -c conda-forge spyder=5.1.5
 conda install -y -q -c conda-forge pandas=1.1.5
 conda install -c conda-forge mlflow
 conda install -c conda-forge vadersentiment
+conda install -c conda-forge spacy
+python -m spacy download en_core_web_sm
 
 ```
 
@@ -93,6 +95,16 @@ The features to be extracted can be configured with the following optional param
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
 - `-m` or `--month`: Extract the month in which the tweet was published from the "date" column of the data frame.
 - `-s` or `--sentiment`: Extract a compound sentiment value from the original tweet using VADER.
+- `-p` or `--photos`: Extracts binary for whether tweet has photo(s) attached from the "photo" column
+- `-@` or `--mention`: Extracts binary for whether someone has been mentioned by the tweet author from the "mention" column
+- `-u` or `--url` Extracts binary for whether a url is attached to tweet from the "url" column
+- `-rt` or `--retweet`: Extracts number of retweets from the "retweet_count" column
+- `-re` or `--replies`: Extracts number of replies from the "replies_count" column
+- `-#` or `--hashtag`: Extracts binary for whether a hashtag is attached to tweet from the "hashtag" column
+- `-l` or `--likes`E xtracts amount of likes from a tweet from the "likes_count" column
+- `-d` or `--daytime`: Extracts at which time of day tweet was tweeted from the "time" column
+- `-n` or `--ner`: Collects the number of entities in a tweet
+
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
@@ -130,11 +142,25 @@ Here, `input.pickle` is a pickle file of the respective data subset, produced by
 By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
 - `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
 - `-f` or `--frequency`: Dummy classifier that makes predictions based on the label frequency in the training data.
+- `-u` or  `--uniform`: uniform (random) classifier
+- `--knn`: k nearest neighbor classifier with the specified value of k, default = None
+- `--knn_weights`: weight function of knn which can be optionally be chosen: uniform or distance, default = uniform
+- `--tree`: decision tree classifier with the specified value as max_depth, default = None
+- `--tree_criterion`: Criterion to measure split quality: gini or entropy, default = "gini"
+- `--svm`: Support vector machine with specified kernel: "linear", "polynomial", "rbf", or "sigmoid", default = None
+- `--randforest`: Random forest classifier with specified value as # of trees in forest, default = None
+- `--forest_criterion`: Criterion to measure split quality: "gini" or "entropy", default = "gini"
+- `--forest_max_depth`: max_depth of trees in forest, default = None
+- `--mlp`: Multilayer perceptron classifier, values resemble hidden layer sizes (1 value per layer), default = None
+- `--bayes` Complement naive bayes classifier
+
+
 
 The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
 - `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
 - `-k`or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
-- `-f1` or `--f1_score`:
+- `-f1` or `--f1_score`: F1-score, calculated from precision and recall
+- `-ba`or `--balanced_accuracy`: Balanced classification accuracy 
 
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
