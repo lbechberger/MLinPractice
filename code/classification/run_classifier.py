@@ -133,7 +133,7 @@ else:   # manually set up a classifier
                   "kernel": args.svm}
         
         standardizer = StandardScaler()
-        svm_classifier = SVC(kernel = args.svm)
+        svm_classifier = SVC(kernel = args.svm, gamma = "auto")
         classifier = make_pipeline(standardizer, svm_classifier)
         
     elif args.randforest is not None:

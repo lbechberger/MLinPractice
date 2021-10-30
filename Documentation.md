@@ -156,7 +156,7 @@ len(sent)
 # 38
 ```
 
-This is, however simple it may be, a difficult to interpret feature: for most of its existence, Twitter has had a character limit of 140 characters per tweet. In 2017, the maximum character limit was raised to 280[^twitter_charlength], which lead to an almost immediate drop of the prevalence of tweets with around 140 characters while, at the same time, tweets approaching 280 characters appear to be snytactically and semantically similar to tweets around 140 characters from before the change __(Gligoric, Anderson, West, 2020)__.
+This is, however simple it may be, a difficult to interpret feature: for most of its existence, Twitter has had a character limit of 140 characters per tweet. In 2017, the maximum character limit was raised to 280[^twitter_charlength], which lead to an almost immediate drop of the prevalence of tweets with around 140 characters while, at the same time, tweets approaching 280 characters appear to be snytactically and semantically similar to tweets around 140 characters from before the change (Gligorić et al., 2020).
 
 <a name='month'></a>
 ### Month
@@ -207,7 +207,8 @@ Nota bene: We added $+1$ to the compound sentiment so that no negative values ar
 
 <a name='time_of_day'></a>
 ### Time of Day
-As opposed to the [Month](#month) feature, which we ended up not using, we felt that the time of the day during which a tweet was posted might very well have an influence on its virality. We decided to split the day in time ranges with hard boundaries:
+As opposed to the [Month](#month) feature, which we ended up not using, we felt that the time of the day during which a tweet was posted might very well have an influence on its virality. For example, we suppose that less people are online during the night, while
+We decided to split the day in time ranges with hard boundaries:
 
 1. Morning hours from 5am to 9am (5 hours)
 2. Midday from 10am to 2pm (5 hours)
@@ -254,9 +255,43 @@ pd.get_dummies(result)
 ```
 
 ### Named Entity Recognition
-Caveat: computationally quiet expensive
-alternatively md, lg model
-https://spacy.io/models
+Named entity recognition (NER) aims to identify so-called named entities in unstructured texts. We implemented this feature using `spacy`'s pre-trained `en_core_web_sm` pipeline[^spacy_ner]. It has been trained on the OntoNotes 5.0[^onto_notes] and WordNet 3.0[^wordnet] databases. The following entity types are supported by this model:
+
+```python
+import spacy
+
+spacy.info("en_core_web_sm")['labels']['ner']
+
+# ['CARDINAL', 'DATE', 'EVENT', 'FAC', 'GPE', 'LANGUAGE', 'LAW', 'LOC', 'MONEY', 'NORP', 'ORDINAL', 'ORG', 'PERCENT', 'PERSON', 'PRODUCT', 'QUANTITY', 'TIME', 'WORK_OF_ART']
+```
+
+The entities can be accessed as follows:
+
+```python
+ner = en_core_web_sm.load()
+sent1 = "The current Dalai Lama was born in 1935 in Tibet"
+sent2 = "Big Data and AI are a hot trend in 2021 on Twitter"
+
+ner(sent1).ents
+# (1935, Tibet)
+
+ner(sent2).ents
+len(ner(sent2).ents)
+# (Big Data, AI, 2021, Twitter)
+# 4
+```
+As can be seen in the above example, the NER does not work perfectly. "Dalai Lama" in the first sentence is a named entity but not recognized as such. However, we still decided to make use of this feature as it classifies most named entities correctly. We counted the number of NEs per tweet and stored the occurences as integer. The pipeline we employed was specifically designed for web language. We went with the version for English - although an abundancy of other languages is available - because the number of tweets in other languages in our dataset is rather low and the model might still capture named entities, even if in another language:
+
+```python
+sent3 = "Kanzlerin Merkel hat 16 Jahre der Bundesregierung vorgesessen."
+ner.(sent3).ents
+
+# (Kanzlerin Merkel, 16, Jahre, Bundesregierung)
+```
+
+Other models are offered as well, the `en_core_web_sm` is a small one designed for efficiency. Alternatively, models with larger corpus or trimmed towards higher accuracy are available. Although using the more efficient version, the feature extraction step still seems to be computationally very expensive.
+
+NER with `nltk` is also possible when utilizing the `pos_tag()` function, it requires a much larger effort, though, as noun phrase chunking and regular expressions have to be used for the classification.
 
 
 ### URLs, Photos, Mentions, Hashtags
@@ -342,7 +377,7 @@ Decision trees generally have difficulties working with continuous data and we h
 from sklearn.ensemble import RandomForestClassifier
 ```
 
-Random forest classifiers represent an ensemble of multiple decision trees. They are often more robust and accurate than single decision trees and less prone to overfitting and can, therefore, better generalize on new, unseen data.
+Random forest classifiers represent an ensemble of multiple decision trees. They are often more robust and accurate than single decision trees and less prone to overfitting and can, therefore, better generalize on new, unseen data (Breiman, 2001). Random forests are able to deal with unbalanced datasets by down-sampling the majority class such that each subtree works on more balanced data (Biau and Scornet, 2016).
 
 We implemented it such that we can modify the number of trees per forest, the maximum depth per tree, as well as the criterion based on which a split occurs. The options for this are the same as for single decision trees - Gini impurity and entropy. The first two are the main parameters to look at when constructing a forest according to `sklearn`'s user guide on classifiers[^sklearn_forest]. Usually, the classification is obtained via majority vote of the trees in a forest, but this implementation averages over the probabilistic class prediction of the single classifiers.
 
@@ -354,7 +389,9 @@ Being able to manipulate both the maximum depth as well as the split criterion f
 from sklearn.svm import SVC
 ```
 
-We also added a support vector machine. This classifier aims to maximise the decision boundaries between different classes.
+We also added a support vector machine (SVM). This classifier seeks to find a hyperplane in the data space which maximises the distance between different classes. It can easily deal with higher-dimensional data by changing the kernel (application of the so-called kernel-trick). `sklearn` offers to choose between a linear, polynomial (default degree: 3), radial basis function, and sigmoid kernel. We decided to implement a way to change the kernel, as this can highly affect the outcome of the classifier.
+
+SVMs are sensible to unscaled data and require standardization of the input, which we carried out using the `StandardScaler()` from `sklearn.preprocessing`. Class weights can be set by the parameter `class_weight` to deal with unbalanced data sets,
 
 
 ### Multilayer Perceptron
@@ -364,6 +401,15 @@ from sklearn.neural_network import MLPClassifier
 
 Maximum iterations 200, if no convergence training will be stopped
 https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html#sklearn.neural_network.MLPClassifier
+
+
+### Naive Bayes
+```python
+from sklearn.naive_bayes import ComplementNB
+```
+As a sixth (and last) classifier, we implemented one of the naive Bayes variants that `sklearn` offers. The two classic variants are Gaussian and multinomial Bayes, yet, we chose the complement naive Bayes (CNB) algorithm as it was specifically designed to deal with unbalanced data and addresses some of the shortcomings of the multinomial variant (Rennie, Shih, Teevan, Karger, 2003).
+
+No additional parameters to adapt were implemented. Alternatively, we could have implemented command line argument for the smoothing parameter alpha, which adds Laplace smoothing and takes care of the zero probability problem. The default value here is $1$, which is also the preferred value in most use cases. Hence, we did not deem modification necessary.
 
 
 <!-- Evaluation section -->
@@ -418,4 +464,7 @@ Different reserach questions:
 [^twitter_charlength]: <https://blog.twitter.com/official/en_us/topics/product/2017/Giving-you-more-characters-to-express-yourself.html>
 [^sklearn_forest]: <https://scikit-learn.org/stable/modules/ensemble.html#forest>
 [^mlflow]: <https://mlflow.org/docs/latest/index.html#>
+[^onto_notes]: <https://catalog.ldc.upenn.edu/LDC2013T19>
+[^wordnet]: <https://wordnet.princeton.edu/>
+[^spacy_ner]: <https://spacy.io/usage/models>
 <!-- -->
