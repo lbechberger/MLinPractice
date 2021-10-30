@@ -3,9 +3,6 @@
 # create directory if not yet existing
 mkdir -p data/feature_extraction/
 
-# install spaCy language model
-python -m spacy download en_core_web_sm
-
 # run feature extraction on training set (may need to fit extractors)
 echo "  training set"
 python -m code.feature_extraction.extract_features data/preprocessing/split/training.csv data/feature_extraction/training.pickle -e data/feature_extraction/pipeline.pickle -c -s -p -@ -u -# -d -n
