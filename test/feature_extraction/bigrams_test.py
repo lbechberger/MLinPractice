@@ -18,7 +18,7 @@ class BigramFeatureTest(unittest.TestCase):
         self.bigram_feature = BigramFeature(self.INPUT_COLUMN)
         self.df = pd.DataFrame()
         self.df[self.INPUT_COLUMN] = ['["This", "is", "a", "tweet", "This", "is", "also", "a", "test"]',
-        '["This", "is", "a", "beautiful", "cat"]']
+        '["This", "is", "a", "lovely" ,"cat", "very", "lovely", "cat"]']
 
     
     def test_input_columns(self):
@@ -42,18 +42,19 @@ class BigramFeatureTest(unittest.TestCase):
 
     def test_list_of_bigrams_exists(self):
         self.bigram_feature.fit(self.df)
-        self.assertGreaterEqual(len(list(self.bigram_feature._bigrams)), 0)
+        self.assertGreaterEqual(len(list(self.bigram_feature._bigrams_of_all_tweets)), 0)
 
 
     def test_list_of_bigrams_most_frequent_correct(self):
         self.bigram_feature.fit(self.df)
-        EXPECTED_BIGRAM = ('This', 'is')
+        EXPECTED_BIGRAM = [('This', 'is'), 3, ('is', 'a'), 2, ('lovely', 'cat'), 2]
         
-        freq_dist = nltk.FreqDist(self.bigram_feature._bigrams_of_all_tweets)
-        freq_list = list(freq_dist.items())
-        freq_list.sort(key = lambda x: x[1], reverse = True)
-        
-        self.assertEqual(freq_list[0][0], EXPECTED_BIGRAM)
+        freq_dist = self.bigram_feature.transform(self.df)
+        for i in range(2):
+            j = 0
+            self.assertEqual(freq_dist[0][j][i], EXPECTED_BIGRAM[i])
+            j += 1
+
 
 if __name__ == '__main__':
     unittest.main()
