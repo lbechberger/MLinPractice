@@ -17,7 +17,7 @@ class Tokenizer(Preprocessor):
     
     
     def __init__(self, input_column, output_column):
-        """Initialize the Tokenizer with the given input and output column."""
+        """Constructor, calls super Constructor."""
         super().__init__([input_column], output_column)
     
     
@@ -25,8 +25,7 @@ class Tokenizer(Preprocessor):
     
     
     def _get_values(self, inputs):
-        """Tokenize the tweet."""
-        
+        """Tokenize the tweet into individual words using nltk."""
         tokenized = []
         
         for tweet in inputs[0]:

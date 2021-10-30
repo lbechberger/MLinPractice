@@ -13,6 +13,7 @@ import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.util import COLUMN_TWEET
 
+
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Application")
 parser.add_argument("preprocessing_file", help = "path to the pickle file containing the preprocessing")
@@ -57,4 +58,3 @@ while True:
     
     print("Prediction: {0}, Confidence: {1}".format(prediction, confidence))
     print("")
-    

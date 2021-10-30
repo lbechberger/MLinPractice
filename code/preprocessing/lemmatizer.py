@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Lemmatizes the given input column, i.e. modifies inflected or variant forms of a word into its lemma.
+Lemmatizes the given input column, i.e. modifies inflected or variant forms 
+of a word into its lemma.
 
 Created on Fri Oct  8 11:18:30 2021
 
@@ -16,20 +17,24 @@ from ast import literal_eval
 
 
 class Lemmatizer(Preprocessor):
-    """Lemmatize given input column."""
+    """
+    Lemmatize given input column.
+    inspired by https://www.machinelearningplus.com/nlp/lemmatization-examples-python/
+    """
     
     
     def __init__(self, input_column, output_column):
-        """Init with given input and output column"""
+        """Constuctor, calls super Constructor."""
         super().__init__([input_column], output_column)
     
     
     # implementation of _set_variables() not necessary
     
-    
-    # inspired by https://www.machinelearningplus.com/nlp/lemmatization-examples-python/    
+      
     def _get_values(self, inputs):
-        """Lemmatize given input based on WordNet. Also changes to lowercase."""
+        """
+        Lemmatize given input based on WordNet. Also changes to lowercase.
+        """
         lemmatizer = WordNetLemmatizer()
         
         # dict to map PoS to arg accepted by lemmatize()
@@ -38,6 +43,7 @@ class Lemmatizer(Preprocessor):
                     "V": wordnet.VERB,
                     "R": wordnet.ADV
                     }
+        
         column = []
         
         for tweet in inputs[0]:
@@ -51,4 +57,3 @@ class Lemmatizer(Preprocessor):
             column.append(lemmatized)
             
         return column
-        

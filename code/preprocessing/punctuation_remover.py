@@ -13,26 +13,29 @@ import string
 from code.preprocessing.preprocessor import Preprocessor
 
 
-# removes punctuation from the original tweet
-# inspired by https://stackoverflow.com/a/45600350
 class PunctuationRemover(Preprocessor):
+    """
+    Class to remove punctuation marks from given input
+    inspired by https://stackoverflow.com/a/45600350
+    """
     
     
-    # constructor
     def __init__(self, input_column, output_column):
-        # input column "tweet", new output column
+        """Constuctor, calls super Constructor"""
         super().__init__([input_column], output_column)
     
     
-    # set internal variables based on input columns
     def _set_variables(self, inputs):
-        # store punctuation for later reference
+        """
+        Stores punctuation for later reference
+        """
         self._punctuation = "[{}]".format(string.punctuation)
     
     
-    # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
-        # replace punctuation with empty string
+        """
+        Replaces a punctuation mark with an empty string
+        """
         column = inputs[0].str.replace(self._punctuation, "")
         
         return column

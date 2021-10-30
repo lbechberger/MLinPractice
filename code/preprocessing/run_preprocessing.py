@@ -17,6 +17,7 @@ from code.preprocessing.stopword_remover import StopwordRemover
 from code.preprocessing.lemmatizer import Lemmatizer
 from code.util import COLUMN_TWEET, SUFFIX_TOKENIZED, SUFFIX_STOPWORDS, SUFFIX_LEMMATIZED, SUFFIX_PUNCTUATION
 
+
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
 parser.add_argument("input_file", help = "path to the input csv file")
@@ -65,5 +66,4 @@ df.to_csv(args.output_file, index = False, quoting = csv.QUOTE_NONNUMERIC, line_
 if args.export_file is not None:
     pipeline = make_pipeline(*preprocessors)
     with open(args.export_file, 'wb') as f_out:
-        pickle.dump(pipeline, f_out)
-        
+        pickle.dump(pipeline, f_out)    

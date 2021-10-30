@@ -17,7 +17,7 @@ class StopwordRemover(Preprocessor):
     
     
     def __init__(self, input_column, output_column):
-        """Init StopwordRemover with given input-/output columns."""
+        """Constructor, calls super Constructor"""
         super().__init__([input_column], output_column)
         
         
@@ -25,8 +25,7 @@ class StopwordRemover(Preprocessor):
     
     
     def _get_values(self, inputs):
-        """Remove stopwords from given column."""
+        """Remove stopwords from given column with gensim."""
         column = [gensim.parsing.preprocessing.remove_stopwords(tweet) for tweet in inputs[0]]
         
         return column
-    

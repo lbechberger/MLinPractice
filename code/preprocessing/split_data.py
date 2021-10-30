@@ -13,6 +13,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from code.util import COLUMN_LABEL
 
+
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Splitting the data set")
 parser.add_argument("input_file", help = "path to the input csv file")

@@ -14,10 +14,11 @@ import datetime
 
 
 class MonthExtractor(FeatureExtractor):
-    """Extracts the month in which a tweet has been published from the given input column."""
+    """Extracts the month in which a tweet has been published."""
     
     
     def __init__(self, input_column):
+        """Constructor, calls super Constructor."""
         super().__init__([input_column], "tweet_month")
         
         
@@ -25,5 +26,5 @@ class MonthExtractor(FeatureExtractor):
         """Extracts the month from a string containing a date."""
         result = np.array([datetime.datetime.strptime(date, "%Y-%m-%d").month for date in inputs[0]])
         result = result.reshape(-1, 1)
-        return result
         
+        return result

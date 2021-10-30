@@ -11,18 +11,22 @@ Created on Wed Sep 29 12:29:25 2021
 import numpy as np
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
-# class for extracting the character-based length as a feature
+
 class CharacterLength(FeatureExtractor):
+    """Extracts the character-based length as a feature."""
     
-    # constructor
+
     def __init__(self, input_column):
+        """Constructor with given input_column."""
         super().__init__([input_column], "{0}_charlength".format(input_column))
+    
     
     # don't need to fit, so don't overwrite _set_variables()
     
-    # compute the word length based on the inputs
+    
     def _get_values(self, inputs):
-        
+        """Compute the word length based on the input."""
         result = np.array(inputs[0].str.len())
         result = result.reshape(-1,1)
+        
         return result

@@ -58,8 +58,8 @@ if args.import_file is not None:
     with open(args.import_file, "rb") as f_in:
         feature_collector = pickle.load(f_in)
 
-else:    # need to create FeatureCollector manually
-
+# need to create FeatureCollector manually
+else:    
     # collect all feature extractors
     features = []
     if args.char_length:
