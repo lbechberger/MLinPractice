@@ -16,7 +16,7 @@ import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.bigrams import BigramFeature
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_STEMMED
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_STEMMED, COLUMN_UNIQUE_BIGRAMS
 
 
 # setting up CLI
@@ -29,8 +29,6 @@ parser.add_argument("-i", "--import_file",
                     help="import an existing pipeline from the given location", default=None)
 parser.add_argument("-b", "--bigram", action="store_true",
                     help="get the bigrams")
-parser.add_argument("--bigram_input", help="input column to bigram",
-                    default=COLUMN_STEMMED)
 parser.add_argument("-c", "--char_length", action="store_true",
                     help="compute the number of characters in the tweet")
 args = parser.parse_args()
@@ -52,7 +50,7 @@ else:    # need to create FeatureCollector manually
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
     if args.bigram:
-        features.append(CharacterLength(COLUMN_TWEET))
+        features.append(BigramFeature(COLUMN_STEMMED))
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
 
