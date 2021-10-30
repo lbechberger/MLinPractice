@@ -28,7 +28,7 @@ class SentimentAnalyzer(FeatureExtractor):
         """Analyse sentiment and return compound value."""
         sia = SentimentIntensityAnalyzer()
         
-        result = np.array([sia.polarity_scores(tweet)["compound"] for tweet in inputs[0]])
+        result = np.array([sia.polarity_scores(tweet)["compound"] + 1 for tweet in inputs[0]])
         result = result.reshape(-1, 1)
         return result
         

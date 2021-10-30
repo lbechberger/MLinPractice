@@ -202,6 +202,8 @@ for s in sentences:
 ```
 We can see how the compound sentiment changes with the addition of words, punctuation, and emojis. We decided to only use the compound sentiment as measure because we felt that this is the most important one. A tweet might have a certain negativity score (indicating, e.g., that it is negatively phrased) because of a few words, while the rest of the tweet is phrased very positively, resulting in a positive compound sentiment. However, compared to a tweet with only neutral phrasing (i.e. a negative score of $0$), it would still be classified as more negative, which would intuitively be wrong.
 
+Nota bene: We added $+1$ to the compound sentiment so that no negative values are returned. We had to do this because the Bayes classifier (see [Bayes Classifier](#bayes_classifier)) cannot handle negative values. The range of possible values is now [0, 2] with 1 representing a neutral tweet, 0 being the most negative and 2 the most positive value.
+
 
 <a name='time_of_day'></a>
 ### Time of Day
