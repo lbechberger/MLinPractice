@@ -17,6 +17,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.pipeline import make_pipeline
 from mlflow import log_metric, log_param, set_tracking_uri
 
@@ -40,6 +41,7 @@ parser.add_argument("--randforest", type = int, help = "random forest classifier
 parser.add_argument("--forest_criterion", type = str, help = "criterion to measure split quality, gini or entropy", default = "gini")
 parser.add_argument("--forest_max_depth", type = int, help = "max depth of trees in forest", default = None)
 parser.add_argument("--mlp", nargs = "+", type = int, help = "multilayer perceptron classifier, values resemble hidden layer sizes (1 value per layer)", default = None)
+parser.add_argument("--bayes", help = "gaussian naive bayes classifier")
 
 # <--- Evaluation metrics --->
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
