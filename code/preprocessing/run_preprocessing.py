@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Runs the specified collection of preprocessing steps
-
 Created on Tue Sep 28 16:43:18 2021
-
 @author: lbechberger
 """
 

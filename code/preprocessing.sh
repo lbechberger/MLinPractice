@@ -3,14 +3,8 @@
 # create directory if not yet existing
 mkdir -p data/preprocessing/split/
 
-# install all NLTK models
-# python -m nltk.downloader all
-
-# # install the spaCy model for Englisch, French, Germana and Spanish
-# python -m spacy download en_core_web_sm
-# python -m spacy download fr_core_news_sm
-# python -m spacy download de_core_news_sm
-# python -m spacy download es_core_news_sm
+# need to install all NLTK models
+python -m nltk.dowloader all
 
 # add labels
 echo "  creating labels"

@@ -13,14 +13,14 @@ from code.preprocessing.preprocessor import Preprocessor
 
 
 class StopwordsRemover(Preprocessor):
-    # constructor
+    # constructo
     def __init__(self, input_column, output_column):
+        # input column "tweet", new output column
         super().__init__([input_column], output_column)
 
     # set internal variables based on input columns
     def _set_variables(self, inputs):
         # loads the punctuation list and the stopword lists for the following four languages
-        self._stopwords_ar = stopwords.words('arabic')
         self._stopwords_ar = stopwords.words('arabic')
         self._stopwords_en = stopwords.words('english')
         self._stopwords_de = stopwords.words('german')

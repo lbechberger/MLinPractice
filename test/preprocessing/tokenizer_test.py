@@ -3,7 +3,7 @@
 """
 Created on Thu Oct  7 14:30:41 2021
 
-@author: rfarah
+@author: ml
 """
 
 import unittest
@@ -58,7 +58,6 @@ class TokenizerTest(unittest.TestCase):
         tokenized = self.tokenizer.fit_transform(input_df)
         for i in range(3):
             self.assertEqual(tokenized[self.OUTPUT_COLUMN][i], output_text[i])
-
 
 if __name__ == '__main__':
     unittest.main()

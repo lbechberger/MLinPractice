@@ -28,8 +28,8 @@ parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier w
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-p", "--precision", action = "store_true", help = "evaluate using precision")
 parser.add_argument("-r", "--recall", action = "store_true", help = "evaluate using recall")
-parser.add_argument("-ck", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 parser.add_argument("-f1", "--fscore", action = "store_true", help = "evaluate using F-score")
+parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
 args = parser.parse_args()
 
