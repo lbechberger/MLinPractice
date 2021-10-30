@@ -41,7 +41,7 @@ parser.add_argument("--randforest", type = int, help = "random forest classifier
 parser.add_argument("--forest_criterion", type = str, help = "criterion to measure split quality, gini or entropy", default = "gini")
 parser.add_argument("--forest_max_depth", type = int, help = "max depth of trees in forest", default = None)
 parser.add_argument("--mlp", nargs = "+", type = int, help = "multilayer perceptron classifier, values resemble hidden layer sizes (1 value per layer)", default = None)
-parser.add_argument("--bayes", help = "complement naive bayes classifier")
+parser.add_argument("--bayes", action = "store_true", help = "complement naive bayes classifier")
 
 # <--- Evaluation metrics --->
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
@@ -171,9 +171,9 @@ else:   # manually set up a classifier
         log_param("classifier", "complementNB")
         params = {"classifier": "complementNB"}
         
-        standardizer = StandardScaler()
-        nb_classifer = ComplementNB()
-        classifier = make_pipeline(standardizer, nb_classifer)
+        #standardizer = StandardScaler()
+        classifier = ComplementNB()
+        #classifier = make_pipeline(standardizer, nb_classifer)
         
     classifier.fit(data["features"], data["labels"].ravel())
     log_param("dataset", "training")
