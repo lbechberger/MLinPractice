@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+Named entitiy recognition using spaCy's corpus. Works with unprocessed tweet column as default input.
+
 Created on Thu Oct 28 10:08:05 2021
 
 @author: Yannik
+modified by dhesenkamp
 """
 
 import spacy
@@ -10,13 +13,18 @@ import en_core_web_sm
 import numpy as np
 from code.feature_extraction.feature_extractor import FeatureExtractor
 
+
 class NER(FeatureExtractor):
-    """"""""
+    """Named entity recognition"""
+
     
     def __init__(self, input_column):
+        """Constructor"""
        super().__init__([input_column], "{0}_ner_count".format(input_column))
+
        
     def _get_values(self, inputs):
+        """Recognize named entities and count their occurence on a per tweet basis"""
         result = []
         nlp = en_core_web_sm.load()
         
@@ -25,6 +33,7 @@ class NER(FeatureExtractor):
             result.append(len(doc.ents))
             
         result = np.array(result)
-        return result.reshape(-1,1)
-                
+        result = result.reshape(-1, 1)
         
+        return result
+                
