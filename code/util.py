@@ -19,3 +19,6 @@ COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 COLUMN_TOKENIZED = "tweet_tokenized"
 COLUMN_STOPWORDS = "tweet_no_stopwords"
+
+# column names of novel columns for feature extracting
+COLUMN_UNIQUE_BIGRAMS = "tweet_unique_bigrams"
