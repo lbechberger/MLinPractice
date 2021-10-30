@@ -4,7 +4,7 @@
 mkdir -p data/feature_extraction/
 
 # install spaCy language model
--python -m spacy download en_core_web_sm
+python -m spacy download en_core_web_sm
 
 # run feature extraction on training set (may need to fit extractors)
 echo "  training set"

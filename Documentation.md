@@ -297,6 +297,14 @@ Retweets and likes follow the same rationale as replies. These are the most obvi
 <a name='classification'></a>
 
 ## Classifier
+The data vectores in our dataset have one of two possible labels - __true__ if the tweet went viral, __false__ if not. We are, thus, faced with a binary classification task and need classifiers suited for this kind of task.
+
+### Dummy Classifiers
+We implemented three dummy classifiers to explore baselines.
+
+- Majority
+- Frequency
+- Uniform
 
 ### _k_ - Nearest Neighbour
 ```python
@@ -349,7 +357,7 @@ We also added a support vector machine. This classifier aims to maximise the dec
 We implemented multiple evaluation metrics to see how well our classification works.
 
 ### Accuracy
-
+The accuracy - or fraction of correctly classified smaples - might just be simplest statistic for evaluation of a classification task.
 
 ### Balanced Accuracy
 
@@ -358,18 +366,23 @@ We implemented multiple evaluation metrics to see how well our classification wo
 Robust against class imbalance
 
 ### F<sub>1</sub> - Score
-
+The F<sub>&beta;</sub>-Score is a measure which combines precision and recall and returns a single value.
 
 
 ## Hyperparameter Optimization
+`mlflow ui --backend-store-uri data/classification/mlflow`
+
 knn: only odd k values
 
-forest: large number of trees = high accuracy Usually
+forest: large number of trees = high accuracy usually
 
-
+__insert picture from mlflow__
 ## Conclusion
 Different reserach questions:  
 <p style='color:red'>How does tweet metadata play into virality?</p>
+
+
+## Next Steps
 
 
 ## Resources
@@ -388,4 +401,5 @@ Different reserach questions:
 [^vader_homepage]: <https://github.com/cjhutto/vaderSentiment>
 [^twitter_charlength]: <https://blog.twitter.com/official/en_us/topics/product/2017/Giving-you-more-characters-to-express-yourself.html>
 [^sklearn_forest]: <https://scikit-learn.org/stable/modules/ensemble.html#forest>
+[^mlflow]: <https://mlflow.org/docs/latest/index.html#>
 <!-- -->
