@@ -87,12 +87,28 @@ print(tf_idf_similarities[:5,:5])
 # NER
 text = "John Wilkes Booth shot Abraham Lincoln. Abraham Lincoln was not shot inside the White House."
 sentences = nltk.sent_tokenize(text)
+print(sentences[0])
 for sentence in sentences:
-    words = nltk.word_tokenize(sentence)
-    pos_tagged = nltk.pos_tag(words)
+    #words = nltk.word_tokenize(sentence)
+    pos_tagged = nltk.pos_tag([sentence])
     ne_chunked = nltk.ne_chunk(pos_tagged)
+    print(pos_tagged)
     print(ne_chunked)
+    print(ne_chunked.label())
+    for i in ne_chunked:
+        print(i.label())
+        
+import spacy
+import en_core_web_sm
 
+nlp = en_core_web_sm.load()
+doc = nlp(text)
+for i in doc:
+    print(i.ent_type_)
+l = ([(X.text, X.label_) for X in doc.ents])
+print(len(doc.ents))
+print(len(l))
+    
 
 # WordNet
 dog_synsets = nltk.corpus.wordnet.synsets('dog')
