@@ -53,6 +53,9 @@ Also, most tweets in our data set are written in English, as can be seen here:
 
 The data set provides the raw tweet as it has been posted as well as multiple features related to the tweet, for instance the person who published it, the time it has been published at, whether it contained any media (be it photo, video, url, etc.), and many more. We employed multiple preprocessing steps to transform the input data into a more usable format for feature extraction steps later on.
 
+### Splitting
+As a very first step, we split the data set into a training, a validation, and a test set. We will work on the training and validation set to implement everything to then, eventually, test our classifiers on the test set.
+
 
 ### Tokenization
 In the lecture, Lucas implemented a tokenizer to disassemble tweets into individual words using the `nltk` library[^nltk]. This is done to split up the raw tweet into its constituents, i.e. the single words and punctuation signs it contains. By doing so, further processing and feature extraction can be performed by looking at the single components of a sentence/tweet as opposed to working with one long string.
