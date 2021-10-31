@@ -10,6 +10,7 @@ Group members: Dennis Hesenkamp, Yannik Ullrich
 2. [Feature Extraction](#feature_extraction)
 3. [Classification](#classification)
 4. [Evaluation](#evaluation)
+5. [Results](#results)
 
 ---
 
@@ -25,7 +26,19 @@ This document contains the documentation for our project, which aims to classify
 
 The data set used is Ruchi Bhatia's [Data Science Tweets 2010-2021](https://www.kaggle.com/ruchi798/data-science-tweets) from [Kaggle](https://www.kaggle.com/). The code base on which we built our machine learning pipeline was provided by Lucas Bechberger (lecturer) and can be found [here](https://github.com/lbechberger/MLinPractice). 
 
-<p style='color:red'><b>On which basis have the labels in the data set been assigned?</b></p>
+We can see that, over the years, the interest in data science and related topics as grown very fast:
+
+<fig style="align:center">
+	<img src="img/year_distribution.png">
+	<figcaption>Fig 1: Tweets per year.</figcaption>
+</fig>
+
+Also, most tweets in our data set are written in English, as can be seen here:
+
+<fig style="align:left">
+	<img src="img/lang_distribution.png">
+	<figcaption>Fig 2: Language distribution of the tweets.</figcaption>
+</fig>
 
 
 <!-- Preprocessing section -->
@@ -487,17 +500,193 @@ $$
 
 Values range from $0$ (worst) to $1$ (best).
 
+
 ## Hyperparameter Optimization
 `mlflow ui --backend-store-uri data/classification/mlflow`
 
-knn: only odd k values
+After having done preprocessing and feature extraction, choosen evaluation metrics, and decided on the classifiers to employ with what kind of parameters, we ran different configurations on the training and validation set to find the most promising classifier and hyperparameter set. Listing the results of every possible combination would go beyond the scope of this documentation, which is why we will only provide an overview over all tested combinations and the most notable results. We tracked all results using the `mlflow` package, which allows for very convenient logging of the used parameters and metrics.
 
-forest: large number of trees = high accuracy usually
 
-__insert picture from mlflow__
+### _k_ - Nearest Neighbor
+<!-- K NEAREST NEIGHBOR -->
+For the _k_-NN classifier, we tested the following parameter combinations:
+
+<table>
+<tbody>
+  <tr>
+    <td><b>Weight</b></td>
+    <td style="text-align:center" colspan="5">Uniform</td>
+    <td style="text-align:center" colspan="5">Distance</td>
+  </tr>
+  <tr>
+    <td><b>k</b></td>
+    <td>1</td>
+    <td>3</td>
+    <td>5</td>
+    <td>7</td>
+    <td>9</td>
+    <td>1</td>
+    <td>3</td>
+    <td>5</td>
+    <td>7</td>
+    <td>9</td>
+  </tr>
+</tbody>
+</table>
+
+We used only odd numbers for _k_ to avoid a tie since our task is binary classification (for an odd number of classes, the inverse holds true: even _k_-values avoid ties).
+
+
+<!-- DECISION TREE -->
+### Decision Tree
+For decision trees, we explored the following hyperparameter space:
+
+<table>
+<tbody>
+  <tr>
+    <td><b>Criterion</b></td>
+    <td style="text-align:center" colspan="9">Gini impurity</td>
+  </tr>
+  <tr>
+    <td><b>Max depth</b></td>
+    <td>16</td>
+    <td>18</td>
+    <td>20</td>
+    <td>22</td>
+    <td>24</td>
+    <td>26</td>
+    <td>28</td>
+    <td>30</td>
+    <td>32</td>
+  </tr>
+  <tr>
+    <td><b>Criterion</b></td>
+    <td style="text-align:center" colspan="9">Entropy</td>
+  </tr>
+  <tr>
+    <td><b>Max depth</b></td>
+    <td>16</td>
+    <td>18</td>
+    <td>20</td>
+    <td>22</td>
+    <td>24</td>
+    <td>26</td>
+    <td>28</td>
+    <td>30</td>
+    <td>32</td>
+  </tr>
+</tbody>
+</table>
+
+Additionally, we built the tree without depth restriction for both split criterions.
+
+
+<!-- RANDOM FOREST -->
+### Random Forest
+The random forest classifier comes with the added parameter of a set number of trees per forest:
+
+<table>
+<tbody>
+  <tr>
+    <td><b>Trees per forest</b></td>
+    <td>10</td>
+    <td>25</td>
+    <td>50</td>
+    <td>100</td>
+  </tr>
+</tbody>
+</table>
+
+For each possible number of trees per forest, we explored the same space as with the single decision tree. Further, we also built one tree without depth restriction for each possible combination of tree amount and split criterion. A high number of trees per forest usually results in better and more solid results, especially in terms of avoiding overfitting.
+
+
+### Support Vector Machine
+We tested the SVM classifier with four different kernels:
+
+<table>
+<tbody>
+  <tr>
+    <td><b>Kernel</b></td>
+    <td>linear</td>
+    <td>polynomial</td>
+    <td>radial basis function</td>
+    <td>sigmoid</td>
+  </tr>
+</tbody>
+</table>
+
+The computational cost for the SVM classifier seems very high and execution of training and validation took extremely long.
+
+<!--MULTILAYER PERCEPTRON -->
+### Multilayer Perceptron
+We tried many different combinations for the MLP classifier: we built it first with only one hidden layer (which means three layers in total, one additional layer for input and output), then with two and three hidden layers. We tried every possible combination of neurons per hidden layer from the set of (10, 25, 50), which yields a total of 39 combinations. The hyperparameter space for a network with three hidden layers and 10 neurons in hidden layer 1 would, e.g., look like this:
+
+<table>
+<tbody>
+  <tr>
+    <td><b>Layer 1</b></td>
+    <td style="text-align:center" colspan="9">10</td>
+  </tr>
+  <tr>
+    <td><b>Layer 2</b></td>
+    <td style="text-align:center" colspan="3">10</td>
+    <td style="text-align:center" colspan="3">25</td>
+    <td style="text-align:center" colspan="3">50</td>
+  </tr>
+  <tr>
+    <td><b>Layer 3</b></td>
+    <td>10</td>
+    <td>25</td>
+    <td>50</td>
+    <td>10</td>
+    <td>25</td>
+    <td>50</td>
+    <td>10</td>
+    <td>25</td>
+    <td>50</td>
+  </tr>
+</tbody>
+</table>
+
+Additionally, we followed a promising lead and also trained a network with the hidden layer structure (100, 100, 100). After 200 iterations, the training was abandoned because the network had still not converged - nonetheless delivering the best result we observed thus far with the MLP. We also decided not to explore any combinations with higher number of neurons because of the computational cost. 
+
+
+<!-- COMPLEMENT NAIVE BAYES -->
+### Naive Bayes
+Since we did not implement any hyperparameters to adjust, we only ran the CNB classifier once.
+
+
+<a name="results"></a>
+## Results
+An important note right away: we did not use the grid of our institute for the hyperparameter optimization but only ran the classifier on a local machine. The results we obtained are from a naive exploration of the search space. We tried to narrow down interesting and promising configurations and ranges for every classifier by manual testing. Hence, we might have obtained results that are only local optima.
+
+The results per classifier for our evaluation metrics can be seen in the figures below:
+
+<div style="background:transparent">
+<figure>
+  <img src="img/accuracy.png">
+  <figcaption>Fig 1: Accuracy per classifier</figcaption>
+</figure>  
+<figure>
+  <img src="img/balancedaccuracy.png">
+  <figcaption>Fig 2: Balanced accuracy per classifier</figcaption>
+</figure>  
+<figure>
+  <img src="img/cohenskappa.png">
+  <figcaption>Fig 3: Cohen's kappa per classifier</figcaption>
+</figure>  
+<figure>
+  <img src="img/fscore.png">
+  <figcaption>Fig 4: F<sub>1</sub>-score per classifier</figcaption>
+</figure>  
+</div>
+
+
 ## Conclusion
-Different reserach questions:  
-<p style='color:red'>How does tweet metadata play into virality?</p>
+different eval metrics, what do they tell us?
+how mcuh better than baseline
+what worked, what didnt?
+
 
 
 ## Next Steps
