@@ -1,12 +1,12 @@
 ## ZeitZeiton Group- MLinPractice
 
 ## Proprecessing 
-This application is capable of handling correctly 14 languages, since the used Snowball Stemmer supports the following 14 languages: Arabic, English, Spanish, French, German, Norwegian, Danish, Dutch, Swedish, Italian, Hungarian, Portuguese, Russian and Romanian.
-For the mentioned languages, we upload for each language and the corresponding stemmer and the list of the stopwords.
+This application is capable of handling correctly 14 languages since the used Snowball Stemmer supports the following 14 languages: Arabic, English, Spanish, French, German, Norwegian, Danish, Dutch, Swedish, Italian, Hungarian, Portuguese, Russian and Romanian.
+We upload for each language and the corresponding stemmer and the list of the stopwords for the mentioned languages.
 
 <p align="center"> <img src="imgs/supported_languages.png"> </p>
 
-The supported languages make up most of the tweets in the dataset. We process the other languages but we are more sure of the accuracy of the results of the supported languages.
+The supported languages make up most of the tweets in the dataset. We process the other languages, but we are more sure of the accuracy of the results of the supported languages.
 
 <p align="center"> <img src="imgs/comparison.png"> </p>
 
