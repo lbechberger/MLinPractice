@@ -9,7 +9,8 @@ Created on Wed Sep 29 13:33:37 2021
 """
 
 import argparse, pickle
-from sklearn.feature_selection import SelectKBest, mutual_info_classif
+from sklearn.feature_selection import SelectKBest, mutual_info_classif, SelectFromModel
+from sklearn.ensemble import RandomForestClassifier
 
 
 # setting up CLI
@@ -19,6 +20,7 @@ parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-m", "--mutual_information", type = int, help = "select K best features with Mutual Information", default = None)
+parser.add_argument("-r", "--random_forest", type = int, help = "select the number of trees in the forest", default = None)
 parser.add_argument("--verbose", action = "store_true", help = "print information about feature selection process")
 args = parser.parse_args()
 
@@ -56,6 +58,28 @@ else: # need to set things up manually
             print("    {0}".format(feature_names))
             print("    " + str(dim_red.scores_))
             print("    " + str(get_feature_names(dim_red, feature_names)))
+
+    elif args.random_forest:
+        dim_red = RandomForestClassifier(n_estimators = args.random_forest, random_state=42)
+        dim_red.fit(features, labels.ravel())
+        scores = dim_red.feature_importances_
+        dim_red = SelectFromModel(dim_red, threshold = 0.1, prefit = True)
+
+        # resulting feature names based on support given by RandomForestClassifer
+        def get_feature_names(random_forest, names):
+            support = random_forest.get_support()
+            result = []
+            for name, selected in zip(names, support):
+                if selected:
+                    result.append(name)
+            return result
+
+        if args.verbose:
+            print("    RandomForestClassifier with {0} trees".format(args.random_forest))
+            print("    {0}".format(feature_names))
+            print("    " + str(scores))
+            print("    " + str(get_feature_names(dim_red, feature_names)))
+
     pass
 
 # apply the dimensionality reduction to the given features

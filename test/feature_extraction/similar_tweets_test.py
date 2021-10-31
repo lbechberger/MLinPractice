@@ -7,7 +7,9 @@ Created on Thu Oct  7 14:51:00 2021
 """
 
 import unittest
+import numpy
 import pandas as pd
+import numpy as np
 from code.feature_extraction.similar_tweets import SimilarTweets
 
 
@@ -27,11 +29,11 @@ class SimilarTweetsTest(unittest.TestCase):
     def test_sentiment_analysis(self):
         results = self.sentiment_analyser.transform(self.df)
         # check the input and the output length
-        EXPECTED_LENGTH = 25
+        EXPECTED_LENGTH = 5
         self.assertEqual(results.shape[0], EXPECTED_LENGTH)
         # the third one and the last one should have high cosine similarity value
-        EXPECTED_SIMILARITY_THRESHOLD = 0.8
-        self.assertTrue(results[24] > EXPECTED_SIMILARITY_THRESHOLD)
+        EXPECTED_MAX_INDEX = 3
+        self.assertTrue(np.argmax(results), EXPECTED_MAX_INDEX)
 
 
 if __name__ == '__main__':
