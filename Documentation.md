@@ -44,6 +44,9 @@ For the media of the tweet: it is only helpful, in case of the given tweet has s
 
 - **images counter**: computes the number of the images attached to the tweet.
 
+## Dimensionality Reduction
+
+We implemented one dimensionality reduction method in addition to the preimplemented, namely, the Embedded methods using the Random Forest Classifer with 5 trees. It is also computationally cheap like the wrapper methods. Both methods give result back that the two features, "retweets_count" and "like_count" are the most informative and distinctive features.
 # Documentation Example
 
 Some introductory sentence(s). Data set and task are relatively fixed, so 
