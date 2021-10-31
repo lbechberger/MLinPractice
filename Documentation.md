@@ -341,12 +341,18 @@ Retweets and likes follow the same rationale as replies. These are the most obvi
 ## Classifier
 The data vectores in our dataset have one of two possible labels - __true__ if the tweet went viral, __false__ if not. We are, thus, faced with a binary classification task and need classifiers suited for this kind of task.
 
-### Dummy Classifiers
-We implemented three dummy classifiers to explore baselines.
 
-- Majority
-- Frequency
-- Uniform
+### Dummy Classifiers
+```python
+sklearn.dummy.DummyClassifier
+```
+
+Dummy classifiers make predictions without any knowledge about patterns in the data. We implemented three of them with different rules to explore possible baselines to which we could compare our real classifiers later on:
+
+- Majority vote: always labels data as the most frequently occuring label in the data set, in our case __false__.
+- Stratified classification: uses the data set's class distribution to assign labels.
+- Uniform classification: makes random uniform predictions.
+
 
 ### _k_ - Nearest Neighbour
 ```python
@@ -391,7 +397,7 @@ from sklearn.svm import SVC
 
 We also added a support vector machine (SVM). This classifier seeks to find a hyperplane in the data space which maximises the distance between different classes. It can easily deal with higher-dimensional data by changing the kernel (application of the so-called kernel-trick). `sklearn` offers to choose between a linear, polynomial (default degree: 3), radial basis function, and sigmoid kernel. We decided to implement a way to change the kernel, as this can highly affect the outcome of the classifier.
 
-SVMs are sensible to unscaled data and require standardization of the input, which we carried out using the `StandardScaler()` from `sklearn.preprocessing`. Class weights can be set by the parameter `class_weight` to deal with unbalanced data sets,
+SVMs are sensible to unscaled data and require standardization of the input, which we carried out using the `StandardScaler()` from `sklearn.preprocessing`. Class weights can be set by the parameter `class_weight` to deal with unbalanced data sets, we did not implement this parameter.
 
 
 ### Multilayer Perceptron
@@ -416,20 +422,70 @@ No additional parameters to adapt were implemented. Alternatively, we could have
 <a name='evaluation'></a>
 
 ## Evaluation Metrics
-We implemented multiple evaluation metrics to see how well our classification works.
+We implemented multiple evaluation metrics to see how well our classification works and to compare the different classifiers described above.
+
 
 ### Accuracy
-The accuracy - or fraction of correctly classified smaples - might just be simplest statistic for evaluation of a classification task.
+The accuracy - or fraction of correctly classified samples - might just be simplest statistic for evaluation of a classification task. It can be calculated as follows:
+
+$$
+\text{Accuracy} = \frac{TP + TN}{N}
+$$
+
+$TP$: True positive, correctly positively labeled samples  
+$TN$: True negative, correctly negatively labeled samples  
+$N$: Total number of samples
+
+The best value is $1$ ($100\%$ correctly classified samples), the worst $0$.
 
 ### Balanced Accuracy
+The balanced accuracy is better suited for unbalanced data sets. It is based on two other commonly used metrics, the sensitivity and specificity (see section [F<sub>1</sub>-Score](#f1_score) for more details). Its calculation works as follows:
+
+$$
+\text{Balanced accuracy} = \ \frac{\text{Sensitivity} + \text{Specificity}}{2}
+$$
+
+Again, values can range from $0$ (worst) to $1$ (best). This metric makes a much better statement about the quality of a classifier when the majority of samples belongs to one class, as in our case with the label '_false_', because it takes into account both how many samples were correctly classified as _true_ and correctly classified as _false_. Consider an example with $1\%$ of the data points belonging to class A and a classifier always assigning the other class (B) as label. This would yield an accuracy of $99\%$ as that would be the fraction of correctly classified samples. Balanced accuracy, however, would return a value of $0.5$ as no sample with class A had been correctly identified, while all class B samples were correctly labeled.
 
 
 ### Cohen's Kappa
-Robust against class imbalance
+Cohen's kappa is another metric which is said to be very robust against class imbalance and, therefore, well suited for our task.
 
-### F<sub>1</sub> - Score
-The F<sub>&beta;</sub>-Score is a measure which combines precision and recall and returns a single value.
+Calculation:
+$$
+\text{Cohen's kappa} = \frac{\text{Accuracy} - p_e}{1 - p_e}
+$$
 
+with
+
+$$
+p_e = p(\text{AC = T}) * p(\text{PC = T}) + p(\text{AC = F}) * p(\text{PC = F})
+$$
+
+where $p$ denotes the probability, $p_e$ specifically designates the expected agreement by chance, $AC$ and $PC$ are the actual and predicted class, and $T$ and $F$ true and false, i.e. the class labels. This metric takes into account that correct classification can happen by chance. Values can range from $-1$ to $1$, with negative values meaning correct classification by chance and $1$ representing complete agreement.
+
+
+<a name='f1_score'></a>
+### F - Score
+The F<sub>&beta;</sub>-Score is a measure which combines precision and recall and returns a single value. The relative contribution from precision and recall can be adjusted with the &beta;-value: $1$ encodes equal weight of the two measures, while a value closer to $0$ will weigh precision stronger and &beta; $> 1$ favors the recall. We chose to the standard score with &beta; $= 1$, as we deem both precision and recall equally important. It can be calculated as follows:
+
+$$
+F_{\beta} = (1 * \beta) \frac{\text{Precision} * \text{Recall}}{(\beta^2 * \text{Precision}) + \text{Recall}}
+$$
+
+with
+
+$$
+\text{Precision} = \frac{TP}{TP + FP}
+$$
+
+and 
+
+$$
+\text{Recall} = \frac{TP}{TP + FN}
+$$
+
+Values range from $0$ (worst) to $1$ (best).
 
 ## Hyperparameter Optimization
 `mlflow ui --backend-store-uri data/classification/mlflow`
