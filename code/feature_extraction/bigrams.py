@@ -44,7 +44,7 @@ class BigramFeature(FeatureExtractor):
 
     def _get_values(self, inputs):
         all_the_tweets = []
-        ## need to recompute the frequency distribution, case we have new input as the validation set
+        # need to recompute the frequency distribution, case we have new input as the validation set
         for tweet in inputs[0]:
             tokens = ast.literal_eval(tweet)
             all_the_tweets += tokens
@@ -66,7 +66,6 @@ class BigramFeature(FeatureExtractor):
             # remove duplicates
             tweet_bigram_freq = list(
                 filter(None, list(set(tweet_bigram_freq))))
-            # print(tweet_bigram_freq)
             tweet_bigram_freq.sort(key=lambda x: x[1], reverse=True)
             frequencies = [frequency[1] for frequency in tweet_bigram_freq]
             # sum the frequencies
