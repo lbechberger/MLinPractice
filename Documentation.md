@@ -97,3 +97,8 @@ test set
   Recall: 1.0
 ```
 
+### Interpretation of the final results
+The classifier generalizes very well to the test set. Such high scores suggest that we are in the sweet-spot between under- and overfitting. The hyperparameters need to be selected carefully for the classifiers, though. In this case, too many trees lead to overfitting. But 20 trees seem to be spot-on for this dataset.
+
+
+
