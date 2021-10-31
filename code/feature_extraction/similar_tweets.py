@@ -12,6 +12,8 @@ import numpy as np
 from code.feature_extraction.feature_extractor import FeatureExtractor
 from sklearn.metrics.pairwise import cosine_similarity
 
+import nltk
+nltk.download('vader_lexicon')
 
 class SimilarTweets(FeatureExtractor):
 
@@ -19,8 +21,8 @@ class SimilarTweets(FeatureExtractor):
         super().__init__([input_column], "similar_{0}".format(input_column))
 
     def _get_values(self, inputs):
-        inputs_concat = [[" ".join(o)] for x in inputs[0] if len(
-            o := ast.literal_eval(x)) > 0]
+        inputs_concat = [[" ".join(ast.literal_eval(x))] for x in inputs[0] if len(
+            ast.literal_eval(x)) > 0]
         indices = [index for index, element in enumerate(inputs[0]) if element == '[]']
         length_of_nones = len(inputs[0]) - len(inputs_concat)
         embedder = sister.MeanEmbedding(lang="en")
