@@ -42,10 +42,12 @@ print("")
 while True:
     # ask user for input
     tweet = input("Please type in your tweet (type 'quit' to quit the program): ")
+    mentions = input("Plese mention another user if you want (type 'quit' to quit the program): ")
+    hashtags = input("Plese use a hashtag if you want (type 'quit' to quit the program): ")
     lang = input("Please enter the language of your tweet (type 'quit' to quit the program): ")
     likes_num = input("Please type the number of likes, if no like is received then type 0 (type 'quit' to quit the program): ")
     replies_num = input("Please type the number of replies to the tweet, if there is no reply to the tweet then type 0 (type 'quit' to quit the program): ")
-    retweets_num = input("Please type the number of the retweets to the tweet, if there is no retweet to the tweet then type 0. (type 'quit' to quit the program): ")
+    retweets_num = input("Please type the number of the retweets, if there is no retweet to the tweet then type 0. (type 'quit' to quit the program): ")
 
 
     
@@ -65,14 +67,22 @@ while True:
     if retweets_num == "quit":
         print("Okay, goodbye!")
         break
+    if mentions == "quit":
+        print("Okay, goodbye!")
+        break
+    if hashtags == "quit":
+        print("Okay, goodbye!")
+        break
     
     # if not terminated: create pandas DataFrame and put it through the pipeline
     df = pd.DataFrame()
     df[COLUMN_TWEET] = [tweet]
-    df["language"] = lang
-    df['likes_count'] = likes_num
-    df['replies_count'] = replies_num
-    df['retweets_count'] = retweets_num
+    df["language"] = [lang]
+    df['likes_count'] = int(likes_num.strip())
+    df['replies_count'] = int(replies_num.strip())
+    df['retweets_count'] = int(retweets_num.strip())
+    df['mentions'] = [mentions]
+    df['hashtags'] = [hashtags]
     
     prediction = pipeline.predict(df)
     confidence = pipeline.predict_proba(df)
