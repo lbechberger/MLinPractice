@@ -17,6 +17,7 @@ class VideosCounter(FeatureExtractor):
         super().__init__([input_column], "{0}_shared".format(input_column))
 
     # compute the video list length based on the inputs
+
     def _get_values(self, inputs):
         result = np.array(inputs[0])
         result = result.reshape(-1, 1)
