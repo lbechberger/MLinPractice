@@ -10,6 +10,7 @@ Group members: Dennis Hesenkamp, Yannik Ullrich
 2. [Feature Extraction](#feature_extraction)
 3. [Classification](#classification)
 4. [Evaluation](#evaluation)
+5. [Results](#results)
 
 ---
 
@@ -25,7 +26,19 @@ This document contains the documentation for our project, which aims to classify
 
 The data set used is Ruchi Bhatia's [Data Science Tweets 2010-2021](https://www.kaggle.com/ruchi798/data-science-tweets) from [Kaggle](https://www.kaggle.com/). The code base on which we built our machine learning pipeline was provided by Lucas Bechberger (lecturer) and can be found [here](https://github.com/lbechberger/MLinPractice). 
 
-<p style='color:red'><b>On which basis have the labels in the data set been assigned?</b></p>
+We can see that, over the years, the interest in data science and related topics as grown very fast:
+
+<fig style="align:center">
+	<img src="img/year_distribution.png">
+	<figcaption>Fig 1: Tweets per year.</figcaption>
+</fig>
+
+Also, most tweets in our data set are written in English, as can be seen here:
+
+<fig style="align:left">
+	<img src="img/lang_distribution.png">
+	<figcaption>Fig 2: Language distribution of the tweets.</figcaption>
+</fig>
 
 
 <!-- Preprocessing section -->
@@ -643,24 +656,36 @@ Additionally, we followed a promising lead and also trained a network with the h
 Since we did not implement any hyperparameters to adjust, we only ran the CNB classifier once.
 
 
-### Results
+<a name="results"></a>
+## Results
 An important note right away: we did not use the grid of our institute for the hyperparameter optimization but only ran the classifier on a local machine. The results we obtained are from a naive exploration of the search space. We tried to narrow down interesting and promising configurations and ranges for every classifier by manual testing. Hence, we might have obtained results that are only local optima.
 
+The results per classifier for our evaluation metrics can be seen in the figures below:
 
-
-<div style="display:inline-grid; grid-template-columns: repeat(2, [col-start] 1fr); width:100%">
+<div style="background:transparent">
+<figure>
   <img src="img/accuracy.png">
+  <figcaption>Fig 1: Accuracy per classifier</figcaption>
+</figure>  
+<figure>
   <img src="img/balancedaccuracy.png">
+  <figcaption>Fig 2: Balanced accuracy per classifier</figcaption>
+</figure>  
+<figure>
   <img src="img/cohenskappa.png">
+  <figcaption>Fig 3: Cohen's kappa per classifier</figcaption>
+</figure>  
+<figure>
   <img src="img/fscore.png">
+  <figcaption>Fig 4: F<sub>1</sub>-score per classifier</figcaption>
+</figure>  
 </div>
-![Accuracy](img/accuracy.png)
-![Balanced accuracy](img/balancedaccuracy.png)
+
+
 ## Conclusion
 different eval metrics, what do they tell us?
 how mcuh better than baseline
 what worked, what didnt?
-display:flex; flex-flow:wrap; border:2px solid black
 
 
 
