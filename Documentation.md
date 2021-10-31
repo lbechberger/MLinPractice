@@ -19,7 +19,7 @@ Group members: Dennis Hesenkamp, Yannik Ullrich
 
 ## Introduction
 
-This document contains the documentation for our project, which aims to classify tweets as viral/non-viral based on multiple features derived from  
+This file contains the documentation for our project, which aims to classify tweets as viral/non-viral based on multiple features derived from  
 
 - the metadata of the tweet and
 - the natural language features of the tweet.
@@ -103,7 +103,7 @@ Caveat: the above code will actually not produce the desired output, but works i
 ### Lemmatization
 Lemmatization modifies an inflected or variant form of a word into its lemma or dictionary form. Through lemmatization, we can make sure that words - on a semantical level - get interpreted in the same way, even when inflected: _walk_ and _walking_, for example, stem from the same word and ultimately carry the same meaning. We decided to use lemmatization as opposed to stemming, although it is computationally more expensive. This is due to lemmatization taking context into account, as it depends on part-of-speech (PoS) tagging.  
 
-To implement this, we used `nltk`'s `pos_tag` to assign PoS tags and WordNet's `WordNetLemmatizer()` class, as well as a manually defined PoS dictionary to reduce the (rather detailed) tags from `pos_tag` to only four different, namely _noun_, _verb_, _adjective_, and _adverb_:
+To implement this, we used `nltk`'s `pos_tag` to assign PoS tags and WordNet's `WordNetLemmatizer()` class, as well as a manually defined PoS dictionary to reduce the (rather detailed) tags from `pos_tag` to only four different ones, namely _noun_, _verb_, _adjective_, and _adverb_:
 
 ```python
 from nltk.corpus import wordnet
@@ -169,7 +169,7 @@ len(sent)
 # 38
 ```
 
-This is, however simple it may be, a difficult to interpret feature: for most of its existence, Twitter has had a character limit of 140 characters per tweet. In 2017, the maximum character limit was raised to 280[^twitter_charlength], which lead to an almost immediate drop of the prevalence of tweets with around 140 characters while, at the same time, tweets approaching 280 characters appear to be snytactically and semantically similar to tweets around 140 characters from before the change (Gligorić et al., 2020).
+This is, however simple it may be, a difficult to interpret feature: for most of its existence, Twitter has had a character limit of 140 characters per tweet. In 2017, the maximum character limit was raised to 280[^twitter_charlength], which led to an almost immediate drop of the prevalence of tweets with around 140 characters while, at the same time, tweets approaching 280 characters appear to be syntactically and semantically similar to tweets around 140 characters from before the change (Gligorić et al., 2020).
 
 <a name='month'></a>
 ### Month
@@ -191,7 +191,6 @@ The result we return is the respective month. We have NOT yet implemented one-ho
 
 <a name='sentiment_analysis'></a>
 ### Sentiment Analysis
-The tonation of 
 Using the VADER (Valence Aware Dictionary and sEntiment Reasoner)[^vader_pypi] [^vader_homepage] framework, we extract the compound sentiment of a tweet. VADER was built for social media and takes into account, among other factors, emojis, punctuation, and caps - which is why we let it work on the unmodified `tweet` column of the dataframe, ensuring that we do not artificially modify the sentiment. The `polarity_score()` function returns a value for positive, negative, and neutral polarity, as well as an additional compound value with $-1$ representing the most negative and $+1$ the most positive sentiment. The classifier does not need training as it is pre-trained, unknown words, however, are simply classified as neutral. 
 
 Example:
@@ -220,8 +219,7 @@ Nota bene: We added $+1$ to the compound sentiment so that no negative values ar
 
 <a name='time_of_day'></a>
 ### Time of Day
-As opposed to the [Month](#month) feature, which we ended up not using, we felt that the time of the day during which a tweet was posted might very well have an influence on its virality. For example, we suppose that less people are online during the night, while
-We decided to split the day in time ranges with hard boundaries:
+As opposed to the [Month](#month) feature, which we ended up not using, we felt that the time of the day during which a tweet was posted might very well have an influence on its virality. For example, we suppose that less people are online during the night, decreasing a tweet's virality potential. We decided to split the day into time ranges with hard boundaries:
 
 1. Morning hours from 5am to 9am (5 hours)
 2. Midday from 10am to 2pm (5 hours)
@@ -267,6 +265,8 @@ pd.get_dummies(result)
 # only yields encoding for 4 variables in this case because 5th category not used
 ```
 
+
+<a name='ner'></a>
 ### Named Entity Recognition
 Named entity recognition (NER) aims to identify so-called named entities in unstructured texts. We implemented this feature using `spacy`'s pre-trained `en_core_web_sm` pipeline[^spacy_ner]. It has been trained on the OntoNotes 5.0[^onto_notes] and WordNet 3.0[^wordnet] databases. The following entity types are supported by this model:
 
@@ -308,7 +308,7 @@ NER with `nltk` is also possible when utilizing the `pos_tag()` function, it req
 
 
 ### URLs, Photos, Mentions, Hashtags
-In this section, we evaluate whether any of the above have been attached to a tweet as a binary (1 if attached, 0 else). Our thinking here was that additional media, be it a link, pictures, mentions of another account, or hashtags, might influence the potential virality of a tweet. We accessed the respective columns of the dataframe (`url`, `photos`, `mentions`, `hashtags`), in which the entries are stored in a list. Hence, we could simply evaluate the length of the entries. If they exceed a length of 2, the column contains more than just the empty brackets and the tweet contains the respective feature:
+In this section, we evaluate whether any of the above have been attached to a tweet as a binary (1 if attached, 0 else). Our thinking here was that additional media, be it a link, pictures, mentions of another account, or hashtags, might influence the potential virality of a tweet. We accessed the respective columns of the dataframe (`url`, `photos`, `mentions`, `hashtags`), in which the entries are stored in a list. Hence, we could simply evaluate the length of the entries. If they exceed a length of 2, the column contains more than just the empty brackets and the tweet contains the respective feature.
 
 Example with URL:
 
@@ -340,12 +340,16 @@ np.array(replies).reshape(-1, 1)
 
 
 ### Retweets and Likes
-Retweets and likes follow the same rationale as replies. These are the most obvious features to consider when measuring virality and we just implented them for the purpose of testing. We did not use them for training our model (since that easily results in an accuracy $>99\%$ and does not tell us anything about _why_ the tweet went viral). The procedure is the same as above: access the respective column, convert it to a `numpy.array` and reshape it.
+Retweets and likes follow the same rationale as replies. These are the most obvious features to consider when measuring virality and we just implemented them for the purpose of testing. We did not use them for training our model (since that easily results in an accuracy $>99\%$ and does not tell us anything about _why_ the tweet went viral). The procedure is the same as above: access the respective column, convert it to a `numpy.array`, and reshape it.
+
 
 <!-- Dimensionality reduction section -->
 <a name='dimensionality_reduction'></a>
 
 ## Dimensionality Reduction
+When considering a large amount of features, we ultimately also have to think about whether they are all useful. Some features might contribute alot to the classification task at hand, while others contribute not at all. When performing classification, large and high-dimensional feature spaces - which can emerge extremely fast due to the curse of dimensionality - can become computationally very costly, so it makes sense to distuingish between important and less important features.
+
+We decided to neither implement new dimensionality reduction methods nor the use the already provided `sklearn.feature_selection.SelectKBest` procedure, since our feature vector was comprised of less than 20 features.
 
 
 <!-- Classifier section -->
@@ -367,7 +371,7 @@ Dummy classifiers make predictions without any knowledge about patterns in the d
 - Uniform classification: makes random uniform predictions.
 
 
-### _k_ - Nearest Neighbour
+### _k_ - Nearest Neighbor
 ```python
 from sklearn.neighbors import KNeighborsClassifier
 ```
@@ -386,7 +390,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 Further, we implemented a decision tree classifier. Due to its nature of learning decision rules from the dataset, it does neither require standardization of data nor does it make assumptions on the data distribution.
 
-We added the option to define a maximum depth of the tree, which is extremely important to cope with overfitting. Further, the criterion for measuring split quality can be choosen between Gini impurity and entropy/information gain. The former is usually preferred for classification and regression trees (CART) while the latter is used for the ID3 variant[^id3] of decision trees. Although `sklearn` employs a version of the CART algorithm, it nonetheless works with entropy as measure.
+We added the option to define a maximum depth of the tree, which is extremely important to cope with overfitting. Further, the criterion for measuring split quality can be chosen between Gini impurity and entropy/information gain. The former is usually preferred for classification and regression trees (CART) while the latter is used for the ID3 variant[^id3] of decision trees. Although `sklearn` employs a version of the CART algorithm, it nonetheless works with entropy as measure.
 
 Decision trees generally have difficulties working with continuous data and we have the compound sentiment (see [Sentiment Analysis](#sentiment_analysis)) as feature of such nature which is continuous in the range $[-1, 1]$ (although a case could be made for it being a discrete feature since it is rounded to four decimal places).
 
@@ -408,7 +412,7 @@ Being able to manipulate both the maximum depth as well as the split criterion f
 from sklearn.svm import SVC
 ```
 
-We also added a support vector machine (SVM). This classifier seeks to find a hyperplane in the data space which maximises the distance between different classes. It can easily deal with higher-dimensional data by changing the kernel (application of the so-called kernel-trick). `sklearn` offers to choose between a linear, polynomial (default degree: 3), radial basis function, and sigmoid kernel. We decided to implement a way to change the kernel, as this can highly affect the outcome of the classifier.
+We also added a support vector machine (SVM). This classifier seeks to find a hyperplane in the data space which maximizes the distance between different classes. It can easily deal with higher-dimensional data by changing the kernel (application of the so-called kernel-trick). `sklearn` offers to choose between a linear, polynomial (default degree: 3), radial basis function, and sigmoid kernel. We decided to implement a way to change the kernel, as this can highly affect the outcome of the classifier.
 
 SVMs are sensible to unscaled data and require standardization of the input, which we carried out using the `StandardScaler()` from `sklearn.preprocessing`. Class weights can be set by the parameter `class_weight` to deal with unbalanced data sets, we did not implement this parameter.
 
@@ -418,8 +422,7 @@ SVMs are sensible to unscaled data and require standardization of the input, whi
 from sklearn.neural_network import MLPClassifier
 ```
 
-Maximum iterations 200, if no convergence training will be stopped
-https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html#sklearn.neural_network.MLPClassifier
+The multilayer perceptron (MLP) consists usually of at least three layers: one input layer, one hidden layer, and one output layer. We implemented it such that we can define the number of hidden layers as well as the number of neurons per layer. It should be noted that `sklearn`'s implementation of the MLP stops after 200 iterations if the network has not converged to a solution by then.
 
 
 ### Naive Bayes
@@ -480,7 +483,7 @@ where $p$ denotes the probability, $p_e$ specifically designates the expected ag
 
 <a name='f1_score'></a>
 ### F - Score
-The F<sub>&beta;</sub>-Score is a measure which combines precision and recall and returns a single value. The relative contribution from precision and recall can be adjusted with the &beta;-value: $1$ encodes equal weight of the two measures, while a value closer to $0$ will weigh precision stronger and &beta; $> 1$ favors the recall. We chose to the standard score with &beta; $= 1$, as we deem both precision and recall equally important. It can be calculated as follows:
+The F<sub>&beta;</sub>-Score is a measure which combines precision and recall and returns a single value. The relative contribution from precision and recall can be adjusted with the &beta;-value: $1$ encodes equal weight of the two measures, while a value closer to $0$ will weigh precision stronger and &beta; $> 1$ favors the recall. We chose to implement the standard score with &beta; $= 1$, as we deem both precision and recall equally important. It can be calculated as follows:
 
 $$
 F_{\beta} = (1 * \beta) \frac{\text{Precision} * \text{Recall}}{(\beta^2 * \text{Precision}) + \text{Recall}}
@@ -504,7 +507,7 @@ Values range from $0$ (worst) to $1$ (best).
 ## Hyperparameter Optimization
 `mlflow ui --backend-store-uri data/classification/mlflow`
 
-After having done preprocessing and feature extraction, choosen evaluation metrics, and decided on the classifiers to employ with what kind of parameters, we ran different configurations on the training and validation set to find the most promising classifier and hyperparameter set. Listing the results of every possible combination would go beyond the scope of this documentation, which is why we will only provide an overview over all tested combinations and the most notable results. We tracked all results using the `mlflow` package, which allows for very convenient logging of the used parameters and metrics.
+After having done preprocessing and feature extraction, chosen evaluation metrics, and decided on the classifiers to employ with what kind of parameters, we ran different configurations on the training and validation set to find the most promising classifier and hyperparameter set. Listing the results of every possible combination would go beyond the scope of this documentation, which is why we will only provide an overview over all tested combinations and the most notable results. We tracked all results using the `mlflow` package, which allows for very convenient logging of the used parameters and metrics.
 
 
 ### _k_ - Nearest Neighbor
@@ -597,7 +600,7 @@ The random forest classifier comes with the added parameter of a set number of t
 </tbody>
 </table>
 
-For each possible number of trees per forest, we explored the same space as with the single decision tree. Further, we also built one tree without depth restriction for each possible combination of tree amount and split criterion. A high number of trees per forest usually results in better and more solid results, especially in terms of avoiding overfitting.
+For each possible number of trees per forest, we explored the same space as with the single decision tree. Further, we also built one tree without depth restriction for each possible combination of tree number and split criterion. A high number of trees per forest usually results in better and more solid results, especially in terms of avoiding overfitting.
 
 
 ### Support Vector Machine
@@ -660,36 +663,67 @@ Since we did not implement any hyperparameters to adjust, we only ran the CNB cl
 ## Results
 An important note right away: we did not use the grid of our institute for the hyperparameter optimization but only ran the classifier on a local machine. The results we obtained are from a naive exploration of the search space. We tried to narrow down interesting and promising configurations and ranges for every classifier by manual testing. Hence, we might have obtained results that are only local optima.
 
-The results per classifier for our evaluation metrics can be seen in the figures below:
+The results per classifier for our evaluation metrics on the validation set can be seen in the figures below:
 
 <div style="background:transparent">
 <figure>
   <img src="img/accuracy.png">
-  <figcaption>Fig 1: Accuracy per classifier</figcaption>
+  <figcaption>Fig 3: Accuracy per classifier</figcaption>
 </figure>  
 <figure>
   <img src="img/balancedaccuracy.png">
-  <figcaption>Fig 2: Balanced accuracy per classifier</figcaption>
+  <figcaption>Fig 4: Balanced accuracy per classifier</figcaption>
 </figure>  
 <figure>
   <img src="img/cohenskappa.png">
-  <figcaption>Fig 3: Cohen's kappa per classifier</figcaption>
+  <figcaption>Fig 5: Cohen's kappa per classifier</figcaption>
 </figure>  
 <figure>
   <img src="img/fscore.png">
-  <figcaption>Fig 4: F<sub>1</sub>-score per classifier</figcaption>
+  <figcaption>Fig 6: F<sub>1</sub>-score per classifier</figcaption>
 </figure>  
 </div>
 
+Figure 3 shows that the majority of classifiers and configurations achieve a high accuracy, the CNB being an exception while the uniform classifier achieves an accuracy of 0.5, as expected. As already discussed earlier in the section [Evaluation Metrics](#evaluation), this measurement does, unfortunately, not tell us much about the actual quality of the classifier. 
 
+In Figure 4, we can see that none of our classifiers performs much better than the balanced accuracy baseline of 0.5. This value can easily be obtained by classifying most to all of the tweets as _false_. Only the CNB pulls ahead with achieving a score og 0.622, which is still rather low.
+
+Looking further at Cohen's kappa in Figure 5, we can now see more of a difference in the performance of the configurations. The random forest classifier with 25 trees, Gini impurity, and no specified maximum depth performs best with a value of 0.134. We can see that especially the MLP and SVM cofigurations are not useful as well. Decision tree, random forest, and _k_-NN have a similar performance, CNB scores equally well, given that only one configuration was run.
+
+Figure 6 displays the F<sub>1</sub>-score, showing a similar picture to Figure 5: SVM and MLP do not perform well, while decision tree, random forest, and _k_-NN are again quite level in terms of mean score. We can see that even the uniform dummy classifier performs on par with our other classifiers, since it probably assigns the correct label to about half of the positive samples. Again, CNB leads the field with a score of 0.233.
+
+Given the above results, we decided that the CNB classifier is the best choice to run on our test set. It performed best on both the balanced accuracy and F<sub>1</sub>-score, while being average on the Cohen's kappa metric.
+
+
+<a name='conclusion'></a>
 ## Conclusion
-different eval metrics, what do they tell us?
-how mcuh better than baseline
-what worked, what didnt?
+<figure>
+  <img src='img/final_result.png'>
+  <figcaption>Fig 7: Final result on test set.
+</figcaption>
+</figure>  
 
+Figure 7 shows the result of our CNB classifier on the test set. The scores resemble those achieved on the validation set quiet closely, which confirms our choice.
+
+In the end, we based our classifier decision not on one single metric as we had initially planned, but looked at a combination of values. That CNB worked best overall caught us by surprise, although we might just have been biased by the many configurations tested with the other classifiers compared to the single one from CNB. A random forest with Gini impurity split criterion and unlimited depth would be our second choice, the number of trees should be at least 25 (higher numbers did not yield better results, but they are possibly more robust to overfitting).
+
+We decided to drop accuracy as decision-influencing metric because of its drawbacks when working with unbalanced data. The scores on the other three metrics are still not very satisfactory and leave much room for improvement. Our pipeline cannot be considered production ready at this point due to its substandard performance. This might have different reasons.
+
+First of all, the features we extracted are largely metadata based. We have only implemented two natural language based features, namely the sentiment score and the named entity recognition. But even these two are without error, as our examples have shown. Sometimes, they fail to label even simple examples correctly (see sections [Sentiment Analysis](#sentiment_analysis) and [Named Entity Recognition](#ner) again for details). It could be that the features we extracted just do not capture what exactly makes a tweet go viral. There has been research into virality in the past, but it is not easy to capture what exactly helps a tweet (or any piece of media, for that matter) to become popular. Marketing agency OutGrow has put together an infographic with some aspects that seem to play a role in making content shareworthy[^outgrow].
+
+Further, we only did a naive hyperparameter optimization. It is possible that we found solutions only in a local optimum, while there are much more suitable classifier setups. In Figures 4-6, we can, for example, see that one MLP configuration, namely the one with hidden layer structure (100, 100, 100), outperforms the other MLPs. In this particular case, our hyperparameter space exploration was limited due to computational capability, training more complex networks has simply been not feasible for us.
+
+On the other hand, when testing the decision tree and random forest classifiers, we also let one tree or forest grow to full depth per parameter combination. We figured this might lead to overfitting on the validation set, but the unrestricted depth configurations actually achieved best (in one case second-to-best) performance, i.e. for each evaluation metric the best performing trees and random forests where those which could grow until the end.
 
 
 ## Next Steps
+After having discussed the results and possible shortcomings of our pipeline, we would like to point out directions for further reseach.
+
+As already mentioned, we only implemented two natural language grounded features. It is likely that a greater focus on this kind of feature will lead to better classification results. One could, e.g., consider _n_-grams, word importance measures like tf-idf, or constituency parsing and dependency parsing to measure syntactic complexity. There might also be more interesting (and more obvious) metadata features as the number of followers of a Twitter account or the history of viral posts of an account. Such features, though, seem less interesting compared to actual language based featurea - at least to us.
+
+A more thorough and thought-through implementation of classifiers based on our first results is another feasible direction. This work can be understand as laying out some groundwork to possibly built on.
+
+Lastly, it should not be forgotten that we worked only with a data set containing tweets about data science. While making it probably easier to work with features such as keywords when narrowing the domain, it is also much harder to get large data sets and find general patterns in the data that can be applied to new data.
 
 
 ## Resources
@@ -712,4 +746,5 @@ what worked, what didnt?
 [^onto_notes]: <https://catalog.ldc.upenn.edu/LDC2013T19>
 [^wordnet]: <https://wordnet.princeton.edu/>
 [^spacy_ner]: <https://spacy.io/usage/models>
+[^outgrow]: <https://outgrow.co/blog/infographic-science-behind-virality>
 <!-- -->
