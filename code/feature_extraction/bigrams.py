@@ -24,7 +24,7 @@ class BigramFeature(FeatureExtractor):
                 tokens = ast.literal_eval(tweet)
                 all_the_tweets += tokens
             else:
-                all_the_tweets = tokens
+                all_the_tweets = tweet
         self._bigrams_of_all_tweets = list(nltk.bigrams(all_the_tweets))
         self._freq_dist_of_all_tweets = nltk.FreqDist(
             self._bigrams_of_all_tweets)
