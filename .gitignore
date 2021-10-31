@@ -139,3 +139,6 @@ lid.176.bin
 
 # exclude csv files from data directory
 data/
+
+code/feature_extraction/similar_tweets_test.py
+test/feature_extraction/similar_tweets_test.py

@@ -24,7 +24,7 @@ from code.feature_extraction.mentions_counter import MentionsCounter
 from code.feature_extraction.retweets_counter import RetweetsCounter
 from code.feature_extraction.likes_counter import LikesCounter
 from code.feature_extraction.replies_counter import RepliesCounter
-from code.feature_extraction.similar_tweets import SimilarTweets
+
 from code.util import COLUMN_REPLIES, COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_TWEET, COLUMN_LABEL, COLUMN_STEMMED, COLUMN_IMAGES, COLUMN_VIDEOS, COLUMN_RETWEET, COLUMN_LIKES
 
 
@@ -38,8 +38,6 @@ parser.add_argument("-i", "--import_file",
                     help="import an existing pipeline from the given location", default=None)
 parser.add_argument("-b", "--bigram", action="store_true",
                     help="get the bigrams")
-parser.add_argument("-st", "--similar_tweets", action="store_true",
-                    help="check the similarity between the tweets")
 parser.add_argument("-c", "--char_length", action="store_true",
                     help="compute the number of characters in the tweet")
 parser.add_argument("-p", "--photos_shared", action="store_true",
@@ -95,8 +93,6 @@ else:    # need to create FeatureCollector manually
         features.append(LikesCounter(COLUMN_LIKES))
     if args.replies_num:
         features.append(RepliesCounter(COLUMN_REPLIES))
-    if args.similar_tweets:
-        features.append(SimilarTweets(COLUMN_STEMMED))
 
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)

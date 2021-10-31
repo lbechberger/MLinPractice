@@ -27,8 +27,6 @@ We delete the deuplicates, since the value of the frequency distribution capture
 
 - **sentiment analysis**: first we decided to use [Flair](https://github.com/flairNLP/flair), but due to speed issues, we drop it but it is very accurate in compraison to the other, and it support 15 languages. We ended up using the SentimentIntensityAnalyzer from NLTK. To represent the sentiments, namely "postive", "negative", "neutral", we used OneHotEncoder.
   
-- **similar tweets**: to capture how similar the tweets are, we had to first to embed the stemmed tweets using [Sister](https://towardsdatascience.com/super-easy-way-to-get-sentence-embedding-using-fasttext-in-python-a70f34ac5b7c). Since it is easier than implementing it. The MeanEmbedding of Sister takes the embeddings of the words and it averages them. To compute the cosine similarity, we had to slice the sentence embeddings, to prevent a memory error.
-  
 For the interactive side of the tweet: it is only helpful, in case of the given tweet has these attributes attached to the input. Like the validation and the testing sets. 
 - **likes counter**: computes the number of the received likes to the tweet.
 

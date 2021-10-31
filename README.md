@@ -90,7 +90,6 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 The features to be extracted can be configured with the following optional parameters:
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
 - `-b` or `--bigram`: Extract the bigrams of the stemmed tweets. (see code/feature_extraction/bigrams.py)
-- `-st` or `--similar_tweets`: Compute the cosine similarity between the sentence embeddings of the tweet. (see code/feature_extraction/similar_tweets.py)
 - `-p` or `--photos_shared`: Count the number of photos attached to the tweets. (see code/feature_extraction/image_counter.py)
 - `-v` or `--videos_shared`: Count the number of videos attached to the tweets. (see code/feature_extraction/videos_counter.py)
 - `-ph` or `--popular_hashtags`: Compute the Tf-id of the hashtags to get the most popular hashtag. (see code/feature_extraction/popular_hashtags.py)
