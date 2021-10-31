@@ -54,7 +54,7 @@ Also, most tweets in our data set are written in English, as can be seen here:
 The data set provides the raw tweet as it has been posted as well as multiple features related to the tweet, for instance the person who published it, the time it has been published at, whether it contained any media (be it photo, video, url, etc.), and many more. We employed multiple preprocessing steps to transform the input data into a more usable format for feature extraction steps later on.
 
 ### Splitting
-As a very first step, we split the data set into a training, a validation, and a test set. We will work on the training and validation set to implement everything to then, eventually, test our classifiers on the test set.
+As a very first step, we split the data set into a training (60%), a validation (20%), and a test set (20%). We will work on the training and validation set to implement everything to then, eventually, test our classifiers on the test set.
 
 
 ### Tokenization
