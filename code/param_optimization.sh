@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# runs all classifier with the configurations we want to explore as part of
+# runs all classifiers with the configurations we want to explore as part of
 # the hyperparamter optimization
 
 # create directory if not yet existing
