@@ -25,10 +25,10 @@ class VideoCounterTest(unittest.TestCase):
                          [self.INPUT_COLUMN])
 
     def test_number_of_videos(self):
-        num_photos = self.images.transform(self.df)
-        EXPECTED_NUM_PHOTOS = [[6]]
+        num_videos = self.images.transform(self.df)
+        EXPECTED_NUM_VIDEOS = [[6]]
 
-        self.assertEqual(np.sum(num_photos), EXPECTED_NUM_PHOTOS)
+        self.assertEqual(np.sum(num_videos), EXPECTED_NUM_VIDEOS)
 
 
 if __name__ == '__main__':
