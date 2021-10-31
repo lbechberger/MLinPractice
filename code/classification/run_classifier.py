@@ -31,14 +31,14 @@ parser.add_argument("-m", "--majority", action = "store_true", help = "majority 
 parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
 parser.add_argument("-n", "--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
 parser.add_argument("-rf", "--forest", type = int, help = "random forest classifier with the specified number of trees", default = None)
-parser.add_argument("-svm", "--supportvm", type = int, help = "linear support vector machine with previous Nystroem transformation with specified number of features to construct for Nystroem transformation", default = None)
+parser.add_argument("-svm", "--supportvm", type=int, help = "linear support vector machine with specified number of iterations", default = None)
 parser.add_argument("-l", "--logistic", type = int, help = "logistic regression classifier with specified number of epochs", default = None)
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-p", "--precision", action = "store_true", help = "evaluate using precision")
 parser.add_argument("-r", "--recall", action = "store_true", help = "evaluate using recall")
 parser.add_argument("-f1", "--fscore", action = "store_true", help = "evaluate using F-score")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
-parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlflow")
+parser.add_argument("--log_folder", help = "where to log the mlflow results", default = "data/classification/mlruns")
 args = parser.parse_args()
 
 # load data
@@ -96,14 +96,12 @@ else:   # manually set up a classifier
         classifier = RandomForestClassifier(n_estimators = args.forest)
 
     elif args.supportvm is not None:
-        # linear svm with previous Nystroem transformation
-        print("     linear support vector machine with previous Nystroem transformation with {0} constructed features".format(args.supportvm)) # default 300 
+        # linear svm with specified number of iterations
+        print("     linear support vector machine with {0} iterations".format(args.supportvm)) # default 1000 
         log_param("classifier", "support_vector_machine")
-        log_param("kernel", args.supportvm)
-        params = {"classifier":"support_vector_machine", "kernel": args.supportvm}
-        classifier = LinearSVC()
-        feature_map_nystroem = Nystroem(gamma=0.2, random_state=1, n_components=args.supportvm) 
-        data["features"] = feature_map_nystroem.fit_transform(data["features"]) # replace original features with transformed ones 
+        log_param("iterations", args.supportvm)
+        params = {"classifier":"support_vector_machine", "iterations": args.supportvm}
+        classifier = LinearSVC(max_iter=args.supportvm)
 
     elif args.logistic is not None:
         # logistic regression classifier with stochastic gradient descent training
