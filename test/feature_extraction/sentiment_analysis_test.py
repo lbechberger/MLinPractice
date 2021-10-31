@@ -27,12 +27,12 @@ class SentimentAnalysisTest(unittest.TestCase):
 
     def test_sentiment_analysis(self):
         results = self.sentiment_analyser.transform(self.df)
-        POS = [0., 0., 1.]
-        NEG = [1., 0., 0.]
-        NEU = [0., 1., 0.]
+        POS = [1]
+        NEG = [-1]
+        NEU = [0]
         EXPECTED_SENTIMENT = [POS, POS, NEG, POS]
         for i in range(3):
-            self.assertListEqual(list(results[i][0]), EXPECTED_SENTIMENT[i])
+            self.assertListEqual(list(results[i]), EXPECTED_SENTIMENT[i])
 
 
 if __name__ == '__main__':
