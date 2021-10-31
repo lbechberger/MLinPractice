@@ -21,6 +21,7 @@ class SimilarTweets(FeatureExtractor):
     def _get_values(self, inputs):
         inputs_concat = [[" ".join(o)] for x in inputs[0] if len(
             o := ast.literal_eval(x)) > 0]
+        indices = [index for index, element in enumerate(inputs[0]) if element == '[]']
         length_of_nones = len(inputs[0]) - len(inputs_concat)
         embedder = sister.MeanEmbedding(lang="en")
         sentence_embeddings = [embedder(x[0]) for x in inputs_concat]
@@ -34,14 +35,14 @@ class SimilarTweets(FeatureExtractor):
             for i in range(bins):
                 tmp_scores = cosine_similarity(
                     np.array(sentence_embeddings[start:end]))
-                final.extend(tmp_scores)
-
+                final.extend(np.sum(tmp_scores, axis= 1))
+                print(final)
                 start = end
                 end += bin_size
         else:
-            final = cosine_similarity(np.array(sentence_embeddings))
+            final = np.sum(cosine_similarity(np.array(sentence_embeddings)), axis=1)
         # add the NaN values to keep the correct shape
-        for i in range(length_of_nones):
-            final.extend(np.array((1,)))
-        final = np.array(final, dtype=object).reshape(-1, 1)
+        for index in indices:
+            final.insert(index, 0)
+        final = final.reshape(-1, 1)
         return final

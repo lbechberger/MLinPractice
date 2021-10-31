@@ -46,9 +46,9 @@ class SentimentAnalysis(FeatureExtractor):
             concatenated_tokens)['compound']
         # if "POSITIVE" in str(score):
         if sentiment_score > 0:
-            return list(self._onehot_encoding[0])  # for positive [0., 0., 1.]
+            return 1 # for positive 
         # elif "NEGATIVE" in str(score):
         elif sentiment_score < 0:
-            return list(self._onehot_encoding[2])
+            return -1
         else:
-            return list(self._onehot_encoding[1])
+            return 0
