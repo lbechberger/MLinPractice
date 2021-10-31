@@ -42,16 +42,37 @@ print("")
 while True:
     # ask user for input
     tweet = input("Please type in your tweet (type 'quit' to quit the program): ")
+    lang = input("Please enter the language of your tweet (type 'quit' to quit the program): ")
+    likes_num = input("Please type the number of likes, if no like is received then type 0 (type 'quit' to quit the program): ")
+    replies_num = input("Please type the number of replies to the tweet, if there is no reply to the tweet then type 0 (type 'quit' to quit the program): ")
+    retweets_num = input("Please type the number of the retweets to the tweet, if there is no retweet to the tweet then type 0. (type 'quit' to quit the program): ")
+
+
     
     # terminate if necessary
     if tweet == "quit":
+        print("Okay, goodbye!")
+        break
+    if lang == "quit":
+        print("Okay, goodbye!")
+        break
+    if likes_num == "quit":
+        print("Okay, goodbye!")
+        break
+    if replies_num == "quit":
+        print("Okay, goodbye!")
+        break
+    if retweets_num == "quit":
         print("Okay, goodbye!")
         break
     
     # if not terminated: create pandas DataFrame and put it through the pipeline
     df = pd.DataFrame()
     df[COLUMN_TWEET] = [tweet]
-    df["language"] = "en"
+    df["language"] = lang
+    df['likes_count'] = likes_num
+    df['replies_count'] = replies_num
+    df['retweets_count'] = retweets_num
     
     prediction = pipeline.predict(df)
     confidence = pipeline.predict_proba(df)
