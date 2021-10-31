@@ -51,20 +51,22 @@ We implemented one dimensionality reduction method in addition to the preimpleme
 ## Classifier
 
 ### Architectures
-We implemented (besides the already available `majority vote`, `label frequency`and `k-nearest-neighbour` classifiers) these classifiers: 
-* Random forest
-* Logistic Regression 
-* Linear Support Vector Machine
+We implemented (besides the already available `Majority Vote`, `Label Frequency`and `K-Nearest-Neighbour` classifiers) these classifiers: 
+* `Random Forest`
+* `Logistic Regression` 
+* `Linear Support Vector Machine`
 
 We decided for a linear kernel for the Support Vector Machine, since other kernels did not scale very well with the number of samples that we fed into the classifier. Since the linear kernel already produces great results in very short time, there does not seem to be a need for another kernel, that runs significantly longer and does not produce significantly better results. 
 
 ### Evaluation 
-To evaluate their performances, we added (besides the already available `accuracy` and `Cohen's Kappa`) these scores: 
-* F1
-* Precision
-* Recall 
+To evaluate their performances, we added (besides the already available `Accuracy` and `Cohen's Kappa`) these scores: 
+* `F1`
+* `Precision`
+* `Recall`
 
 All three newly implemented classifiers perform about equally well on the given data according to the metric scores with their hyperparameters chosen correctly.
+
+### Hyperparameters
 
 For the `Linear Support Vector Machine` we decided to let the number of iterations be adjustable as a hyperparameter. It turned out that 2000 iterations already produced really good results (all before mentioned scores evaluated to above 99% on the validation set).
 
@@ -76,22 +78,22 @@ The `Random Forest` also performed similarly. The adjustable hyperparameter we o
 Finally, here are the full results of the `Random Forest` classifier with 20 trees. 
 ```
 training set
-  accuracy: 1.0
+  Accuracy: 1.0
   Cohen_kappa: 1.0
   F1 score: 1.0
-  precision: 1.0
-  recall: 1.0
+  Precision: 1.0
+  Recall: 1.0
 validation set
-  accuracy: 0.9999661945167506
+  Accuracy: 0.9999661945167506
   Cohen_kappa: 0.999797260617484
   F1 score: 0.9998158718468054
-  precision: 1.0
-  recall: 0.9996318114874816
+  Precision: 1.0
+  Recall: 0.9996318114874816
 test set
-  accuracy: 0.9999830975440731
+  Accuracy: 0.9999830975440731
   Cohen_kappa: 0.9998986556422478
   F1 score: 0.9999079613437644
-  precision: 0.999815939628198
-  recall: 1.0
+  Precision: 0.999815939628198
+  Recall: 1.0
 ```
 
