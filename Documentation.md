@@ -8,9 +8,14 @@ Group members: Dennis Hesenkamp, Yannik Ullrich
 1. [Introduction](#introduction)
 1. [Preprocessing](#preprocessing)
 2. [Feature Extraction](#feature_extraction)
+3. [Dimensionality Reduction](#dimensionality_reduction)
 3. [Classification](#classification)
-4. [Evaluation](#evaluation)
+4. [Evaluation Metrics](#evaluation)
+5. [Hyperparameter Optimization](#param_optimization)
 5. [Results](#results)
+6. [Conclusion](#conclusion)
+6. [Next Steps](#next_steps)
+7. [Resources](#resources)
 
 ---
 
@@ -355,7 +360,7 @@ We decided to neither implement new dimensionality reduction methods nor the use
 <!-- Classifier section -->
 <a name='classification'></a>
 
-## Classifier
+## Classification
 The data vectores in our dataset have one of two possible labels - __true__ if the tweet went viral, __false__ if not. We are, thus, faced with a binary classification task and need classifiers suited for this kind of task.
 
 
@@ -504,6 +509,7 @@ $$
 Values range from $0$ (worst) to $1$ (best).
 
 
+<a name='param_optimization'></a>
 ## Hyperparameter Optimization
 `mlflow ui --backend-store-uri data/classification/mlflow`
 
@@ -716,6 +722,7 @@ Further, we only did a naive hyperparameter optimization. It is possible that we
 On the other hand, when testing the decision tree and random forest classifiers, we also let one tree or forest grow to full depth per parameter combination. We figured this might lead to overfitting on the validation set, but the unrestricted depth configurations actually achieved best (in one case second-to-best) performance, i.e. for each evaluation metric the best performing trees and random forests where those which could grow until the end.
 
 
+<a name='next_steps'></a>
 ## Next Steps
 After having discussed the results and possible shortcomings of our pipeline, we would like to point out directions for further reseach.
 
@@ -726,6 +733,7 @@ A more thorough and thought-through implementation of classifiers based on our f
 Lastly, it should not be forgotten that we worked only with a data set containing tweets about data science. While making it probably easier to work with features such as keywords when narrowing the domain, it is also much harder to get large data sets and find general patterns in the data that can be applied to new data.
 
 
+<a name='resources'></a>
 ## Resources
 <https://towardsdatascience.com/comparative-study-on-classic-machine-learning-algorithms-24f9ff6ab222>
 
