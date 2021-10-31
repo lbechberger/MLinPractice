@@ -9,11 +9,16 @@ Created on Wed Sep 29 14:23:48 2021
 """
 
 import argparse, pickle
+import numpy as np
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, precision_score, recall_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC, LinearSVC
+from sklearn.kernel_approximation import Nystroem
+from sklearn.linear_model import SGDClassifier
 from mlflow import log_metric, log_param, set_tracking_uri
 
 # setting up CLI
@@ -24,7 +29,10 @@ parser.add_argument("-e", "--export_file", help = "export the trained classifier
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
 parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
-parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
+parser.add_argument("-n", "--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
+parser.add_argument("-rf", "--forest", type = int, help = "random forest classifier with the specified number of trees", default = None)
+parser.add_argument("-svm", "--supportvm", type = int, help = "linear support vector machine with previous Nystroem transformation with specified number of features to construct for Nystroem transformation", default = None)
+parser.add_argument("-l", "--logistic", type = int, help = "logistic regression classifier with specified number of epochs", default = None)
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-p", "--precision", action = "store_true", help = "evaluate using precision")
 parser.add_argument("-r", "--recall", action = "store_true", help = "evaluate using recall")
@@ -37,9 +45,12 @@ args = parser.parse_args()
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
 
+# setup logging 
 set_tracking_uri(args.log_folder)
+
+# import a pre-trained classifier
 if args.import_file is not None:
-    # import a pre-trained classifier
+    
     with open(args.import_file, 'rb') as f_in:
         input_dict = pickle.load(f_in)
     
@@ -48,6 +59,7 @@ if args.import_file is not None:
         log_param(param, value)
     
     log_param("dataset", "validation")
+
 
 else:   # manually set up a classifier
     
@@ -64,7 +76,9 @@ else:   # manually set up a classifier
         log_param("classifier", "frequency")
         params = {"classifier": "frequency"}
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
+
     elif args.knn is not None:
+        # k nearest neighbor classifier 
         print("    {0} nearest neighbor classifier".format(args.knn))
         log_param("classifier", "knn")
         log_param("k", args.knn)
@@ -72,11 +86,39 @@ else:   # manually set up a classifier
         standardizer = StandardScaler()
         knn_classifier = KNeighborsClassifier(args.knn, n_jobs = -1)
         classifier = make_pipeline(standardizer, knn_classifier)
+
+    elif args.forest is not None:
+        # random forest classifier 
+        print("     random forest classifier with {0} trees".format(args.forest)) # default 100
+        log_param("classifier", "random_forest")
+        log_param("n_trees", args.forest)
+        params = {"classifier":"random_forest", "n_trees": args.forest}
+        classifier = RandomForestClassifier(n_estimators = args.forest)
+
+    elif args.supportvm is not None:
+        # linear svm with previous Nystroem transformation
+        print("     linear support vector machine with previous Nystroem transformation with {0} constructed features".format(args.supportvm)) # default 300 
+        log_param("classifier", "support_vector_machine")
+        log_param("kernel", args.supportvm)
+        params = {"classifier":"support_vector_machine", "kernel": args.supportvm}
+        classifier = LinearSVC()
+        feature_map_nystroem = Nystroem(gamma=0.2, random_state=1, n_components=args.supportvm) 
+        data["features"] = feature_map_nystroem.fit_transform(data["features"]) # replace original features with transformed ones 
+
+    elif args.logistic is not None:
+        # logistic regression classifier with stochastic gradient descent training
+        print("     logistic regression classifier trained with stochastic gradient descent with {0} epochs".format(args.logistic)) # default 1000
+        log_param("classifier", "logistic_regression")
+        log_param("epochs", args.logistic)
+        params = {"classifier":"logistic_regression", "epochs": args.logistic}
+        classifier = SGDClassifier(loss='log', max_iter = args.logistic)
+ 
+
+    # fit classifier to data 
     classifier.fit(data["features"], data["labels"].ravel())
     log_param("dataset", "training")
 
 # now classify the given data
-
 prediction = classifier.predict(data["features"])
 
 # collect all evaluation metrics
@@ -88,7 +130,7 @@ if args.kappa:
     evaluation_metrics.append(("Cohen_kappa", cohen_kappa_score))
 
 if args.fscore:
-    evaluation_metrics.append(("F1 score",f1_score ))
+    evaluation_metrics.append(("F1 score",f1_score))
 
 if args.precision:
     evaluation_metrics.append(("precision", precision_score))

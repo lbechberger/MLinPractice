@@ -44,6 +44,23 @@ For the media of the tweet: it is only helpful, in case of the given tweet has s
 
 - **images counter**: computes the number of the images attached to the tweet.
 
+# Classifier 
+Implemented are the following classifiers:
+* Majority vote 
+* Label frequency
+* k-nearest neighbour
+* Random forest
+* Linear Support Vector Machine
+* Logistic Regression 
+
+
+
+
+
+# ----------------------
+# ----------------------
+# ----------------------
+
 # Documentation Example
 
 Some introductory sentence(s). Data set and task are relatively fixed, so 
