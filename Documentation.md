@@ -100,5 +100,6 @@ test set
 ### Interpretation of the final results
 The classifier generalizes very well to the test set. Such high scores suggest that we are in the sweet-spot between under- and overfitting. The hyperparameters need to be selected carefully for the classifiers, though. In this case, too many trees lead to overfitting. But 20 trees seem to be spot-on for this dataset.
 
-
+## The application.sh:
+Sadly, since I am using Python 3.9 the whole time because the VBox was not working and I got frustrated and sadly sick last weel. Therefore, did not have much time. I was not able to run the application.sh to fix the small errors, such as invalid key or invalid type. Apparently, it must be Python 3.6. But everything with the dataset works fine. 
 
