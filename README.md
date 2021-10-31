@@ -136,6 +136,10 @@ Here, `input.pickle` is a pickle file of the respective data subset, produced by
 By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
 - `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
 - `-f` or `--frequency`: Dummy classifier that makes predictions based on the label frequency in the training data.
+- `-n` or `--knn`: K-nearest-neighbour classifier with the specified value of K.
+- `-rf` or `--forest`: Random forest classifier with the specified number of trees.
+- `-svm` or `--supportvm`: Linear support vector machine with specified number of iterations.
+- `-l` or `--logistic`: Logistic regression classifier with specified number of epochs. 
 
 The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
 - `-a` or `-accuracy`: Classifier's accurracy, also called The Probability of agreement, (i.e., percentage of correctly classified examples). Use this metric, when the false negatives and false positives are close in value.
@@ -145,9 +149,12 @@ The classifier is then evaluated, using the evaluation metrics as specified thro
 - `-k` or `--kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement). It is the best metric for showing the model's reliability, meaning if the model produces the same results under the same conditions. If the value of Cohe's kappa score is 0, it means random agreement among the predicted and the actual results, and if the score is 1, this means a complete agreement among the predicted and the actual results.
 
 
-Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
+Moreover, the script supports importing and exporting trained classifiers with the following optional arguments:
 - `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
 - `-e` or `--export_file`: Export the trained classifier into the given pickle file.
+
+When using mlflow, the logging folder can be specified: 
+- `--log_folder`: Where to log the mlflow results
 
 Finally, the optional argument `-s` or `--seed` determines the seed for intializing the random number generator (which may be important for some classifiers). 
 Using the same seed across multiple runs ensures reproducibility of the results. If no seed is set, the current system time will be used.
@@ -156,7 +163,7 @@ Using the same seed across multiple runs ensures reproducibility of the results.
 
 All python code for the application demo can be found in `code/application/`.
 
-The script `application.py` provides a simple command line interface, where the user is asked to type in their prospective tweet, which is then analyzed using the trained ML pipeline.
+The script `application.py` provides a simple command line interface, where the user is asked to type in their prospective tweet along with some additional infos like retweets or hashtags, which is then analyzed using the trained ML pipeline.
 The script can be invoked as follows:
 ```python -m code.application.application path/to/preprocessing.pickle path/to/feature_extraction.pickle path/to/dimensionality_reduction.pickle path/to/classifier.pickle```
 The four pickle files correspond to the exported versions for the different pipeline steps as created by `run_preprocessing.py`, `extract_features.py`, `reduce_dimensionality.py`, and `run_classifier.py`, respectively, with the `-e` option.
