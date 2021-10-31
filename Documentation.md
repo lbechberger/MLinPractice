@@ -648,20 +648,20 @@ An important note right away: we did not use the grid of our institute for the h
 
 
 
-__insert picture from mlflow__
-
-
+<div style="display:inline-grid; grid-template-columns: repeat(2, [col-start] 1fr); width:100%">
+  <img src="img/accuracy.png">
+  <img src="img/balancedaccuracy.png">
+  <img src="img/cohenskappa.png">
+  <img src="img/fscore.png">
+</div>
+![Accuracy](img/accuracy.png)
+![Balanced accuracy](img/balancedaccuracy.png)
 ## Conclusion
 different eval metrics, what do they tell us?
 how mcuh better than baseline
 what worked, what didnt?
+display:flex; flex-flow:wrap; border:2px solid black
 
-<div id="cover">
-  <img src="https://imgur.com/dv9Z2Nu.jpg">
-  <img src="https://imgur.com/htWKe9m.gif">
-  <img src="https://imgur.com/eog5eFZ.gif">
-  <img src="https://imgur.com/nUJVBmO.jpg">
-</div>
 
 
 ## Next Steps
