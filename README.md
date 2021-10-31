@@ -89,6 +89,17 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 
 The features to be extracted can be configured with the following optional parameters:
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
+- `-b` or `--bigram`: Extract the bigrams of the stemmed tweets. (see code/feature_extraction/bigrams.py)
+- `-st` or `--similar_tweets`: Compute the cosine similarity between the sentence embeddings of the tweet. (see code/feature_extraction/similar_tweets.py)
+- `-p` or `--photos_shared`: Count the number of photos attached to the tweets. (see code/feature_extraction/image_counter.py)
+- `-v` or `--videos_shared`: Count the number of videos attached to the tweets. (see code/feature_extraction/videos_counter.py)
+- `-ph` or `--popular_hashtags`: Compute the Tf-id of the hashtags to get the most popular hashtag. (see code/feature_extraction/popular_hashtags.py)
+- `-sa` or `--sentiment_analysis`: Analyse the sentiment of the stemmed tweets. (see code/feature_extraction/sentiment_analysis.py)
+- `-m` or `--mentions_counter`: Count the number of mentions attached to the tweets. (see code/feature_extraction/mentions_counter.py)
+- `-r` or `--retweet_num`: Count the number of the retweets to the tweets. (see code/feature_extraction/retweets_counter.py)
+- `-l` or `--likes_num`: Count the number of the likes to the tweets. (see code/feature_extraction/likes_counter.py)
+- `-re` or `--replies_num`: Count the number of the replies to the tweets. (see code/feature_extraction/replies_counter.py)
+
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
