@@ -18,6 +18,7 @@ class RepliesCounter(FeatureExtractor):
     def __init__(self, input_column):
         super().__init__([input_column], "{0}".format(input_column))
 
+
     def _get_values(self, inputs):
         result = np.array(inputs[0])
         result = result.reshape(-1, 1)
