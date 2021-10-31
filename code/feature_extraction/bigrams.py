@@ -37,7 +37,8 @@ class BigramFeature(FeatureExtractor):
         self._freq_list = []
         for tweet in inputs[0]:
             tweet_bigram_freq = []
-            tweet = ast.literal_eval(tweet)
+            if not isinstance(tweet, list):
+                tweet = ast.literal_eval(tweet)
             bigrams = list(nltk.bigrams(tweet))
             for bigram in bigrams:
                 tweet_bigram_freq.append(
