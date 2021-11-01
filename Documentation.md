@@ -437,7 +437,7 @@ The multilayer perceptron (MLP) consists usually of at least three layers: one i
 ```python
 from sklearn.naive_bayes import ComplementNB
 ```
-As a sixth (and last) classifier, we implemented one of the naive Bayes variants that `sklearn` offers. The two classic variants are Gaussian and multinomial Bayes, yet, we chose the complement naive Bayes (CNB) algorithm as it was specifically designed to deal with unbalanced data and addresses some of the shortcomings of the multinomial variant (Rennie, Shih, Teevan, Karger, 2003).
+As a sixth (and last) classifier, we implemented one of the naive Bayes variants that `sklearn` offers. The two classic variants are Gaussian and multinomial Bayes, yet, we chose the complement naive Bayes (CNB) algorithm as it was specifically designed to deal with unbalanced data and addresses some of the shortcomings of the multinomial variant (Rennie et al., 2003).
 
 No additional parameters to adapt were implemented. Alternatively, we could have implemented command line argument for the smoothing parameter alpha, which adds Laplace smoothing and takes care of the zero probability problem. The default value here is $1$, which is also the preferred value in most use cases. Hence, we did not deem modification necessary.
 
@@ -738,11 +738,19 @@ Lastly, it should not be forgotten that we worked only with a data set containin
 
 <a name='resources'></a>
 ## Resources
+<div class="csl-entry">Biau, G., &#38; Scornet, E. (2016). A random forest guided tour. <i>TEST</i>, <i>25</i>(2), 197–227. https://doi.org/10.1007/s11749-016-0481-7</div></br>
+
+<div class="csl-entry">Breiman, L. (2001). Random Forests. <i>Machine Learning</i>, <i>45</i>, 5–32. https://doi.org/10.1023/A:1010933404324</div></br>
+
+<div class="csl-entry">Gligorić, K., Anderson, A., &#38; West, R. (2020). <i>Adoption of Twitter’s New Length Limit: Is 280 the New 140?</i> http://arxiv.org/abs/2009.07661</div></br>
+
+<div class="csl-entry">Rennie, J. D. M., Shih, L., Teevan, J., &#38; Karger, D. R. (2003). Tackling the Poor Assumptions of Naive Bayes Text Classifiers. <i>Proceedings of the Twentieth International Conference on Machine Learning (ICML-2003)</i>, 616–623. https://people.csail.mit.edu/jrennie/papers/icml03-nb.pdf</div>
+
 <https://towardsdatascience.com/comparative-study-on-classic-machine-learning-algorithms-24f9ff6ab222>
 
 
 <!-- Footnotes -->
-[^nltk]: <https://www.nltk.org/>
+[^nltk]: <https://www.nltk.org/>, retrieved Oct 26, 2021
 [^oec]: <https://web.archive.org/web/20111226085859/http://oxforddictionaries.com/words/the-oec-facts-about-the-language>, retrieved Oct 26, 2021
 [^nltk_stopwords]: <https://www.nltk.org/book/ch02.html>, retrieved Oct 26, 2021
 [^gensim_stopwords]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.remove_stopwords>, retireved Oct 26, 2021
@@ -751,11 +759,11 @@ Lastly, it should not be forgotten that we worked only with a data set containin
 [^gensim_stemming]: <https://radimrehurek.com/gensim/parsing/preprocessing.html#gensim.parsing.preprocessing.stem>, retrieved Oct 26, 2021
 [^vader_pypi]: <https://pypi.org/project/vaderSentiment/>, retrieved Oct 15, 2021
 [^vader_homepage]: <https://github.com/cjhutto/vaderSentiment>, retrieved Oct 15, 2021
-[^twitter_charlength]: <https://blog.twitter.com/official/en_us/topics/product/2017/Giving-you-more-characters-to-express-yourself.html>
-[^sklearn_forest]: <https://scikit-learn.org/stable/modules/ensemble.html#forest>
-[^mlflow]: <https://mlflow.org/docs/latest/index.html#>
-[^onto_notes]: <https://catalog.ldc.upenn.edu/LDC2013T19>
-[^wordnet]: <https://wordnet.princeton.edu/>
-[^spacy_ner]: <https://spacy.io/usage/models>
-[^outgrow]: <https://outgrow.co/blog/infographic-science-behind-virality>
+[^twitter_charlength]: <https://blog.twitter.com/official/en_us/topics/product/2017/Giving-you-more-characters-to-express-yourself.html>, retroieved Oct 29, 2021
+[^sklearn_forest]: <https://scikit-learn.org/stable/modules/ensemble.html#forest>, retrieved Oct 31, 2021
+[^mlflow]: <https://mlflow.org/docs/latest/index.html#>, retrieved Oct 31, 2021
+[^onto_notes]: <https://catalog.ldc.upenn.edu/LDC2013T19>, retrieved Oct 31, 2021
+[^wordnet]: <https://wordnet.princeton.edu/>, retrieved Oct 31, 2021
+[^spacy_ner]: <https://spacy.io/usage/models>, retrieved Oct 31, 2021
+[^outgrow]: <https://outgrow.co/blog/infographic-science-behind-virality>, retrieved Oct 31, 2021
 <!-- -->
