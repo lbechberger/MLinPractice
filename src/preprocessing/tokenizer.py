@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Tokenize the tweet into individual words.
-
-Created on Wed Oct  6 13:59:54 2021
-
-@author: lbechberger
 """
 
 from src.preprocessing.preprocessor import Preprocessor

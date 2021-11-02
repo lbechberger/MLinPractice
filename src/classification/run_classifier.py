@@ -6,7 +6,6 @@ Train or evaluate a single classifier with its given set of hyperparameters.
 
 import argparse, pickle, os
 from pathlib import Path
-from sys import float_info
 from typing import Any, Callable, List, Tuple
 from sklearn.dummy import DummyClassifier
 from sklearn.preprocessing import StandardScaler
@@ -98,7 +97,8 @@ def main():
     prediction = classifier.predict(data["features"])
     
     evaluation_metrics = select_metrics_based_on_args(args.metrics)
-    computed_metrics = compute_metrics(evaluation_metrics, data, prediction)
+    computed_metrics = compute_metrics(
+        evaluation_metrics, data["labels"], prediction)
     
     print_input_file_name(args.input_file) # eg training set
     print_formatted_metrics(computed_metrics) # eg Accuracy: 0.908
@@ -138,11 +138,11 @@ def select_metrics_based_on_args(metrics: str):
     return evaluation_metrics
 
 
-def compute_metrics(evaluation_metrics, data, prediction):
+def compute_metrics(evaluation_metrics, data_column, prediction):
     computed_metrics: List[Tuple[str, float]] = []
 
     for metric_name, metric in evaluation_metrics:
-        metric_score = metric(data["labels"], prediction)
+        metric_score = metric(data_column, prediction)
         computed_metrics.append((metric_name, metric_score))
 
     return computed_metrics

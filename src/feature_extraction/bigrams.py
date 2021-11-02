@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct  7 14:53:52 2021
-
-@author: ml
+Bigram Feature
 """
 
 import ast
