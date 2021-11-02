@@ -10,6 +10,7 @@ import numpy as np
 from src.feature_extraction.character_length import CharacterLength
 from src.feature_extraction.counter_fe import CounterFE
 from src.feature_extraction.feature_collector import FeatureCollector
+from src.feature_extraction.sentiment_fe import SentimentFE
 from src.util import COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_TWEET, COLUMN_LABEL
 
 
@@ -39,6 +40,7 @@ def main():
             features.append(CharacterLength(COLUMN_TWEET))
             features.append(CounterFE(COLUMN_MENTIONS))
             features.append(CounterFE(COLUMN_PHOTOS))
+            features.append(SentimentFE(COLUMN_TWEET))
         
         # create overall FeatureCollector
         feature_collector = FeatureCollector(features)
