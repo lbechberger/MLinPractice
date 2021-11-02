@@ -4,8 +4,6 @@
 Tests feature extraction
 """
 
-import csv
-import logging
 import unittest
 import pandas as pd
 import numpy as np

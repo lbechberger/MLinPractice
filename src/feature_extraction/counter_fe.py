@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Counts the
+Given an input column, this class counts the length of the array per record
 """
 
 import numpy as np
