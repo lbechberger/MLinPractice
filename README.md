@@ -203,3 +203,8 @@ python -m debugpy --wait-for-client --listen 5678 .\src\feature_extraction\test\
 ```
 mlflow ui --backend-store-uri data/classification/mlflow
 ```
+
+Mlflow allows us to specify an SQL like search for specific data.
+For example the `params.classifier = "knn"` to search for all entries where a knn classifier was used
+
+More information on [https://www.mlflow.org/docs/latest/search-syntax.html#syntax](https://www.mlflow.org/docs/latest/search-syntax.html#syntax)
