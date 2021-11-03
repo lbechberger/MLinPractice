@@ -8,7 +8,7 @@ import numpy as np
 from src.feature_extraction.feature_extractor import FeatureExtractor
 
 # class for extracting the character-based length as a feature
-class CharacterLength(FeatureExtractor):
+class CharacterLengthFE(FeatureExtractor):
     
     # constructor
     def __init__(self, input_column):

@@ -34,26 +34,25 @@ def main():
 
     else: # need to set things up manually
 
-        if args.mutual_information is not None:
-            # select K best based on Mutual Information
-            dim_red = SelectKBest(mutual_info_classif, k="all") # k = args.mutual_information)
-            dim_red.fit(features, labels.ravel())
-            
-            # resulting feature names based on support given by SelectKBest
-            def get_feature_names(kbest, names):
-                support = kbest.get_support()
-                result = []
-                for name, selected in zip(names, support):
-                    if selected:
-                        result.append(name)
-                return result
-            
-            if args.verbose:
-                print("    SelectKBest with Mutual Information and k = {0}".format(args.mutual_information))
-                print("    {0}".format(feature_names))
-                print("    " + str(dim_red.scores_))
-                print("    " + str(get_feature_names(dim_red, feature_names)))
-        pass
+        # select K best based on Mutual Information
+        k_param = args.mutual_information or "all"
+        dim_red = SelectKBest(mutual_info_classif, k = k_param)
+        dim_red.fit(features, labels.ravel())
+        
+        # resulting feature names based on support given by SelectKBest
+        def get_feature_names(kbest, names):
+            support = kbest.get_support()
+            result = []
+            for name, selected in zip(names, support):
+                if selected:
+                    result.append(name)
+            return result
+        
+        if args.verbose:
+            print("    SelectKBest with Mutual Information and k = {0}".format(args.mutual_information))
+            print("    {0}".format(feature_names))
+            print("    " + str(dim_red.scores_))
+            print("    " + str(get_feature_names(dim_red, feature_names)))        
 
     # apply the dimensionality reduction to the given features
     reduced_features = dim_red.transform(features)

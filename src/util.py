@@ -11,6 +11,11 @@ COLUMN_PHOTOS = "photos"
 COLUMN_MENTIONS_COUNT = "mentions_count"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
+COLUMN_HASHTAGS = "hashtags"
+COLUMN_URLS = "urls"
+COLUMN_CASHTAGS = "cashtags"
+COLUMN_REPLY_TO = "reply_to"
+COLUMN_TWEET_TOKENIZED = "tweet_tokenized"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
