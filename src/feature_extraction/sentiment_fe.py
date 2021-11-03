@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Counts the
+Analyzes the sentiment of a given text input column (e.g. the sentiment of a tweet)
+The result is splitted as columns with
 """
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import numpy as np
+import pandas as pd
 from nltk import tokenize
 from src.feature_extraction.feature_extractor import FeatureExtractor
 
@@ -20,7 +22,7 @@ class SentimentFE(FeatureExtractor):
     # don't need to fit, so don't overwrite _set_variables()
 
 
-    def _get_values(self, inputs):
+    def _get_values(self, inputs: pd.Series):
         """
         Parses the string in every cell of the column/series as an array
         and counts the length in the cell of the output column
@@ -28,7 +30,24 @@ class SentimentFE(FeatureExtractor):
 
         analyzer = SentimentIntensityAnalyzer()
         # result = inputs[0].apply(lambda x: [analyzer.polarity_scores(sentence) for sentence in x])
-        result = inputs[0].apply(lambda x: analyzer.polarity_scores(x))
+        sentiments = inputs[0].apply(lambda x: analyzer.polarity_scores(x))
+
+        temp_df = pd.DataFrame.from_records(sentiments)
+            
+        collected_rows = []
+        for _, row in temp_df.iterrows():
+            temp_row = [
+                row["pos"], # positive
+                row["neg"], # negative
+                # other values are left out, 
+                # because they contain no new information
+                # row["compound"], # sum of pos and neu
+                # row["neu"], # neutral
+            ]
+            collected_rows.append(temp_row)
+                
+        result = np.array(collected_rows)
+
 
         """
         for sentence in inputs[0]:
@@ -52,7 +71,5 @@ class SentimentFE(FeatureExtractor):
         print("AVERAGE SENTIMENT FOR PARAGRAPH: \t" + str(round(paragraphSentiments / len(sentence_list), 4)))
         """
         # result = np.array(paragraphSentiments)
-       
-        result = np.array(result)
-        result = result.reshape(-1,1)
+               
         return result
