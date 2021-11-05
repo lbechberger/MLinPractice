@@ -7,8 +7,8 @@ Created on Wed Sep 29 12:22:13 2021
 
 @author: lbechberger
 """
-
 from sklearn.base import BaseEstimator, TransformerMixin
+
 
 # base class for all feature extractors
 #   inherits from BaseEstimator (as pretty much everything in sklearn)
@@ -38,7 +38,6 @@ class FeatureExtractor(BaseEstimator,TransformerMixin):
     
     # fit function: takes pandas DataFrame to set any internal variables
     def fit(self, df):
-        
         inputs = []
         # collect all input columns from df
         for input_col in self._input_columns:
@@ -58,10 +57,9 @@ class FeatureExtractor(BaseEstimator,TransformerMixin):
         
     # transform function: transforms pandas DataFrame to numpy array of feature values
     def transform(self, df):
-
         inputs = []
         # collect all input columns from df
         for input_col in self._input_columns:
             inputs.append(df[input_col])
-            
+
         return self._get_values(inputs)

@@ -12,8 +12,11 @@ import argparse, csv, pickle
 import pandas as pd
 import numpy as np
 from src.feature_extraction.character_length import CharacterLength
+from src.feature_extraction.media_type import MediaType
+from src.feature_extraction.day_period import DayPeriod
 from src.feature_extraction.feature_collector import FeatureCollector
-from src.util import COLUMN_TWEET, COLUMN_VIRAL
+from src.feature_extraction.feature_extractor import FeatureExtractor
+from src.util import COLUMN_TWEET, COLUMN_VIRAL, COLUMN_MEDIA, COLUMN_DAYPERIOD
 
 
 # setting up CLI
@@ -23,6 +26,9 @@ parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("-m", "--media_type", action = "store_true", help = "defines the attached media file to the tweet")
+parser.add_argument("-d", "--day_period", action = "store_true", help = "defines the period of the day of the tweet")
+parser.add_argument("--verbose", action = "store_true", help = "print information about feature selection process")
 args = parser.parse_args()
 
 # load data
@@ -40,9 +46,16 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
-    
+    if args.media_type:
+        # media type attached to the original tweet
+        features.append(MediaType(COLUMN_MEDIA))
+    if args.day_period:
+        # period of the day that the tweet was posted
+        features.append(DayPeriod(COLUMN_DAYPERIOD))
+
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
+
     
     # fit it on the given data set (assumed to be training data)
     feature_collector.fit(df)
@@ -61,6 +74,11 @@ results = {"features": feature_array, "labels": label_array,
            "feature_names": feature_collector.get_feature_names()}
 with open(args.output_file, 'wb') as f_out:
     pickle.dump(results, f_out)
+
+# Print the extracted feature names
+if args.verbose:
+    print("List of extracted feature:\n"
+          + str(results.get("feature_names")))
 
 # export the FeatureCollector as pickle file if desired by user
 if args.export_file is not None:
