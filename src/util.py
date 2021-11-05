@@ -14,11 +14,13 @@ COLUMN_LIKES    = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
 COLUMN_VIDEO    = "video"
 COLUMN_PHOTOS   = "photos"
+COLUMN_DATE     = "date"
 
 
 # column names of novel columns for preprocessing
 COLUMN_VIRAL = "viral"
 COLUMN_MEDIA = "media"
+COLUMN_WEEKDAY = "weekday"
 COLUMN_DAYPERIOD  = "dayperiod"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
 

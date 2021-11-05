@@ -11,8 +11,8 @@ Created on Tue Sep 28 15:55:44 2021
 
 import os, argparse, csv
 import pandas as pd
-from src.util import (COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_PHOTOS,
-                      COLUMN_VIDEO, COLUMN_VIRAL, COLUMN_MEDIA, COLUMN_DAYPERIOD)
+from src.util import (COLUMN_LIKES, COLUMN_RETWEETS, COLUMN_PHOTOS, COLUMN_DATE,
+                      COLUMN_VIDEO, COLUMN_VIRAL, COLUMN_MEDIA, COLUMN_DAYPERIOD, COLUMN_WEEKDAY)
 from src.preprocessing.dayperiodizer import DayPeriodizer
 
 # setting up CLI
@@ -60,6 +60,10 @@ if args.mediafile == "photo" or args.mediafile == "both":
 periodizer = DayPeriodizer(args.night_end, args.morning_end, args.afternoon_end, args.evening_end)
 df[COLUMN_DAYPERIOD] = df["time"].apply(lambda time: periodizer.day_periodize(time))
 
+
+# adds new column based on the weekday the tweet was sent
+df[COLUMN_WEEKDAY] = pd.to_datetime(df[COLUMN_DATE]).dt.day_name()
+
 # print statistics
 print("Number of tweets: {0}".format(len(df)))
 print("Viral distribution:")
@@ -68,6 +72,8 @@ print("Media distribution for " + args.mediafile)
 print(df[COLUMN_MEDIA].value_counts(normalize=True))
 print("Day period distribution")
 print(df[COLUMN_DAYPERIOD].value_counts(normalize=True))
+print("Weekday distribution")
+print(df[COLUMN_WEEKDAY].value_counts(normalize=True))
 
 
 # store the DataFrame into a csv file

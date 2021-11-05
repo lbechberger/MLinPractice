@@ -14,9 +14,10 @@ import numpy as np
 from src.feature_extraction.character_length import CharacterLength
 from src.feature_extraction.media_type import MediaType
 from src.feature_extraction.day_period import DayPeriod
+from src.feature_extraction.weekday import Weekday
 from src.feature_extraction.feature_collector import FeatureCollector
 from src.feature_extraction.feature_extractor import FeatureExtractor
-from src.util import COLUMN_TWEET, COLUMN_VIRAL, COLUMN_MEDIA, COLUMN_DAYPERIOD
+from src.util import COLUMN_TWEET, COLUMN_VIRAL, COLUMN_MEDIA, COLUMN_DAYPERIOD, COLUMN_WEEKDAY
 
 
 # setting up CLI
@@ -26,6 +27,7 @@ parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("-w", "--weekday", action = "store_true", help = "defines the weekday of the tweet")
 parser.add_argument("-m", "--media_type", action = "store_true", help = "defines the attached media file to the tweet")
 parser.add_argument("-d", "--day_period", action = "store_true", help = "defines the period of the day of the tweet")
 parser.add_argument("--verbose", action = "store_true", help = "print information about feature selection process")
@@ -46,6 +48,9 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
+    if args.weekday:
+        # weekday of the original tweet
+        features.append(Weekday(COLUMN_WEEKDAY))
     if args.media_type:
         # media type attached to the original tweet
         features.append(MediaType(COLUMN_MEDIA))
