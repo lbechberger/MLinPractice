@@ -13,10 +13,10 @@ conda activate MLinPractice
 
 # train classifier on training set
 echo "    training"
-python -m code.classification.run_classifier data/dimensionality_reduction/training.pickle -e $*
+python -m src.classification.run_classifier data/dimensionality_reduction/training.pickle -e $*
 
 # evaluate classifier on validation set
 echo "    validation"
-python -m code.classification.run_classifier data/dimensionality_reduction/validation.pickle -i $*
+python -m src.classification.run_classifier data/dimensionality_reduction/validation.pickle -i $*
 
 conda deactivate
