@@ -205,6 +205,11 @@ mlflow ui --backend-store-uri data/classification/mlflow
 ```
 
 Mlflow allows us to specify an SQL like search for specific data.
-For example the `params.classifier = "knn"` to search for all entries where a knn classifier was used
+For example the `params.classifier = "knn"` to search for all entries where a knn classifier was used.
+Other examples:
+
+```
+params.classifier = "randomforest" AND params.dataset = "validation"
+```
 
 More information on [https://www.mlflow.org/docs/latest/search-syntax.html#syntax](https://www.mlflow.org/docs/latest/search-syntax.html#syntax)
