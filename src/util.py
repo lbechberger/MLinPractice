@@ -19,7 +19,6 @@ COLUMN_DATE     = "date"
 
 # column names of novel columns for preprocessing
 COLUMN_VIRAL = "viral"
-COLUMN_MEDIA = "media"
 COLUMN_WEEKDAY = "weekday"
 COLUMN_DAYPERIOD  = "dayperiod"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"

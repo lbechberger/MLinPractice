@@ -17,7 +17,7 @@ from src.feature_extraction.day_period import DayPeriod
 from src.feature_extraction.weekday import Weekday
 from src.feature_extraction.feature_collector import FeatureCollector
 from src.feature_extraction.feature_extractor import FeatureExtractor
-from src.util import COLUMN_TWEET, COLUMN_VIRAL, COLUMN_MEDIA, COLUMN_DAYPERIOD, COLUMN_WEEKDAY
+from src.util import COLUMN_TWEET, COLUMN_VIRAL, COLUMN_PHOTOS, COLUMN_VIDEO, COLUMN_DAYPERIOD
 
 
 # setting up CLI
@@ -53,7 +53,7 @@ else:    # need to create FeatureCollector manually
         features.append(Weekday(COLUMN_WEEKDAY))
     if args.media_type:
         # media type attached to the original tweet
-        features.append(MediaType(COLUMN_MEDIA))
+        features.append(MediaType([COLUMN_PHOTOS, COLUMN_VIDEO]))
     if args.day_period:
         # period of the day that the tweet was posted
         features.append(DayPeriod(COLUMN_DAYPERIOD))

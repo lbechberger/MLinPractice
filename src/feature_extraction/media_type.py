@@ -9,6 +9,8 @@ Created on Fri Oct 29 12:33:04 2021
 """
 
 import numpy as np
+import pandas as pd
+from src.util import COLUMN_PHOTOS, COLUMN_VIDEO
 from src.feature_extraction.feature_extractor import FeatureExtractor
 
 
@@ -16,20 +18,18 @@ from src.feature_extraction.feature_extractor import FeatureExtractor
 class MediaType(FeatureExtractor):
 
     # constructor
-    def __init__(self, input_column):
-        super().__init__([input_column], "media_type")
+    def __init__(self, input_columns):
+        super().__init__(input_columns, "media_type")
 
-
-    # returns 3 columns, one for each media type
+    # returns 3 columns, one for each media type (Photo, Video, None)
     def _get_values(self, inputs):
         result = []
-        for media in np.array(inputs[0]):
-            if media == "Photo":
-                media_number = [1,0,0]
-            elif media == "Video":
-                media_number = [0,1,0]
+        for photo, video in zip(inputs[0],inputs[1]):
+            if photo != "[]":
+                result.append([1,0,0])
+            elif video == 1:
+                result.append([0,1,0])
             else:
-                media_number = [0,0,1]
-            result.append(media_number)
-        result = np.array(result)
-        return result
+                result.append([0,0,1])
+        return np.array(result)
+
