@@ -10,6 +10,9 @@ Created on Wed Sep 29 13:33:37 2021
 
 import argparse, pickle
 from sklearn.feature_selection import SelectKBest, mutual_info_classif
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline, make_pipeline
 
 
 # setting up CLI
@@ -19,6 +22,7 @@ parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-m", "--mutual_information", type = int, help = "select K best features with Mutual Information", default = None)
+parser.add_argument("-pca", help = "Principal component analysis, n_components = 'mle' or float between 0 and 1", default = None)
 parser.add_argument("--verbose", action = "store_true", help = "print information about feature selection process")
 args = parser.parse_args()
 
@@ -41,7 +45,7 @@ else: # need to set things up manually
         # select K best based on Mutual Information
         dim_red = SelectKBest(mutual_info_classif, k = args.mutual_information)
         dim_red.fit(features, labels.ravel())
-        
+
         # resulting feature names based on support given by SelectKBest
         def get_feature_names(kbest, names):
             support = kbest.get_support()
@@ -50,12 +54,25 @@ else: # need to set things up manually
                 if selected:
                     result.append(name)
             return result
-        
+
         if args.verbose:
             print("    SelectKBest with Mutual Information and k = {0}".format(args.mutual_information))
             print("    {0}".format(feature_names))
             print("    " + str(dim_red.scores_))
             print("    " + str(get_feature_names(dim_red, feature_names)))
+
+    if args.pca is not None:
+        # use principal component analysis \
+        standardizer = StandardScaler()
+        pca = PCA(n_components=args.pca)
+        dim_red = Pipeline(steps=[('scaling', standardizer),
+                                ('pca', pca)])
+        dim_red.fit(features, labels.ravel())
+
+        if args.verbose:
+            print(f"    number of components: {dim_red['pca'].n_components_}")
+            print(f"    number of features: {dim_red['pca'].n_features_in_}")
+        # print(f"    {dim_red['pca'].feature_names_in_}") <- only supported on sklearn > 1.0.0
     pass
 
 # apply the dimensionality reduction to the given features
