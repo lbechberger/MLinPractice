@@ -10,14 +10,14 @@ Author: LDankert
 
 import unittest
 import pandas as pd
+import numpy as np
 from src.feature_extraction.weekday import Weekday
 
 class WeeldayFeatureTest(unittest.TestCase):
 
     def setUp(self):
-        self.INPUT_COLUMN = "dummy name"
-        self.inputs = [["Sunday","Monday","Tuesday","Friday","Wednesday","Saturday","Thursday"]]
-        self.error_inputs =[["Shitday"],["asda s"], [10], ["Sunday","Monday","Shitday"]]
+        self.INPUT_COLUMN = "weekday"
+        self.inputs = pd.DataFrame(["1994-01-23","1994-01-24","2023-10-31","2021-02-26","2019-09-18","2018-10-20","2021-03-18"])
         self.expected_outputs = [[0,0,0,0,0,0,1], [1,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,0,0,1,0,0],
                             [0,0,1,0,0,0,0],[0,0,0,0,0,1,0],[0,0,0,1,0,0,0]]
         self.weekdayer = Weekday(self.INPUT_COLUMN)
@@ -26,10 +26,6 @@ class WeeldayFeatureTest(unittest.TestCase):
         function_output = self.weekdayer._get_values(self.inputs)
         test_value = [self.expected_outputs == function_output]
         self.assertTrue(test_value)
-
-    def test_weekday_get_values_exception(self):
-        for input in self.error_inputs:
-            self.assertRaises(Exception, self.weekdayer._get_values, input)
 
     def test_input_columns(self):
         self.assertEqual(self.weekdayer._input_columns, [self.INPUT_COLUMN])
