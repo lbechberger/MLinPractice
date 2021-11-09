@@ -13,8 +13,12 @@ from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score, cohen_kappa_score, precision_score, f1_score, recall_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 from mlflow import log_metric, log_param, set_tracking_uri
+
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -26,6 +30,9 @@ parser.add_argument("-m", "--majority", action = "store_true", help = "majority 
 parser.add_argument("-f", "--frequency", action = "store_true", help = "label frequency classifier")
 parser.add_argument("-u", "--uniform", action = "store_true", help = "uniform random classifier")
 parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
+parser.add_argument("--lsvm", type = float, help = "linear SVM classifier with the specified regularization parameter C", default = None)
+parser.add_argument("--gnb", action = "store_true", help="gaussian naive bayes classifier")
+parser.add_argument("--mlp", action = "store_true")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
 parser.add_argument("-p", "--precision", action = "store_true", help = "evaluate using precision")
@@ -68,14 +75,14 @@ else:   # manually set up a classifier
         classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
 
     elif args.uniform:
-        # label frequency classifier
+        # uniform classifier
         print("    uniform random classifier")
         log_param("classifier", "uniform")
         params = {"classifier": "uniform"}
         classifier = DummyClassifier(strategy = "uniform", random_state = args.seed)
 
-
     elif args.knn is not None:
+        # k nearest neighbor classifier
         print("    {0} nearest neighbor classifier".format(args.knn))
         log_param("classifier", "knn")
         log_param("k", args.knn)
@@ -84,6 +91,32 @@ else:   # manually set up a classifier
         knn_classifier = KNeighborsClassifier(args.knn, n_jobs = -1)
         classifier = make_pipeline(standardizer, knn_classifier)
 
+    elif args.lsvm is not None:
+        # linear support vector classifier
+        print(f"    linear SVM classifier regularization of {args.lsvm}")
+        log_param("classifier", "lsvm")
+        log_param("C", args.lsvm)
+        params = {"classifier": "lsvm", "C": args.lsvm}
+        standardizer = StandardScaler()
+        lsvm_classifier = LinearSVC(C = args.lsvm, max_iter=5000)
+        classifier = make_pipeline(standardizer, lsvm_classifier)
+
+    elif args.gnb:
+        # naive gaussian bayes classifier
+        print("    gaussian naive bayes classifier")
+        log_param("classifier", "gnb")
+        params = {"classifier": "gnb"}
+        classifier = GaussianNB()
+
+    elif args.mlp:
+        # multi layer perceptron classifier
+        # print(f"    MLP classifier  {args.lsvm}")
+        log_param("classifier", "mlp")
+        # log_param("C", args.lsvm)
+        params = {"classifier": "mlp"}
+        standardizer = StandardScaler()
+        lsvm_classifier = MLPClassifier()
+        classifier = make_pipeline(standardizer, lsvm_classifier)
 
     classifier.fit(data["features"], data["labels"].ravel())
     log_param("dataset", "training")
