@@ -13,18 +13,48 @@ Before taking a look at the implemented metrics to judge the prediction performa
 
 For the baselines a `DummyClassifier` from the sklearn package was used with the `strategy` `most_frequent` and `stratified`. The former determines non-viral tweets as the most frequent class and therefore predicts every sample as non-viral. Fig. 1 shows that this rather dumb prediction strategy results in a high accuracy of 90.6%. This is the case, because the calculation of the accuracy metric is based on how many predictions have been correct. Since the data set contains mostly non-viral tweets, the prediction is correct most of the time with a percentage that is similar to the data set's class distribution. The slight difference in the percentage can be explained by the removal of some samples during the preprocessing step.
 
-The `stratified` strategy makes prediction by respecting the training set’s class distribution. Again the accuracy has a high value of 83.2% on the validation set. In two observations the accuracy metric performs well on baselines indicating that it is not useful for the imbalanced data set and therefore can be dismissed entirely. The other metrics _Precision_, _Recall_, _F1-Score_, _Cohen's Kappa_ and _Jaccard Score_ are not null this time, but still have a very low value roughly between 0 and 0.1. Some considerations about the othere metrics are discussed in the following paragraphs.
+The `stratified` strategy makes prediction by respecting the training set’s class distribution. Again the accuracy has a high value of 83.2% on the validation set. In two observations the accuracy metric performs well on baselines indicating that it is not useful for the imbalanced data set and therefore can be dismissed entirely. The other metrics _Precision_, _Recall_, _F1-Score_, _Cohen's Kappa_ and _Jaccard Score_ are not null this time, but still have a very low value roughly between 0 and 0.1 which is a bad result. Some considerations about the remaining metrics are discussed in the following paragraphs.
 
-When selecting metrics, the use case should be taken into account. An average twitter user would expect that most send tweets will not go viral. When such a user would type a potential tweet into our application to find out if it is going to be viral, it is important to detect a tweet which would go viral as such. This can be captured by the recall metric which asks the question _"How many of the true positives did I catch?"_. On the other hand, it would be annoying if the application is not critical enough and classifies a lot of tweets as viral that don't go viral in practice. Such a high rate of false positives is captured by the precision metric which asks "How many positively classified ones are actually positive?". Therefore, both recall and precision are good metrics for the use case.
+When selecting metrics, the use case should be taken into account. An average twitter user would expect that most send tweets will not go viral. When such a user would type a potential tweet into our application to find out if it is going to be viral, it is important to detect a tweet which would go viral as such. This can be captured by the recall metric which asks the question _"How many of the true positives did I catch?"_. On the other hand, it would be annoying if the application is not critical enough and classifies a lot of tweets as viral that don't go viral in practice. Such a high rate of false positives is captured by the precision metric which asks _"How many positively classified ones are actually positive?"_. Therefore, both recall and precision are good metrics for the use case.
 
-Since the F1-Score combines both recall and precision as a weighted average in a single score, it is a practical approach to ignore the former two and instead just focus on the F1-Score alone. Furthermore, cohen's kappa is a good condidate for an imbalanced data set. In its calculation the accuracy is used, but adjusted by the probability of random agreement and therefore considered as a more robust measure than simple percent agreement calculations. In addition, the Jaccard Score leaves out false negatives in its calculation. Since it can be expected that this is the most frequently appearing type of result in a confusion matrix, the Jaccard Score is also well-suited for the data set. All in all, the metrics _F1-Score_, _Cohen's Kappa_ and _Jaccard Score_ are used to judge about the models prediction performance by comparing the scores of the model two the scores of the chosen baselines.
+Since the F1-Score combines both recall and precision as a weighted average in a single score, it is a practical approach to ignore the former two and instead just focus on the F1-Score alone. Furthermore, Cohen's Kappa is a good condidate for an imbalanced data set. In its calculation the accuracy is used, but adjusted by the probability of random agreement and therefore considered as a more robust measure than simple percent agreement calculations. In addition, the Jaccard Score leaves out false negatives in its calculation. Since it can be expected that this is the most frequently appearing type of result in a confusion matrix, the Jaccard Score is also well-suited for the data set. All in all, the metrics _F1-Score_, _Cohen's Kappa_ and _Jaccard Score_ are used to judge about the models prediction performance by comparing the scores of the model two the scores of the chosen baselines.
 
 ## Preprocessing
 
+### Preprocessing in general & Provided Preprocessors
+
+After the above mentioned actions of appending the raw data set to a big one and labeling it, a few more preprocessing operations are performed. These operations are applied to prepare the data in a way so that it can be used by machine learning models. A model cannot process prose or text in general, but rather needs numerical values. The applied operations are organized in their own preprocessor classes by inheriting from the sklearn classes `BaseEstimator` and `TransformerMixin`. The first two preprocessors `PunctuationRemover` and `Tokenizer` were already provided by the lecturer. The former removes ACII characters which are considered punctuation characters from the tweet column and saves them in a new column. This should result in mostly pure text. The latter takes a text column as the input and splits the text into an array of one word per element. The resulting data of both preprocessors is well-suited to perform NLP techniques on it during the feature extraction step.
+
+### NonEnglishRemover & ColumnDropper
+
+Two more processors were implemented. First, the `NonEnglishRemover` removes all data rows that are labelled as being non-english. This was done after exploring and visualizing the data set in [`visualization.py`](../src/visualization.py). As can be seen in [Fig 2.](./imgs/distribution_of_tweets_per_language.png) the majority of tweets is labelled as english (95.57%). The removel of non-english tweets is useful, because most pre-trained NLP models or other NLP techniques are optimized for english texts. Additionally, next biggest languages only has 3492 records, which is to little to perform any meaningful machine learning on it. It should be noted though, that there are still some non-english tweets in the data set after performing the operation, because they were labeled wrong. Because this misslabeling is seldom, they can be regarded as noise and must not be further taken into account.
+Second, `ColumnDropper` removes columns that are not needed. This is simply for the convenience of having less columns when looking at the preprocessed data set which is saved as an intermediate data set.
+
+### Hashtag, URL and username remover
+
+Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished. It is expected that leaving these elements in the tweet would decrease the performance of various NLP techniques, because they are not trained on such words.
+
 As the visualization shows non-language removed
+<p align="center">
+    <img src="./imgs/distribution_of_tweets_per_language.png" alt="">
+    Fig. 2: 
+</p>
 
 ## Feature Extraction
 
 ## Dimensionality Reduction
 
 ## Classification
+
+## Testing
+
+Three additional tests have been implemented to ensure the intended functionality of the metrics calculations and two features extractors. The test are located in a sub-folder of the corresponding implementation they are testing so that both test and implementation lie close together.
+
+- [metrics_test.py](..\src\classification\test\metrics_test.py)
+- [count_test.py](..\src\feature_extraction\test\count_test.py)
+- [sentiment_test.py](..\src\feature_extraction\test\sentiment_test.py)
+
+Test implemented, but corresponding implementation not enterily finished (branch `Tweetclean`):
+
+- [tweet_cleaner_test.py](..\src\preprocessing\test\tweet_cleaner_test.py)
+
