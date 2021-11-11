@@ -11,10 +11,10 @@ Created on Wed Sep 29 14:23:48 2021
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score, cohen_kappa_score, precision_score, f1_score, recall_score
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import LinearSVC
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB, ComplementNB
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 from mlflow import log_metric, log_param, set_tracking_uri
@@ -32,6 +32,7 @@ parser.add_argument("-u", "--uniform", action = "store_true", help = "uniform ra
 parser.add_argument("--knn", type = int, help = "k nearest neighbor classifier with the specified value of k", default = None)
 parser.add_argument("--lsvm", type = float, help = "linear SVM classifier with the specified regularization parameter C", default = None)
 parser.add_argument("--gnb", action = "store_true", help="gaussian naive bayes classifier")
+parser.add_argument("--cnb", action = "store_true", help="complement naive bayes classifier")
 parser.add_argument("--mlp", action = "store_true")
 parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
 parser.add_argument("-k", "--kappa", action = "store_true", help = "evaluate using Cohen's kappa")
@@ -107,6 +108,15 @@ else:   # manually set up a classifier
         log_param("classifier", "gnb")
         params = {"classifier": "gnb"}
         classifier = GaussianNB()
+
+    elif args.cnb:
+        # naive complement bayes classifier
+        print("    complement naive bayes classifier")
+        log_param("classifier", "cnb")
+        params = {"classifier": "cnb"}
+        scaler = MinMaxScaler()
+        cnb_classifier = ComplementNB()
+        classifier = make_pipeline(scaler, cnb_classifier)
 
     elif args.mlp:
         # multi layer perceptron classifier
