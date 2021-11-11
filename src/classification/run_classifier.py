@@ -46,7 +46,7 @@ args = parser.parse_args()
 with open(args.input_file, 'rb') as f_in:
     data = pickle.load(f_in)
 
-#set_tracking_uri(args.log_folder)
+set_tracking_uri(args.log_folder)
 
 if args.import_file is not None:
     # import a pre-trained classifier
@@ -99,7 +99,7 @@ else:   # manually set up a classifier
         log_param("C", args.lsvm)
         params = {"classifier": "lsvm", "C": args.lsvm}
         standardizer = StandardScaler()
-        lsvm_classifier = LinearSVC(C = args.lsvm, max_iter=5000)
+        lsvm_classifier = LinearSVC(C = args.lsvm, class_weight='balanced', max_iter=5000)
         classifier = make_pipeline(standardizer, lsvm_classifier)
 
     elif args.gnb:
@@ -120,13 +120,17 @@ else:   # manually set up a classifier
 
     elif args.mlp:
         # multi layer perceptron classifier
+        # The MLP does not currently work as the loss is still way too high.
         # print(f"    MLP classifier  {args.lsvm}")
         log_param("classifier", "mlp")
-        # log_param("C", args.lsvm)
         params = {"classifier": "mlp"}
         standardizer = StandardScaler()
-        lsvm_classifier = MLPClassifier()
-        classifier = make_pipeline(standardizer, lsvm_classifier)
+        mlp_classifier = MLPClassifier(hidden_layer_sizes=[50, 50, 50], 
+                                        verbose=True, 
+                                        solver="sgd",
+                                        learning_rate_init=0.1,
+                                        alpha=0.1)
+        classifier = make_pipeline(standardizer, mlp_classifier)
 
     classifier.fit(data["features"], data["labels"].ravel())
     log_param("dataset", "training")
