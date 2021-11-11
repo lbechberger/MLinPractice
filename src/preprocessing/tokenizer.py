@@ -23,15 +23,10 @@ class Tokenizer(Preprocessor):
     def _get_values(self, inputs):
         """Tokenize the tweet."""
         
+        print("\tTokenizer")
         tokenized = []
         
         for tweet in inputs[0]:
-            sentences = nltk.sent_tokenize(tweet)
-            tokenized_tweet = []
-            for sentence in sentences:
-                words = nltk.word_tokenize(sentence)
-                tokenized_tweet += words
-            
-            tokenized.append(str(tokenized_tweet))
+            tokenized.append(nltk.word_tokenize(tweet))
         
         return tokenized

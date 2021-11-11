@@ -20,6 +20,4 @@ COLUMN_TIME     = "time"
 
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "viral"
-COLUMN_PUNCTUATION = "tweet_no_punctuation"
-
-SUFFIX_TOKENIZED = "_tokenized"
+COLUMN_TWEET_CLEANED = "cleaned"
