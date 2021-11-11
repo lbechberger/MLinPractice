@@ -42,7 +42,7 @@ Second, `ColumnDropper` removes columns that are not needed. This is simply for 
 Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished. It is expected that leaving these elements in the tweet would decrease the performance of various NLP techniques, because they are not trained on such words.
 
 <p align="center">
-    <img src="./imgs/distribution_of_tweets_per_language.png" alt="">
+    <img src="./imgs/after_more_count_cropped2.png" alt="">
 
 Fig. 2: The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.
 </p>
