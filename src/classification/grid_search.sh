@@ -40,6 +40,10 @@ done
 echo "GNB"
 $cmd 'data/classification/clf_gnb.pickle' --gnb -s 42 --accuracy --kappa --precision --recall --f1_score
 
+# complement Naive Bayes
+echo "CNB"
+$cmd 'data/classification/clf_cnb.pickle' --cnb -s 42 --accuracy --kappa --precision --recall --f1_score
+
 # MLP
 echo "MLP"
 $cmd 'data/classification/clf_mlp.pickle' --mlp -s 42 --accuracy --kappa --precision --recall --f1_score
