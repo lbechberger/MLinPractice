@@ -134,6 +134,3 @@ dmypy.json
 # exclude csv files from data directory
 data/raw/
 data/preprocessing/
-
-# Ignore mlflow for now
-data/classification/mlflow/
