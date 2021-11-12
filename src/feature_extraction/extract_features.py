@@ -15,9 +15,11 @@ from src.feature_extraction.character_length import CharacterLength
 from src.feature_extraction.media_type import MediaType
 from src.feature_extraction.day_period import DayPeriod
 from src.feature_extraction.weekday import Weekday
+from src.feature_extraction.keyword import Keyword
+from src.feature_extraction.most_common_words import MostCommonWords
 from src.feature_extraction.feature_collector import FeatureCollector
 from src.feature_extraction.feature_extractor import FeatureExtractor
-from src.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PHOTOS, COLUMN_VIDEO, COLUMN_TIME, COLUMN_DATE
+from src.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PHOTOS, COLUMN_VIDEO, COLUMN_TIME, COLUMN_DATE, COLUMN_TWEET_CLEANED
 
 
 # setting up CLI
@@ -30,11 +32,13 @@ parser.add_argument("-c", "--char_length", action = "store_true", help = "comput
 parser.add_argument("-w", "--weekday", action = "store_true", help = "defines the weekday of the tweet")
 parser.add_argument("-m", "--media_type", action = "store_true", help = "defines the attached media file to the tweet")
 parser.add_argument("-d", "--day_period", action = "store_true", help = "defines the period of the day of the tweet")
+parser.add_argument("-k", "--keywords", type = int, help = "looks for the k most common words in viral tweets", default = None)
+parser.add_argument("-cm", "--common_words", type = int, help = "looks for the k most common words in all tweets", default = None)
 parser.add_argument("--verbose", action = "store_true", help = "print information about feature selection process")
 args = parser.parse_args()
 
 # load data
-df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n")
+df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator = "\n", converters={COLUMN_TWEET_CLEANED:eval})
 
 if args.import_file is not None:
     # simply import an exisiting FeatureCollector
@@ -57,11 +61,16 @@ else:    # need to create FeatureCollector manually
     if args.day_period:
         # period of the day that the tweet was posted
         features.append(DayPeriod(COLUMN_TIME))
+    if args.keywords is not None:
+        # k most viral words
+        features.append(Keyword([COLUMN_TWEET_CLEANED, COLUMN_LABEL], args.keywords))
+    if args.common_words is not None:
+        # k most common words
+        features.append(MostCommonWords(COLUMN_TWEET_CLEANED, args.common_words))
 
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
 
-    
     # fit it on the given data set (assumed to be training data)
     feature_collector.fit(df)
 
@@ -82,7 +91,7 @@ with open(args.output_file, 'wb') as f_out:
 
 # Print the extracted feature names
 if args.verbose:
-    print("List of extracted features:\n"
+    print("List of extracted features:\n\t"
           + str(results.get("feature_names")))
 
 # export the FeatureCollector as pickle file if desired by user

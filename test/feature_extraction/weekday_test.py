@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-weekday_test
+Test for the weekday feature extractor
 
 Created: 04.11.21, 12:05
 
@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 from src.feature_extraction.weekday import Weekday
 
-class WeeldayFeatureTest(unittest.TestCase):
+class WeekdayFeatureTest(unittest.TestCase):
 
     def setUp(self):
         self.INPUT_COLUMN = "weekday"
