@@ -11,7 +11,7 @@ Created on Wed Sep 29 14:49:25 2021
 import argparse, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
-from src.util import COLUMN_TWEET
+from src.util import COLUMN_TWEET, COLUMN_VIDEO, COLUMN_PHOTOS, COLUMN_DATE, COLUMN_TIME
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Application")
@@ -47,11 +47,41 @@ while True:
     if tweet == "quit":
         print("Okay, goodbye!")
         break
-    
+
+    # asks for photo in tweet
+    photo = input("Will your tweet contains a Photo) [y,n]")
+
+    # asks for video in tweet
+    video = input("Will your tweet contains a Video) [y,n]")
+
+    # asks for publish date
+    date = input("On which date do you want to publish your tweet? [YYYY-MM-DD]")
+
+    # asks for publish time
+    time = input("At what time do you want to publish your tweet? [hh:mm:ss]")
+
     # if not terminated: create pandas DataFrame and put it through the pipeline
     df = pd.DataFrame()
     df[COLUMN_TWEET] = [tweet]
-    
+
+    # set photo status
+    if photo == "y":
+        df[COLUMN_PHOTOS] = ["Something"]
+    else:
+        df[COLUMN_PHOTOS] = ["[]"]
+
+    #set video status
+    if video == "y":
+        df[COLUMN_VIDEO] = [1]
+    else:
+        df[COLUMN_VIDEO] = [0]
+
+    # set date
+    df[COLUMN_DATE] = [date]
+
+    # set time
+    df[COLUMN_TIME] = [time]
+
     prediction = pipeline.predict(df)
     confidence = pipeline.predict_proba(df)
     
