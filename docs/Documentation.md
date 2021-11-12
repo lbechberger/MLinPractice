@@ -53,12 +53,6 @@ Besides the already given `CharacterLengthFE`, two more feature extractors have 
 
 The `CounterFE` takes an input column. Suitable columns for this task contain in principle a list of items. But because the data set is read from file the list has been wrapped in double quotes as a string. Therefore the string contained in every data cell of the column is parsed as a python list by applying (`pandas.DataFrame.apply` [^1]) the `litera_eval` function [^2] from the `ast` package. Then the length of the list for each cell is saved by outputting a column with single integer values in a new column. The new column keeps the original name plus an appended `_count`. 
 
-```
-evaluated = inputs[0].apply(ast.literal_eval)
-result = np.array(evaluated.str.len())
-result = result.reshape(-1,1)
-```
-
 The data set contains the countable columns *mentions*, *photos*, *hashtags*, *urls*, *cashtags*, *reply_to* and *tweet_tokenized*. The motivation for chosing these columns was to gain information about the virality of tweet by counting for example the amount of photos, used hashtags and urls of a particular tweet. The following table shows an example what the input for the hashtag column could look like and the corresponding output of the feature extractor.
 
 | input                                                             | output |
@@ -69,13 +63,15 @@ The data set contains the countable columns *mentions*, *photos*, *hashtags*, *u
 
 ### SentimentFE
 
-
+The `SentimentFE` feature extractor makes us of a sentiment analyzer. The idea is to analyze the sentiment of the tweet text itself by passing it as an input column. It is assumed that tweets which elicit a strong positive or negative emotion are more likely to go viral. For this task the VADER (Valence Aware Dictionary and sEntiment Reasoner) analysis tool was used. This tool is lexicon and rule-based specifically attuned to sentiments expressed in social media. [^3] VADER is applied on the tweet and automatically analyzes the sentiment of the whole tweet, even if it contains multiple sentences. The calculated *positive* and *negative* polarity scores are floating point numbers between 0 and 1 and then stored in the output column. It is noteworthy that VADER also offers a neutral score as well as a compound store, consisting of the sum of *positive* and *neutral*. These two scores where not used because tehy provide no new information since the sum of *positive*, *neutral* and *negative* always is 1.
 
 ## Dimensionality Reduction
 
 
 
 ## Classification
+
+SelectKBest dimensionality was tried, but did not help.
 
 <p align="center">
     <img src="./imgs/after_sentiment_2021-11-03_231550.png" alt="">
@@ -99,6 +95,10 @@ Test implemented, but corresponding implementation not enterily finished (branch
 
 ## References
 
-[1^]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.apply.html
+[^1]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.apply.html
 
-[2^]: https://docs.python.org/3/library/ast.html#ast.literal_eval
+[^2]: https://docs.python.org/3/library/ast.html#ast.literal_eval
+
+[^3]: Taken from https://github.com/cjhutto/vaderSentiment#vader-sentiment-analysis
+
+    VADER (Valence Aware Dictionary and sEntiment Reasoner) is a lexicon and rule-based sentiment analysis tool that is specifically attuned to sentiments expressed in social media. It is fully open-sourced under the [MIT License] (we sincerely appreciate all attributions and readily accept most contributions, but please don't hold us liable).
