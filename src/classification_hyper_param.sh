@@ -14,7 +14,7 @@ do
 done
 
 # random forest classifier
-values_of_n=("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20")
+values_of_n=("1 2 3 4 5 6 7 8 9 10 15 20 30 40 50 75 100")
 for n in $values_of_n
 do
     echo $n
