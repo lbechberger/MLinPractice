@@ -1,0 +1,15 @@
+artifact_uri: data/classification/mlflow/0/7e1d67620e4d4eb18d3dc962fd1a2b52/artifacts
+end_time: 1636736066510
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 7e1d67620e4d4eb18d3dc962fd1a2b52
+run_uuid: 7e1d67620e4d4eb18d3dc962fd1a2b52
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1636736066304
+status: 3
+tags: []
+user_id: chbroecker
