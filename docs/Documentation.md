@@ -1,7 +1,5 @@
 # Documentation - [Patoali](https://trello.com/b/3pj6SkWa)
 
-Here's a simple footnote,[^1] and here's a longer one.[^bignote]. And another one [^2] here
-
 This document presents the author's work on the 'Machine Learning in Practice' project which took place during the summer term 2021 as a block seminar at Osnabrück University. The given task was to analyze a data set containing data science related tweets and predict whether a tweet will go viral or not by applying machine learning techniques. A tweet is defined as viral if it exceeds the arbitrary threshold of the sum of 50 likes and retweets. The data set _Data Science Tweets 2010-2021_ contains _data science_, _data analysis_ and _data visualization_ tweets from verified accounts on Twitter from 2010 til 2021. It was collected and [shared on kaggle.com](https://www.kaggle.com/ruchi798/data-science-tweets) by Ruchi Bhatia.
 
 The lecturer Lucas Bechberger provided his students with a foundational codebase which makes heavy use of the python library scikit-learn. The codebase consists of multiple python (`.py`) and bash (`.sh`) scripts that resemble a basic pipeline of the processing steps _preprocessing_, _feature extraction_, _dimensionality reduction_ and _classification_ which is common for machine learning projects. The shell scripts invoke the python scripts with a particular set of command line arguments. Shell scripts can be used to run the entire pipeline or to execute only individual steps to save time. Results of the pipeline steps are stored in `.pickle` files to reuse them in a separate application. The application offers a rudimentary read–eval–print loop to predict the virality of the tweet a user inputs. The students task was to understand the code base and extend or replace given placeholder implementations with proper solutions to improve and measure the virality prediction.
@@ -49,15 +47,33 @@ Fig. 2: The majority of tweet records are labelled as english. The amount of non
 
 ## Feature Extraction
 
+Besides the already given `CharacterLengthFE`, two more feature extractors have been implemented, namely `CounterFE` and `SentimentFE`. The former is applied to multiple columns and thereby creates multiple features. In general, the feature extractors inherit from a custom `FeatureExtractor` class which in turn inherits from the sklearn classes `BaseEstimator` and `TransformerMixin`. This is done to collect the features and store them in a `.pickle` file for later use in the application.
 
 ### CounterFE
 
+The `CounterFE` takes an input column. Suitable columns for this task contain in principle a list of items. But because the data set is read from file the list has been wrapped in double quotes as a string. Therefore the string contained in every data cell of the column is parsed as a python list by applying (`pandas.DataFrame.apply` [^1]) the `litera_eval` function [^2] from the `ast` package. Then the length of the list for each cell is saved by outputting a column with single integer values in a new column. The new column keeps the original name plus an appended `_count`. 
+
+```
+evaluated = inputs[0].apply(ast.literal_eval)
+result = np.array(evaluated.str.len())
+result = result.reshape(-1,1)
+```
+
+The data set contains the countable columns *mentions*, *photos*, *hashtags*, *urls*, *cashtags*, *reply_to* and *tweet_tokenized*. The motivation for chosing these columns was to gain information about the virality of tweet by counting for example the amount of photos, used hashtags and urls of a particular tweet. The following table shows an example what the input for the hashtag column could look like and the corresponding output of the feature extractor.
+
+| input                                                             | output |
+|-------------------------------------------------------------------|--------|
+| "['energy', 'visualization', 'data']"                             | 3      |
+| "[]"                                                              | 0      |
+| "['flutter', 'webdevelopment', 'mobiledev', 'datavisualization']" | 4      |
 
 ### SentimentFE
 
 
 
 ## Dimensionality Reduction
+
+
 
 ## Classification
 
@@ -79,19 +95,10 @@ Test implemented, but corresponding implementation not enterily finished (branch
 
 - [tweet_cleaner_test.py](..\src\preprocessing\test\tweet_cleaner_test.py)
 
-
 ---
 
 ## References
 
-[^1]: This is the first footnote.
+[1^]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.apply.html
 
-[^bignote]: Here's one with multiple paragraphs and code.
-
-    Indent paragraphs to include them in the footnote.
-
-    `{ my code }`
-
-    Add as many paragraphs as you like.
-
-[^2]: This is the first footnote.
+[2^]: https://docs.python.org/3/library/ast.html#ast.literal_eval
