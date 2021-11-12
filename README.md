@@ -1,7 +1,7 @@
 # Machine Learning in Practice from chréon 
-Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrück University in the winter term 2021/2022 at the Insitute of Cognitive Science.
+Source code for the practical Seminar "Machine Learning in Practice", taught at Osnabrück University in the winter term 2021/2022 at the Insitute of Cognitive Science taught by [Lucas Bechberger](https://github.com/lbechberger/).
 
-As data source, we use the "Data Science Tweets 2010-2021" data set (version 3) by Ruchi Bhatia from [Kaggle](https://www.kaggle.com/ruchi798/data-science-tweets). The goal of our example project is to predict which tweets will go viral, i.e., receive many likes and retweets.
+As the data source, we use the "Data Science Tweets 2010-2021" data set (version 3) by Ruchi Bhatia from [Kaggle](https://www.kaggle.com/ruchi798/data-science-tweets). The goal of our example project is to predict which tweets will go viral, i.e., receive many likes and retweets.
 
 ## Virtual Environment
 
@@ -59,7 +59,7 @@ Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), whil
 The preprocessing steps to take can be configured with the following flags:
 - `-c` or `--clean`: A new column "cleaned" is created, where all tweets are free of punctuation, just in lowercase, tokenized, all stopwords are removed and all words are stemmed.
 
-All preprocessing steps are implemented separtely and could be used as well so. However, in this example they are just used in combination.
+All preprocessing steps are implemented separately and could be used like that as well. However, in this example they are just used in combination.
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
@@ -88,11 +88,11 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 
 The features to be extracted can be configured with the following optional parameters:
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see src/feature_extraction/character_length.py)
-- `-w` or `--weekday`: Defines what week day the tweet was made using the "date" column of the data frame. (see src(feature_extraction/character_length.py)
-- `-m` or `--media_type`: Defines if and what type of media (Photo or Video) was attached to the tweet using the "photos" and " video" column of the data frame. (see src(feature_extraction/media_type.py)
-- `-d` or `--day_period`: Defines the day period the tweet was made using the "time" column of the data frame. (see src(feature_extraction/day_period.py)
-- `-k` or `--keywords`: Expect an integer to extract the virals keywords from all viral tweets using the cleaned tweet. (see src(feature_extraction/keywordh.py)
-- `-cm` or `--common_words`: Expect an integer to extract the most common word from all tweets using the cleaned tweet. (see src(feature_extraction/most_common_words.py)
+- `-w` or `--weekday`: Defines what week day the tweet was made using the "date" column of the data frame. (see src/feature_extraction/character_length.py)
+- `-m` or `--media_type`: Defines if and what type of media (Photo or Video) was attached to the tweet using the "photos" and " video" column of the data frame. (see src/feature_extraction/media_type.py)
+- `-d` or `--day_period`: Defines the day period the tweet was made using the "time" column of the data frame. (see src/feature_extraction/day_period.py)
+- `-k` or `--keywords`: Expect an integer to extract the virals keywords from all viral tweets using the cleaned tweet. (see src/feature_extraction/keywordh.py)
+- `-cm` or `--common_words`: Expect an integer to extract the most common word from all tweets using the cleaned tweet. (see src/feature_extraction/most_common_words.py)
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
@@ -112,9 +112,9 @@ The file `output.pickle` will be used to store the results of the dimensionality
 
 The dimensionality reduction method to be applied can be configured with the following optional parameters:
 - `-m` or `--mutual_information`: Select the `k` best features (where `k` is given as argument) with the Mutual Information criterion.
-- `-pca` : Expect a float between 0.0 and 1.0 or 'mlp' to reduce dimensionalty with the Principal Component Analysis.
+- `-pca` : Expects a float between 0.0 and 1.0 or 'mle' to reduce dimensionalty with the Principal Component Analysis.
 
-Moreover, the script support importing and exporting fitted dimensionality reduction techniques with the following optional arguments:
+Moreover, the script supports importing and exporting fitted dimensionality reduction techniques with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted dimensionality reduction technique from the given pickle file. Ignore all parameters that configure the dimensionality reduction technique.
 - `-e` or `--export_file`: Export the configured and fitted dimensionality reduction technique into the given pickle file.
 
@@ -134,8 +134,8 @@ By default, this data is used to train a classifier, which is specified by one o
 - `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
 - `-f` or `--frequency`: Dummy classifier that makes predictions based on the label frequency in the training data.
 - `-u` or `--uniform`: Dummy classifier that makes predictions based on a random distribution of the training data.
-- `--knn`: Expect integert k to use k nearest neighbor classifier.
-- `--lsvm`: Expect float between 0.0 and 1.0 for C to compute the linear support vector machine classifier.
+- `--knn`: Expects an integer k to use k nearest neighbor classifier.
+- `--lsvm`: Expects a float between 0.0 and 1.0 for C to compute the linear support vector machine classifier.
 - `--gnb`: Computes the Gaussian Naive Bayes Classifier. 
 - `--cnb`: Computes the Complement Naive Bayes Classifier. 
 - `--mlp`: Classifies using a Multi Layer Perceptron
