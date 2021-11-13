@@ -13,7 +13,7 @@ Before taking a look at the implemented metrics for judging the prediction perfo
 
 For the baselines a `DummyClassifier` from the sklearn package was used with the `strategy` `most_frequent` and `stratified`. The former determines non-viral tweets as the most frequent class and therefore predicts every sample as non-viral. [Fig. 1](#baselines) shows that this rather dumb prediction strategy results in a high accuracy of 90.6%. This is the case, because the calculation of the accuracy metric is based on how many predictions have been correct. Since the data set contains mostly non-viral tweets, the prediction is correct most of the time with a percentage that is similar to the data set's class distribution. The slight difference in the percentage can be explained by the removal of some samples during the preprocessing step.
 
-The `stratified` strategy makes prediction by respecting the training set’s class distribution. Again the accuracy has a high value of 83.2% on the validation set. In two observations the accuracy metric performs well on baselines indicating that it is not useful for the imbalanced data set and therefore can be dismissed entirely. The other metrics _Precision_, _Recall_, _F1-score_, _Cohen's Kappa_ and _Jaccard score_ are not null this time, but still have a very low value roughly between 0 and 0.1 which is a bad result. Some considerations about the remaining metrics are discussed in the following paragraphs.
+The `stratified` strategy makes prediction by respecting the training set’s class distribution. Again the accuracy has a high value of 83.2% on the validation set. In two observations the accuracy metric performs well on baselines indicating that it is not useful for the imbalanced data set and therefore can be dismissed entirely. The other metrics _Precision_, _Recall_, _F1-score_, _Cohen's Kappa coefficient_ and _Jaccard score_ are not null this time, but still have a very low value roughly between 0 and 0.1 which is a bad result. Some considerations about the remaining metrics are discussed in the following paragraphs.
 
 When selecting metrics, the use case should be taken into account. An average twitter user would expect that most send tweets will not go viral. When such a user would type a potential tweet into our application to find out if it is going to be viral, it is important to detect a tweet which would go viral as such. This can be captured by the recall metric which asks the question _"How many of the true positives did I catch?"_. On the other hand, it would be annoying if the application is not critical enough and classifies a lot of tweets as viral that don't go viral in practice. Such a high rate of false positives is captured by the precision metric which asks _"How many positively classified ones are actually positive?"_. Therefore, both recall and precision are good metrics for the use case.
 
@@ -32,9 +32,9 @@ After the above mentioned actions of appending the raw data set to a big one and
 Two more processors were implemented. First, the `NonEnglishRemover` removes all data rows that are labelled as being non-english. This was done after exploring and visualizing the data set in [`visualization.py`](../src/visualization.py). As can be seen in [Fig. 2.](#tweets-language) the majority of tweets is labelled as english (95.57%). The removel of non-english tweets is useful, because most pre-trained NLP models or other NLP techniques are optimized for english texts. Additionally, next biggest languages only has 3492 records, which is to little to perform any meaningful machine learning on it. It should be noted though, that there are still some non-english tweets in the data set after performing the operation, because they were labeled wrong. Because this misslabeling is seldom, they can be regarded as noise and must not be further taken into account.
 Second, `ColumnDropper` removes columns that are not needed. This is simply for the convenience of having less columns when looking at the preprocessed data set which is saved as an intermediate data set.
 
-### TweetCleaner (removes Hashtag, URL and usernames)
+### TweetCleaner (removes hashtag, URL and usernames)
 
-Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished. It is expected that leaving these elements in the tweet would decrease the performance of various NLP techniques, because they are not trained on such words.
+Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet, because various NLP techniques would otherwise unknown words and expressions which would decrease the performance. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished.
 
 <p align="center">
     <img id="tweets-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">Fig. 2: The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.</p>
@@ -77,9 +77,9 @@ This section gives insights into experimentations with dimensionality reduction 
 
 First off, it was experimented with the already implemented dimensionality reduction technique `SelectKBest`. When selecting the two best ($k=2$) best features, the resulting non-accuracy metrics after training are all 0. This shows that the two best features alone don't contain enough information for any learning to happen. Therefore, the argument `all` is used to ignore the dimensionality reduction and select every feature instead. The amount of features is still small enough so that simply training on all features is possible in reasonable time.
 
-### RandomForestClassifier
+### KNeighborsClassifier & RandomForestClassifier
 
-The implemented classifiers are `KNeighborsClassifier` and `RandomForestClassifier`. The former was already provided by the lecturer; the latter was chosen, because a random forest can be considered as a kind of universal machine learning technique that works very well out of the box on a multitude of data sets according to Jeremy Howard[^4]. He further describes some of the properties of a random forest:
+The implemented classifiers are `KNeighborsClassifier` (k-nearest neighbors) and `RandomForestClassifier`. The former was already provided by the lecturer; the latter was chosen, because a random forest can be considered as a kind of universal machine learning technique that works very well out of the box on a multitude of data sets according to Jeremy Howard[^4]. He further describes some of the properties of a random forest:
 - It can predict multiple data types like categories (classification) or continous variables (regression).
 - It can predict with both structured and unstructured data type columns like pixels, zip codes, revenues and so on. 
 - In general, a separate validation set is not needed, since it generalizes well even if there is only one data set present.
@@ -89,13 +89,17 @@ The implemented classifiers are `KNeighborsClassifier` and `RandomForestClassifi
 
 So all in all, a random forest classifier seems like the perfect first candidate to implement when no strong assumption are made about the data.
 
-### Results after adding more features
+### Results and their improvement through additional features
 
-...
+Initially only features for the length of the mentions and photos column as well as the character length of a tweet were implemented. The last four rows in Fig. 3 show the results of the classification for the k-nearest neighbors (KNN) with $k=1$ and the random forest (RF) classifier with $n=10$ estimators (number of trees in the forest) and otherwise default parameters at this point in time. The metrics for both the training and validation set are quite bad. For example the Cohen's Kappa coefficient for both classifiers barely reaches the 0.1 mark on the training set. For the validation set it is even a bit worse. Suprisingly, the precision on the training set with a RF has a decent score of 0.69 and 0.40 on the validation set.
+
+After adding the sentiment feature the metrics improved a lot on the validation set and quite a bit on the training set.
+
+Adding the more count features...
 
 <p align="center">
-    <img src="./imgs/after_sentiment_2021-11-03_231550.png" alt="">
-Fig. 3:
+    <img src="./imgs/after_more_count_cropped2.png" alt="">
+Fig. 3: Adding more features increases the performance on the training set a lot and slightly improves the performance on the validation set. While a decent performance on the training set is measured, for the validation set it is still quite bad which is a sign of overfitting.
 </p>
 
 ### Hyperparameter optimization with GridSearchCV and manual GridSearch
@@ -119,6 +123,10 @@ Fig. 4:
 | 0     | entropy         | 3                       | 1                  | 0.866                 | 41                    | 0.225         | 3             | 0.257          | 41             | 85       |
 | 21    | gini            | 3                       | 1                  | 0.864                 | 42                    | 0.225         | 2             | 0.250          | 42             | 86       |
 
+
+## Conclusion
+
+...
 
 ## Testing
 
