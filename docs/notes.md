@@ -1,5 +1,15 @@
 
-asd
+
+Can I link to the image ? 
+[Fig 2. main](https://github.com/TobiObeck/MLinPractice/blob/main/docs/Documentation.md#distribution-of-tweets-per-language)
+[Fig 2.](https://github.com/TobiObeck/MLinPractice/blob/documentation-2/docs/Documentation.md#distribution-of-tweets-per-language)
+[Fig 2.](Documentation.md#distribution-of-tweets-per-language)
+[Fig 2.](/Documentation.md#distribution-of-tweets-per-language)
+[Fig 2.](./Documentation.md#distribution-of-tweets-per-language)
+[Fig 2.](#distribution-of-tweets-per-language)
+[Fig 2.](/#distribution-of-tweets-per-language)
+[Fig 2.](./#distribution-of-tweets-per-language)
+<a href="#distribution-of-tweets-per-language">link with html anchor</a>
 
 ![asd](imgs/after_sentiment_2021-11-03_231550.png " ")
 
@@ -30,6 +40,14 @@ asd
 
 
 Here's a simple footnote,[^1] and here's a longer one.[^bignote]. And another one [^2] here
+
+
+<p align="center">
+    <img id="distribution-of-tweets-per-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">
+
+Fig. 2: The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.
+</p>
+
 
 ---
 
