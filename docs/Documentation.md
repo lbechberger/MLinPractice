@@ -9,18 +9,15 @@ The lecturer Lucas Bechberger provided his students with a foundational codebase
 Before taking a look at the implemented metrics for judging the prediction performance of various models, some specifics about the data set at hand need to be considered. The raw data consists of the three `.csv` files _data science_, _data analysis_ and _data visualization_. In a first preprocessing step they are appended respectively to form one big data set. In a next step the data is labeled as viral or not viral according to the above mentioned threshold rule. The resulting data set consists of 295.811 tweet records with a distribution of 90.82% non-viral and 9.18% viral tweets. Such an uneven distribution of labelling classes is often referred to as an imbalanced data set. This fact has to be taken into account when comparing the results of baselines with classifiers and the selection of suitable metrics.
 
 <p align="center">
-    <img src="./imgs/baselines_2021-11-03_231550.png" alt="">
-    
-Fig. 1: Shows the performance of the sklearn DummyClassifier with the strategies 'stratified' and 'most_frequent' on a training and validation data set for all implemented metrics.
-</p>
+    <img id="baselines" src="./imgs/baselines_2021-11-03_231550.png" alt="">Fig. 1. Shows the performance of the sklearn DummyClassifier with the strategies 'stratified' and 'most_frequent' on a training and validation data set for all implemented metrics.</p>
 
-For the baselines a `DummyClassifier` from the sklearn package was used with the `strategy` `most_frequent` and `stratified`. The former determines non-viral tweets as the most frequent class and therefore predicts every sample as non-viral. Fig. 1 shows that this rather dumb prediction strategy results in a high accuracy of 90.6%. This is the case, because the calculation of the accuracy metric is based on how many predictions have been correct. Since the data set contains mostly non-viral tweets, the prediction is correct most of the time with a percentage that is similar to the data set's class distribution. The slight difference in the percentage can be explained by the removal of some samples during the preprocessing step.
+For the baselines a `DummyClassifier` from the sklearn package was used with the `strategy` `most_frequent` and `stratified`. The former determines non-viral tweets as the most frequent class and therefore predicts every sample as non-viral. [Fig. 1](#baselines) shows that this rather dumb prediction strategy results in a high accuracy of 90.6%. This is the case, because the calculation of the accuracy metric is based on how many predictions have been correct. Since the data set contains mostly non-viral tweets, the prediction is correct most of the time with a percentage that is similar to the data set's class distribution. The slight difference in the percentage can be explained by the removal of some samples during the preprocessing step.
 
-The `stratified` strategy makes prediction by respecting the training set’s class distribution. Again the accuracy has a high value of 83.2% on the validation set. In two observations the accuracy metric performs well on baselines indicating that it is not useful for the imbalanced data set and therefore can be dismissed entirely. The other metrics _Precision_, _Recall_, _F1-Score_, _Cohen's Kappa_ and _Jaccard Score_ are not null this time, but still have a very low value roughly between 0 and 0.1 which is a bad result. Some considerations about the remaining metrics are discussed in the following paragraphs.
+The `stratified` strategy makes prediction by respecting the training set’s class distribution. Again the accuracy has a high value of 83.2% on the validation set. In two observations the accuracy metric performs well on baselines indicating that it is not useful for the imbalanced data set and therefore can be dismissed entirely. The other metrics _Precision_, _Recall_, _F1-score_, _Cohen's Kappa_ and _Jaccard score_ are not null this time, but still have a very low value roughly between 0 and 0.1 which is a bad result. Some considerations about the remaining metrics are discussed in the following paragraphs.
 
 When selecting metrics, the use case should be taken into account. An average twitter user would expect that most send tweets will not go viral. When such a user would type a potential tweet into our application to find out if it is going to be viral, it is important to detect a tweet which would go viral as such. This can be captured by the recall metric which asks the question _"How many of the true positives did I catch?"_. On the other hand, it would be annoying if the application is not critical enough and classifies a lot of tweets as viral that don't go viral in practice. Such a high rate of false positives is captured by the precision metric which asks _"How many positively classified ones are actually positive?"_. Therefore, both recall and precision are good metrics for the use case.
 
-Since the F1-Score combines both recall and precision as a weighted average in a single score, it is a practical approach to ignore the former two and instead just focus on the F1-Score alone. Furthermore, Cohen's Kappa is a good condidate for an imbalanced data set. In its calculation the accuracy is used, but adjusted by the probability of random agreement and therefore considered as a more robust measure than simple percent agreement calculations. In addition, the Jaccard Score leaves out false negatives in its calculation. Since it can be expected that this is the most frequently appearing type of result in a confusion matrix, the Jaccard Score is also well-suited for the data set. All in all, the metrics _F1-Score_, _Cohen's Kappa_ and _Jaccard Score_ are used to judge about the models prediction performance by comparing the scores of the model two the scores of the chosen baselines.
+Since the F1-score combines both recall and precision as a weighted average in a single score, it is a practical approach to ignore the former two and instead just focus on the F1-score alone. Furthermore, Cohen's Kappa is a good condidate for an imbalanced data set. In its calculation the accuracy is used, but adjusted by the probability of random agreement and therefore considered as a more robust measure than simple percent agreement calculations. In addition, the Jaccard score leaves out false negatives in its calculation. Since it can be expected that this is the most frequently appearing type of result in a confusion matrix, the Jaccard score is also well-suited for the data set. All in all, the metrics _F1-score_, _Cohen's Kappa_ and _Jaccard score_ are used to judge about the models prediction performance by comparing the scores of the model two the scores of the chosen baselines.
 
 ## Preprocessing
 
@@ -32,7 +29,7 @@ After the above mentioned actions of appending the raw data set to a big one and
 
 ### NonEnglishRemover & ColumnDropper
 
-Two more processors were implemented. First, the `NonEnglishRemover` removes all data rows that are labelled as being non-english. This was done after exploring and visualizing the data set in [`visualization.py`](../src/visualization.py). As can be seen in [Fig 2.](./imgs/distribution_of_tweets_per_language.png) the majority of tweets is labelled as english (95.57%). The removel of non-english tweets is useful, because most pre-trained NLP models or other NLP techniques are optimized for english texts. Additionally, next biggest languages only has 3492 records, which is to little to perform any meaningful machine learning on it. It should be noted though, that there are still some non-english tweets in the data set after performing the operation, because they were labeled wrong. Because this misslabeling is seldom, they can be regarded as noise and must not be further taken into account.
+Two more processors were implemented. First, the `NonEnglishRemover` removes all data rows that are labelled as being non-english. This was done after exploring and visualizing the data set in [`visualization.py`](../src/visualization.py). As can be seen in [Fig. 2.](#tweets-language) the majority of tweets is labelled as english (95.57%). The removel of non-english tweets is useful, because most pre-trained NLP models or other NLP techniques are optimized for english texts. Additionally, next biggest languages only has 3492 records, which is to little to perform any meaningful machine learning on it. It should be noted though, that there are still some non-english tweets in the data set after performing the operation, because they were labeled wrong. Because this misslabeling is seldom, they can be regarded as noise and must not be further taken into account.
 Second, `ColumnDropper` removes columns that are not needed. This is simply for the convenience of having less columns when looking at the preprocessed data set which is saved as an intermediate data set.
 
 ### TweetCleaner (removes Hashtag, URL and usernames)
@@ -40,10 +37,7 @@ Second, `ColumnDropper` removes columns that are not needed. This is simply for 
 Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished. It is expected that leaving these elements in the tweet would decrease the performance of various NLP techniques, because they are not trained on such words.
 
 <p align="center">
-    <img id="distribution-of-tweets-per-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">
-
-Fig. 2: The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.
-</p>
+    <img id="tweets-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">Fig. 2: The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.</p>
 
 ## Feature Extraction
 
@@ -75,20 +69,56 @@ VADER is applied on the tweet and automatically analyzes the sentiment of the wh
 | Catch utf-8 emoji such as 💘 and 💋 and 😁              | {'pos': 0.279, 'compound': 0.7003, 'neu': 0.721, 'neg': 0.0}  |
 | Not bad at all                                           | {'pos': 0.487, 'compound': 0.431, 'neu': 0.513, 'neg': 0.0}   |
 
+## Classification & Results
 
-## Dimensionality Reduction
+This section gives insights into experimentations with dimensionality reduction and the motivation for using a random forest for the classification task. Furthermore, first results are presented. Also, two types of grid searches have been implemented and their results are discussed. Finally, a verdict about the performance is epxressed and considerations given that could improve the performance to make the application useful.
 
+### Dimensionality Reduction
 
+First off, it was experimented with the already implemented dimensionality reduction technique `SelectKBest`. When selecting the two best ($k=2$) best features, the resulting non-accuracy metrics after training are all 0. This shows that the two best features alone don't contain enough information for any learning to happen. Therefore, the argument `all` is used to ignore the dimensionality reduction and select every feature instead. The amount of features is still small enough so that simply training on all features is possible in reasonable time.
 
-## Classification
+### RandomForestClassifier
 
-SelectKBest dimensionality was tried, but did not help.
+The implemented classifiers are `KNeighborsClassifier` and `RandomForestClassifier`. The former was already provided by the lecturer; the latter was chosen, because a random forest can be considered as a kind of universal machine learning technique that works very well out of the box on a multitude of data sets according to Jeremy Howard[^4]. He further describes some of the properties of a random forest:
+- It can predict multiple data types like categories (classification) or continous variables (regression).
+- It can predict with both structured and unstructured data type columns like pixels, zip codes, revenues and so on. 
+- In general, a separate validation set is not needed, since it generalizes well even if there is only one data set present.
+- It generally does not overfit too badly and it is very easy to prevent overfitting.
+- It makes few, if any, statistical assumptions like assuming that the data is normally distributed, that the relationship is linear or that you have certain interactions.
+- Feature engineering processing like taking the log of the data or multiplying interactions together is not needed.
+
+So all in all, a random forest classifier seems like the perfect first candidate to implement when no strong assumption are made about the data.
+
+### Results after adding more features
+
+...
 
 <p align="center">
     <img src="./imgs/after_sentiment_2021-11-03_231550.png" alt="">
-
 Fig. 3:
 </p>
+
+### Hyperparameter optimization with GridSearchCV and manual GridSearch
+
+... 
+
+<p align="center">
+    <img src="./imgs/manual_hyper_param_results.png" alt="">
+Fig. 4:
+</p>
+
+| index | param_criterion | param_min_samples_split | param_n_estimators | mean_test_cohen_kappa | rank_test_cohen_kappa | mean_test_rec | rank_test_rec | mean_test_prec | rank_test_prec | rank_sum |
+|-------|-----------------|-------------------------|--------------------|-----------------------|-----------------------|---------------|---------------|----------------|----------------|----------|
+| 19    | entropy         | 5                       | 101                | 0.906                 | 2                     | 0.144         | 35            | 0.509          | 2              | 39       |
+| 20    | entropy         | 5                       | 121                | 0.906                 | 3                     | 0.143         | 36            | 0.508          | 3              | 42       |
+| 41    | gini            | 5                       | 121                | 0.907                 | 1                     | 0.140         | 42            | 0.514          | 1              | 44       |
+| 32    | gini            | 4                       | 81                 | 0.905                 | 11                    | 0.153         | 24            | 0.491          | 10             | 45       |
+| ...   | ...             | ...                     | ...                | ...                   | ...                   | ...           | ...           | ...            | ...            | ...      |
+| 14    | entropy         | 5                       | 1                  | 0.867                 | 38                    | 0.217         | 5             | 0.258          | 40             | 83       |
+| 29    | gini            | 4                       | 21                 | 0.903                 | 31                    | 0.158         | 20            | 0.462          | 32             | 83       |
+| 0     | entropy         | 3                       | 1                  | 0.866                 | 41                    | 0.225         | 3             | 0.257          | 41             | 85       |
+| 21    | gini            | 3                       | 1                  | 0.864                 | 42                    | 0.225         | 2             | 0.250          | 42             | 86       |
+
 
 ## Testing
 
@@ -113,3 +143,5 @@ Test implemented, but corresponding implementation not entirely finished (branch
 [^3]: Taken from https://github.com/cjhutto/vaderSentiment#vader-sentiment-analysis
 
     VADER (Valence Aware Dictionary and sEntiment Reasoner) is a lexicon and rule-based sentiment analysis tool that is specifically attuned to sentiments expressed in social media. It is fully open-sourced under the [MIT License] (we sincerely appreciate all attributions and readily accept most contributions, but please don't hold us liable).
+
+[^4]: Introduction to Machine Learning for Coders Online Course by Jeremy Howard. https://www.youtube.com/watch?v=CzdWqFTmn0Y&t=2197s
