@@ -55,15 +55,26 @@ The `CounterFE` takes an input column. Suitable columns for this task contain in
 
 The data set contains the countable columns *mentions*, *photos*, *hashtags*, *urls*, *cashtags*, *reply_to* and *tweet_tokenized*. The motivation for chosing these columns was to gain information about the virality of tweet by counting for example the amount of photos, used hashtags and urls of a particular tweet. The following table shows an example what the input for the hashtag column could look like and the corresponding output of the feature extractor.
 
-| input                                                             | output |
-|-------------------------------------------------------------------|--------|
-| "['energy', 'visualization', 'data']"                             | 3      |
-| "[]"                                                              | 0      |
-| "['flutter', 'webdevelopment', 'mobiledev', 'datavisualization']" | 4      |
+| input coulmn                                                      | output column |
+|-------------------------------------------------------------------|-------------- |
+| "['energy', 'visualization', 'data']"                             | 3             |
+| "[]"                                                              | 0             |
+| "['flutter', 'webdevelopment', 'mobiledev', 'datavisualization']" | 4             |
 
 ### SentimentFE
 
-The `SentimentFE` feature extractor makes us of a sentiment analyzer. The idea is to analyze the sentiment of the tweet text itself by passing it as an input column. It is assumed that tweets which elicit a strong positive or negative emotion are more likely to go viral. For this task the VADER (Valence Aware Dictionary and sEntiment Reasoner) analysis tool was used. This tool is lexicon and rule-based specifically attuned to sentiments expressed in social media. [^3] VADER is applied on the tweet and automatically analyzes the sentiment of the whole tweet, even if it contains multiple sentences. The calculated *positive* and *negative* polarity scores are floating point numbers between 0 and 1 and then stored in the output column. It is noteworthy that VADER also offers a neutral score as well as a compound store, consisting of the sum of *positive* and *neutral*. These two scores where not used because tehy provide no new information since the sum of *positive*, *neutral* and *negative* always is 1.
+The `SentimentFE` feature extractor makes use of a sentiment analyzer. The idea is to analyze the sentiment of the tweet text itself by passing it as an input column. It is assumed that tweets which elicit a strong positive or negative emotion are more likely to go viral. For this task the VADER (Valence Aware Dictionary and sEntiment Reasoner) analysis tool was used. It is lexicon and rule-based tool specifically attuned to sentiments expressed in social media. [^3] VADER even supports slang and takes the author's emphasis by capitalizing words into account. Therefore, it should be well-suited for analyzing tweets.
+
+VADER is applied on the tweet and automatically analyzes the sentiment of the whole tweet, even if it contains multiple sentences. The calculated *positive*, *neutral* and *negative* polarity scores are floating point number between 0 and 1 that sum up to a total of 1. Only the positive and negative scores are used, since the neutral score is always the remainding value to sum up to 1 and therefore contains no new information. Both scores are stored in the output column. It is noteworthy that VADER also offers a compound score which is a normalized, weighted composite score in a single number between -1 and 1. Using this value would have been a good alternative to using the positive and negative score. The following table shows a few example input texts and their corresponding VADER scores.
+
+| input                                                    | output                                                        |
+|----------------------------------------------------------|---------------------------------------------------------------|
+| VADER is smart, handsome, and funny.                     | {'pos': 0.746, 'compound': 0.8316, 'neu': 0.254, 'neg': 0.0}  |
+| VADER is VERY SMART, uber handsome, and FRIGGIN FUNNY!!! | {'pos': 0.706, 'compound': 0.9469, 'neu': 0.294, 'neg': 0.0}  |
+| Today SUX!                                               | {'pos': 0.0, 'compound': -0.5461, 'neu': 0.221, 'neg': 0.779} |
+| Catch utf-8 emoji such as 💘 and 💋 and 😁              | {'pos': 0.279, 'compound': 0.7003, 'neu': 0.721, 'neg': 0.0}  |
+| Not bad at all                                           | {'pos': 0.487, 'compound': 0.431, 'neu': 0.513, 'neg': 0.0}   |
+
 
 ## Dimensionality Reduction
 
@@ -87,7 +98,7 @@ Three additional tests have been implemented to ensure the intended functionalit
 - [count_test.py](..\src\feature_extraction\test\count_test.py)
 - [sentiment_test.py](..\src\feature_extraction\test\sentiment_test.py)
 
-Test implemented, but corresponding implementation not enterily finished (branch `Tweetclean`):
+Test implemented, but corresponding implementation not entirely finished (branch `Tweetclean`):
 
 - [tweet_cleaner_test.py](..\src\preprocessing\test\tweet_cleaner_test.py)
 
