@@ -9,7 +9,9 @@ The lecturer Lucas Bechberger provided his students with a foundational codebase
 Before taking a look at the implemented metrics for judging the prediction performance of various models, some specifics about the data set at hand need to be considered. The raw data consists of the three `.csv` files _data science_, _data analysis_ and _data visualization_. In a first preprocessing step they are appended respectively to form one big data set. In a next step the data is labeled as viral or not viral according to the above mentioned threshold rule. The resulting data set consists of 295.811 tweet records with a distribution of 90.82% non-viral and 9.18% viral tweets. Such an uneven distribution of labelling classes is often referred to as an imbalanced data set. This fact has to be taken into account when comparing the results of baselines with classifiers and the selection of suitable metrics.
 
 <p align="center">
-    <img id="baselines" src="./imgs/baselines_2021-11-03_231550.png" alt="">Fig. 1. Shows the performance of the sklearn DummyClassifier with the strategies 'stratified' and 'most_frequent' on a training and validation data set for all implemented metrics.</p>
+    <img id="baselines" src="./imgs/baselines_2021-11-03_231550.png" alt="">
+    
+Fig. 1. Shows the performance of the sklearn DummyClassifier with the strategies 'stratified' and 'most_frequent' on a training and validation data set for all implemented metrics.</p>
 
 For the baselines a `DummyClassifier` from the sklearn package was used with the `strategy` `most_frequent` and `stratified`. The former determines non-viral tweets as the most frequent class and therefore predicts every sample as non-viral. [Fig. 1](#baselines) shows that this rather dumb prediction strategy results in a high accuracy of 90.6%. This is the case, because the calculation of the accuracy metric is based on how many predictions have been correct. Since the data set contains mostly non-viral tweets, the prediction is correct most of the time with a percentage that is similar to the data set's class distribution. The slight difference in the percentage can be explained by the removal of some samples during the preprocessing step.
 
@@ -29,7 +31,7 @@ After the above mentioned actions of appending the raw data set to a big one and
 
 ### NonEnglishRemover & ColumnDropper
 
-Two more processors were implemented. First, the `NonEnglishRemover` removes all data rows that are labelled as being non-english. This was done after exploring and visualizing the data set in [`visualization.py`](../src/visualization.py). As can be seen in [Fig. 2.](#tweets-language) the majority of tweets is labelled as english (95.57%). The removel of non-english tweets is useful, because most pre-trained NLP models or other NLP techniques are optimized for english texts. Additionally, next biggest languages only has 3492 records, which is to little to perform any meaningful machine learning on it. It should be noted though, that there are still some non-english tweets in the data set after performing the operation, because they were labeled wrong. Because this misslabeling is seldom, they can be regarded as noise and must not be further taken into account.
+Two more processors were implemented. First, the `NonEnglishRemover` removes all data rows that are labelled as being non-english. This was done after exploring and visualizing the data set in [`visualization.py`](../src/visualization.py). As can be seen in [Fig. 2](#tweets-language) the majority of tweets is labelled as english (95.57%). The removel of non-english tweets is useful, because most pre-trained NLP models or other NLP techniques are optimized for english texts. Additionally, next biggest languages only has 3492 records, which is to little to perform any meaningful machine learning on it. It should be noted though, that there are still some non-english tweets in the data set after performing the operation, because they were labeled wrong. Because this misslabeling is seldom, they can be regarded as noise and must not be further taken into account.
 Second, `ColumnDropper` removes columns that are not needed. This is simply for the convenience of having less columns when looking at the preprocessed data set which is saved as an intermediate data set.
 
 ### TweetCleaner (removes hashtag, URL and usernames)
@@ -37,7 +39,7 @@ Second, `ColumnDropper` removes columns that are not needed. This is simply for 
 Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet, because various NLP techniques would otherwise unknown words and expressions which would decrease the performance. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished.
 
 <p align="center">
-    <img id="tweets-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">Fig. 2: The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.</p>
+    <img id="tweets-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">Fig. 2. The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.</p>
 
 ## Feature Extraction
 
@@ -89,26 +91,28 @@ The implemented classifiers are `KNeighborsClassifier` (k-nearest neighbors) and
 
 So all in all, a random forest classifier seems like the perfect first candidate to implement when no strong assumption are made about the data.
 
-### Results and their improvement through additional features
+### Early Results and Their Improvement Through Additional Features
 
-Initially only features for the length of the mentions and photos column as well as the character length of a tweet were implemented. The last four rows in Fig. 3 show the results of the classification for the k-nearest neighbors (KNN) with $k=1$ and the random forest (RF) classifier with $n=10$ estimators (number of trees in the forest) and otherwise default parameters at this point in time. The metrics for both the training and validation set are quite bad. For example the Cohen's Kappa coefficient for both classifiers barely reaches the 0.1 mark on the training set. For the validation set it is even a bit worse. Suprisingly, the precision on the training set with a RF has a decent score of 0.69 and 0.40 on the validation set.
-
-After adding the sentiment feature the metrics improved a lot on the validation set and quite a bit on the training set.
-
-Adding the more count features...
+Initially only features for the length of the mentions and photos column as well as the character length of a tweet were implemented. The last four rows in [Fig. 3](#early-results) show the results of the classification at this point in time for the k-nearest neighbors classifier (KNN) with $k=1$ and the random forest (RF) classifier with $n=10$ estimators, meaning the number of trees in the forest. Other than that default parameters were used. The metrics for both the training and validation set are quite bad. For example the Cohen's Kappa coefficient for both classifiers barely reaches the 0.1 mark on the training set. For the validation set it is even a bit worse. Suprisingly, the precision for a RF has a decent score of 0.69 on the training set and 0.40 on the validation set. Since the performance on both training and validation set is poor, the models are underfitting and more features are needed.
 
 <p align="center">
-    <img src="./imgs/after_more_count_cropped2.png" alt="">
-Fig. 3: Adding more features increases the performance on the training set a lot and slightly improves the performance on the validation set. While a decent performance on the training set is measured, for the validation set it is still quite bad which is a sign of overfitting.
+    <img id="early-results" src="./imgs/after_more_count_cropped2.png" alt="">
+
+    Fig. 3: Adding more features increases the performance on the training set a lot and slightly improves the performance on the validation set. While a decent performance on the training set is measured, for the validation set it is still quite bad which is a sign of overfitting.
 </p>
+
+After adding the sentiment feature the metrics improved a lot on the training set and a bit on the validation set. For example the Cohen's Kappa is at roughly 0.60 on the trainging set and between 0.11 and 0.12 on the validation set. The performance on the validation set is still relatively poor. Without taking precision into account, the metrics have approximately a value between 0.1 and 0.2. The precision is even worse than before with 0.32. The results show that the models are able to learn something on the training set but this doesn't generalize well on the validation set. So the models could be overfitting because the parameters are chosen too high. But this is not the case for the KNN classifier. Therefore, it is assumed that the features contain to little information for proper learning to happen.
+
+Adding the reaminding count features – mentioned in the [feature extraction](#CounterFE) section – improves the metrics for training set to reasonably good scores. Most metrics are in a range between 0.71 and 0.88. Despite the fact that the performance on the validation set has improved a bit, it still has to be rated as rather poor overall. Most metrics are in the range of 0.14 and 0.27, so in summary even worse than flipping a coin. Since the model parameters are chosen relatively low, which is especially true for the KNN classifier, it can be assumed that the implemented features just don't contain enough meaningful data to predict the virality of tweets.
 
 ### Hyperparameter optimization with GridSearchCV and manual GridSearch
 
 ... 
 
 <p align="center">
-    <img src="./imgs/manual_hyper_param_results.png" alt="">
-Fig. 4:
+    <img src="./imgs/manual_hyper_param_results.png" alt="">    
+</p>
+<p align="center">Fig. 4: TODO Without efficient, transparent bloatware, you will lack social networks. We will enlarge our ability to whiteboard without lessening our power to aggregate. We apply the proverb 'Look before you leap' not only to our content but our... TODO
 </p>
 
 | index | param_criterion | param_min_samples_split | param_n_estimators | mean_test_cohen_kappa | rank_test_cohen_kappa | mean_test_rec | rank_test_rec | mean_test_prec | rank_test_prec | rank_sum |
@@ -126,7 +130,11 @@ Fig. 4:
 
 ## Conclusion
 
-...
+meta data does not contain enough informastion to learn anything meaningful. More work is needed to create proper NLP features that analyze and extract information from the actual content of the tweet. For example this could be the extraction of names and entiteis with named entity recognition or the analyzation of the term frecuency with techniques like TF-IDF or topic modelling. So finding out which topics are relevant and how often they appear in comparison to the overall distribution across all tweets in the data set. Furthermore, it is probably a mistake to use the positve and negative score of the VADER sentiment analysis, because the compound score gives a better representation of the sentiment by taking emphasis into account.
+
+TODO RESULTS ON TEST SET TODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SET
+
+All in all the performance of the model seems to be too bad to be a useful tool in a production application. Because the prediction performance on all metrics for the validation set is way below 50% flipping a coin gives better predictions whether a tweet will go viral or not. Therfore, it makes no sense to publish the application to users. More work on creating good features would be needed to improve performance.
 
 ## Testing
 
