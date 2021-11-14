@@ -4,7 +4,6 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import numpy as np
 import pandas as pd
-from nltk import tokenize
 from src.feature_extraction.feature_extractor import FeatureExtractor
 
 
@@ -21,11 +20,9 @@ class SentimentFE(FeatureExtractor):
 
     # don't need to fit, so don't overwrite _set_variables()
 
-
     def _get_values(self, inputs: pd.Series):
 
         analyzer = SentimentIntensityAnalyzer()
-        # result = inputs[0].apply(lambda x: [analyzer.polarity_scores(sentence) for sentence in x])
         sentiments = inputs[0].apply(lambda x: analyzer.polarity_scores(x))
 
         temp_df = pd.DataFrame.from_records(sentiments)

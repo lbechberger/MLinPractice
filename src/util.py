@@ -5,12 +5,12 @@ Utility file for collecting frequently used constants and helper function.
 """
 
 # column names for the original data frame
+COLUMN_RETWEETS = "retweets_count"
+COLUMN_LIKES = "likes_count"
+
 COLUMN_TWEET = "tweet"
 COLUMN_MENTIONS = "mentions"
 COLUMN_PHOTOS = "photos"
-COLUMN_MENTIONS_COUNT = "mentions_count"
-COLUMN_LIKES = "likes_count"
-COLUMN_RETWEETS = "retweets_count"
 COLUMN_HASHTAGS = "hashtags"
 COLUMN_URLS = "urls"
 COLUMN_CASHTAGS = "cashtags"
