@@ -8,9 +8,9 @@ The lecturer Lucas Bechberger provided his students with a foundational codebase
 
 Before taking a look at the implemented metrics for judging the prediction performance of various models, some specifics about the data set at hand need to be considered. The raw data consists of the three `.csv` files _data science_, _data analysis_ and _data visualization_. In a first preprocessing step they are appended respectively to form one big data set. In a next step the data is labeled as viral or not viral according to the above mentioned threshold rule. The resulting data set consists of 295.811 tweet records with a distribution of 90.82% non-viral and 9.18% viral tweets. Such an uneven distribution of labelling classes is often referred to as an imbalanced data set. This fact has to be taken into account when comparing the results of baselines with classifiers and the selection of suitable metrics.
 
-<p align="center">
+<span align="center">
     <img id="baselines" src="./imgs/baselines_2021-11-03_231550.png" alt="">
-</p>
+</span>
 <p align="center">Fig. 1. Shows the performance of the sklearn DummyClassifier with the strategies 'stratified' and 'most_frequent' on a training and validation data set for all implemented metrics.</p>
 
 For the baselines a `DummyClassifier` from the sklearn package was used with the `strategy` `most_frequent` and `stratified`. The former determines non-viral tweets as the most frequent class and therefore predicts every sample as non-viral. [Fig. 1](#baselines) shows that this rather dumb prediction strategy results in a high accuracy of 90.6%. This is the case, because the calculation of the accuracy metric is based on how many predictions have been correct. Since the data set contains mostly non-viral tweets, the prediction is correct most of the time with a percentage that is similar to the data set's class distribution. The slight difference in the percentage can be explained by the removal of some samples during the preprocessing step.
@@ -19,7 +19,7 @@ The `stratified` strategy makes prediction by respecting the training set’s cl
 
 When selecting metrics, the use case should be taken into account. An average twitter user would expect that most send tweets will not go viral. When such a user would type a potential tweet into our application to find out if it is going to be viral, it is important to detect a tweet which would go viral as such. This can be captured by the recall metric which asks the question _"How many of the true positives did I catch?"_. On the other hand, it would be annoying if the application is not critical enough and classifies a lot of tweets as viral that don't go viral in practice. Such a high rate of false positives is captured by the precision metric which asks _"How many positively classified ones are actually positive?"_. Therefore, both recall and precision are good metrics for the use case.
 
-Since the F1-score combines both recall and precision as a weighted average in a single score, it is a practical approach to ignore the former two and instead just focus on the F1-score alone. Furthermore, Cohen's Kappa is a good condidate for an imbalanced data set. In its calculation the accuracy is used, but adjusted by the probability of random agreement and therefore considered as a more robust measure than simple percent agreement calculations. In addition, the Jaccard score leaves out false negatives in its calculation. Since it can be expected that this is the most frequently appearing type of result in a confusion matrix, the Jaccard score is also well-suited for the data set. All in all, the metrics _F1-score_, _Cohen's Kappa_ and _Jaccard score_ are used to judge about the models prediction performance by comparing the scores of the model two the scores of the chosen baselines.
+Since the F1-score combines both recall and precision as a weighted average in a single score, it is just as an addition. Furthermore, Cohen's Kappa is a good condidate for an imbalanced data set. In its calculation the accuracy is used, but adjusted by the probability of random agreement and therefore considered as a more robust measure than simple percent agreement calculations. Additionally, the Jaccard score leaves out false negatives in its calculation. Since it can be expected that this is the most frequently appearing type of result in a confusion matrix, the Jaccard score is also well-suited for the data set. All in all, the metrics _Cohen's Kappa_, _F1-score_ _Jaccard score_, _precision_ and _recall_ are used to judge about the models prediction performance by comparing the scores of the model two the scores of the chosen baselines.
 
 ## Preprocessing
 
@@ -34,13 +34,13 @@ After the above mentioned actions of appending the raw data set to a big one and
 Two more processors were implemented. First, the `NonEnglishRemover` removes all data rows that are labelled as being non-english. This was done after exploring and visualizing the data set in [`visualization.py`](../src/visualization.py). As can be seen in [Fig. 2](#tweets-language) the majority of tweets is labelled as english (95.57%). The removel of non-english tweets is useful, because most pre-trained NLP models or other NLP techniques are optimized for english texts. Additionally, next biggest languages only has 3492 records, which is to little to perform any meaningful machine learning on it. It should be noted though, that there are still some non-english tweets in the data set after performing the operation, because they were labeled wrong. Because this misslabeling is seldom, they can be regarded as noise and must not be further taken into account.
 Second, `ColumnDropper` removes columns that are not needed. This is simply for the convenience of having less columns when looking at the preprocessed data set which is saved as an intermediate data set.
 
-### TweetCleaner (removes hashtag, URL and usernames)
+### TweetCleaner (removes hashtags, URLs and usernames)
 
-Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet, because various NLP techniques would otherwise unknown words and expressions which would decrease the performance. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished.
+Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet, because various NLP techniques would otherwise unknown words and expressions which would decrease the performance. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished and therefore not used in any features. Just for the record, the preprocessor was mostly implemented by a team member who dropped out of the course.
 
-<p align="center">
+<span align="center">
     <img id="tweets-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">
-</p>
+</span>
 <p align="center">Fig. 2. The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.</p>
 
 ## Feature Extraction
@@ -63,7 +63,7 @@ The data set contains the countable columns *mentions*, *photos*, *hashtags*, *u
 
 The `SentimentFE` feature extractor makes use of a sentiment analyzer. The idea is to analyze the sentiment of the tweet text itself by passing it as an input column. It is assumed that tweets which elicit a strong positive or negative emotion are more likely to go viral. For this task the VADER (Valence Aware Dictionary and sEntiment Reasoner) analysis tool was used. It is lexicon and rule-based tool specifically attuned to sentiments expressed in social media. [^3] VADER even supports slang and takes the author's emphasis by capitalizing words into account. Therefore, it should be well-suited for analyzing tweets.
 
-VADER is applied on the tweet and automatically analyzes the sentiment of the whole tweet, even if it contains multiple sentences. The calculated *positive*, *neutral* and *negative* polarity scores are floating point number between 0 and 1 that sum up to a total of 1. Only the positive and negative scores are used, since the neutral score is always the remainding value to sum up to 1 and therefore contains no new information. Both scores are stored in the output column. It is noteworthy that VADER also offers a compound score which is a normalized, weighted composite score in a single number between -1 and 1. Using this value would have been a good alternative to using the positive and negative score. The following table shows a few example input texts and their corresponding VADER scores.
+VADER is applied on the tweet and automatically analyzes the sentiment of the whole tweet, even if it contains multiple sentences. The calculated *positive*, *neutral* and *negative* polarity scores are floating point number between 0 and 1 that sum up to a total of 1. Only the positive and negative scores are used, since the neutral score is always the remaining value to sum up to 1 and therefore contains no new information. Both scores are stored in the output column. It is noteworthy that VADER also offers a compound score which is a normalized, weighted composite score in a single number between -1 and 1. The following table shows a few example input texts and their corresponding VADER scores. Using the compound score value probably would have  been a better alternative to using the positive and negative score because the first two examples demonstrate how the compound score takes capitalization emphasis into account.
 
 | input                                                    | output                                                        |
 |----------------------------------------------------------|---------------------------------------------------------------|
@@ -97,62 +97,53 @@ So all in all, a random forest classifier seems like the perfect first candidate
 
 Initially only features for the length of the mentions and photos column as well as the character length of a tweet were implemented. The last four rows in [Fig. 3](#early-results) show the results of the classification at this point in time for the k-nearest neighbors classifier (KNN) with $k=1$ and the random forest (RF) classifier with $n=10$ estimators, meaning the number of trees in the forest. Other than that default parameters were used. The metrics for both the training and validation set are quite bad. For example the Cohen's Kappa coefficient for both classifiers barely reaches the 0.1 mark on the training set. For the validation set it is even a bit worse. Suprisingly, the precision for a RF has a decent score of 0.69 on the training set and 0.40 on the validation set. Since the performance on both training and validation set is poor, the models are underfitting and more features are needed.
 
-<p align="center">
+<span align="center">
     <img id="early-results" src="./imgs/after_more_count_cropped2.png" alt="">
-</p>
+</span>
 <p align="center">Fig. 3. Adding more features increases the performance on the training set a lot and slightly improves the performance on the validation set. While a decent performance on the training set is measured, for the validation set it is still quite bad which is a sign of overfitting.</p>
 
 After adding the sentiment feature the metrics improved a lot on the training set and a bit on the validation set. For example the Cohen's Kappa is at roughly 0.60 on the trainging set and between 0.11 and 0.12 on the validation set. The performance on the validation set is still relatively poor. Without taking precision into account, the metrics have approximately a value between 0.1 and 0.2. The precision is even worse than before with 0.32. The results show that the models are able to learn something on the training set but this doesn't generalize well on the validation set. So the models could be overfitting because the parameters are chosen too high. But this is not the case for the KNN classifier. Therefore, it is assumed that the features contain to little information for proper learning to happen.
 
-Adding the reaminding count features – mentioned in the [feature extraction](#CounterFE) section – improves the metrics for training set to reasonably good scores. Most metrics are in a range between 0.71 and 0.88. Despite the fact that the performance on the validation set has improved a bit, it still has to be rated as rather poor overall. Most metrics are in the range of 0.14 and 0.27, so in summary even worse than flipping a coin. Since the model parameters are chosen relatively low, which is especially true for the KNN classifier, it can be assumed that the implemented features just don't contain enough meaningful information to predict the virality of tweets.
+Adding the remaining count features – mentioned in the [feature extraction](#CounterFE) section – improves the metrics for training set to reasonably good scores. Most metrics are in a range between 0.71 and 0.88. Despite the fact that the performance on the validation set has improved a bit, it still has to be rated as rather poor overall. Most metrics are in the range of 0.14 and 0.27, so in summary even worse than flipping a coin. Since the model parameters are chosen relatively low, which is especially true for the KNN classifier, it can be assumed that the implemented features just don't contain enough meaningful information to predict the virality of tweets.
 
-### Hyperparameter Optimization with GridSearchCV and Manual GridSearch
+### Hyperparameter Optimization with GridSearchCV and Manual Grid Search
 
-To figure out whether a different configuration of parameters would improve the performance of the validation set, a grid search is implemented in two variants. One variant is implemented in `classification_hyper_param.sh` by iteratively invoking the `run_classifier.py` script with different parameter values for classifiers in each iteration. The KNN classifier is invoked with k values in a range from 1 to 10 and the RF with a range from 1 to 10 in steps of 1 as well as 10 to 100 in roughly steps of 10. The second implementation uses the `GridSearchCV` class from sklearn to explore the best values for the parameters `criterion`, `min_samples_split` and `n_estimators`. The class uses the metrics OMG I used accuracy instead of cohen \**facepalm**  `'cohen_kappa': make_scorer(accuracy_score),
-                        'rec': 'recall',
-                        'prec': 'precision'`. Now it makes sense why cohen was so good.
+To figure out whether a different configuration of parameters would improve the performance of the validation set, a grid search is implemented in two variants. One variant is implemented in `classification_hyper_param.sh` by iteratively invoking the `run_classifier.py` script with different parameter values for the respective classifier in each iteration. The KNN classifier is invoked with $k$ values in a range from 1 to 10 and the RF with $n$ in a range from 1 to 10 in steps of 1 as well as 10 to 82 in steps of 3. The second implementation uses the `GridSearchCV` class from sklearn to explore the best values for the parameters `criterion`, `min_samples_split` and `n_estimators`. A multi-metric setup with Cohen's Kappa, recall and precision as well as a refit on Cohen's Kappa is configured. By default a 5-fold cross validation is used to evaluate the performance.
 
-The results of the RF can be seen in [Fig. 4](#hyper-man-rf).
+Multiple experimentations with the sklearn grid search revealed no significant difference between the two criterions *gini* and *entropy*. Therefore, another run is performed with the *gini* criterion, `min_samples_split` with the range 2, 4, 6 and 8 as well as a `n_estimators` from 5 to 125 in steps of 12. The results show that `n_estimators` has relatively little impact on the metric scores. Instead there seems to be a somewhat linear correlation and negative correlation between the number of `min_samples_split` and the metrics. The highest mean Cohen's Kappa coefficient of 0.211 is achieved at a split of 2 and the lowest at 8 with 0.163. In the same fashion, the mean recall reaches 0.183 and 0.116 for 2 and 8 respectively. For precision, there is an inverse relationship so that 2 gives the worst score 0.423 and 8 gives the best with 0.544. It can be concluded that the selection of the `min_samples_split` parameter value in a tradeoff between a good precision score and the other metric scores results. The result are saved as [gridsearch_results_crit_1-125-12steps_min2468.csv](results\gridsearch_results_crit_1-125-12steps_min2468.csv).
 
+For the manual grid search a `min_samples_split` of 2 is chosen so that the individual metrics would have a rather good balanced value, instead of having a high precision value in relation to the other metrics. The results of the run on the validation set show once again a linear relationship between Cohen's Cappa, recall and precision. Furthermore, it is noticable that the highest scores for Cohen's Cappa are achieved by a random forest with $n$ between 9 and 82. Because the scores of Cohen's Cappa converge beginning with 9, everything above can be considered as a too high model capacity and starting to overfit. Because of the linear relationship the previously mentioned metrics are more or less the same. Therefore the F1-Score and Jaccard Score are of more interest. The KNN with $k=1$ is the best and RF with $n=9$ the second best classifier for both metrics. The following table shows the results for both. Also, all results are saved as [manual_gridsearch_all.csv](results\manual_gridsearch_all.csv).
 
-
-<p align="center">
-    <img id="hyper-man-rf" src="./imgs/manual_hyper_param_results.png" alt="">    
-</p>
-<p align="center">Fig. 4. TODO Without efficient, transparent bloatware, you will lack social networks. We will enlarge our ability to whiteboard without lessening our power to aggregate. We apply the proverb 'Look before you leap' not only to our content but our... TODO</p>
-
-| index | param_criterion | param_min_samples_split | param_n_estimators | mean_test_cohen_kappa | rank_test_cohen_kappa | mean_test_rec | rank_test_rec | mean_test_prec | rank_test_prec | rank_sum |
-|-------|-----------------|-------------------------|--------------------|-----------------------|-----------------------|---------------|---------------|----------------|----------------|----------|
-| 19    | entropy         | 5                       | 101                | 0.906                 | 2                     | 0.144         | 35            | 0.509          | 2              | 39       |
-| 20    | entropy         | 5                       | 121                | 0.906                 | 3                     | 0.143         | 36            | 0.508          | 3              | 42       |
-| 41    | gini            | 5                       | 121                | 0.907                 | 1                     | 0.140         | 42            | 0.514          | 1              | 44       |
-| 32    | gini            | 4                       | 81                 | 0.905                 | 11                    | 0.153         | 24            | 0.491          | 10             | 45       |
-| ...   | ...             | ...                     | ...                | ...                   | ...                   | ...           | ...           | ...            | ...            | ...      |
-| 14    | entropy         | 5                       | 1                  | 0.867                 | 38                    | 0.217         | 5             | 0.258          | 40             | 83       |
-| 29    | gini            | 4                       | 21                 | 0.903                 | 31                    | 0.158         | 20            | 0.462          | 32             | 83       |
-| 0     | entropy         | 3                       | 1                  | 0.866                 | 41                    | 0.225         | 3             | 0.257          | 41             | 85       |
-| 21    | gini            | 3                       | 1                  | 0.864                 | 42                    | 0.225         | 2             | 0.250          | 42             | 86       |
-
+| Accuracy | Kappa | F1 | Jaccard | Precision | Recall | classifier   | data set   | k | n |
+|----------|-------------|----------|---------|-----------|--------|--------------|------------|---|---|
+| 0.862    | 0.194       | 0.27     | 0.156   | 0.27      | 0.271  | knn          | validation | 1 | - |
+| 0.94     | 0.637       | 0.67     | 0.504   | 0.696     | 0.646  | knn          | training   | 1 | - |
+| 0.896    | 0.212       | 0.261    | 0.15    | 0.393     | 0.196  | randomforest | validation | - | 9 |
+| 0.973    | 0.833       | 0.847    | 0.735   | 0.928     | 0.779  | randomforest | training   | - | 9 |
 
 ## Conclusion
 
-meta data does not contain enough informastion to learn anything meaningful. More work is needed to create proper NLP features that analyze and extract information from the actual content of the tweet. For example this could be the extraction of names and entiteis with named entity recognition or the analyzation of the term frecuency with techniques like TF-IDF or topic modelling. So finding out which topics are relevant and how often they appear in comparison to the overall distribution across all tweets in the data set. Furthermore, it is probably a mistake to use the positve and negative score of the VADER sentiment analysis, because the compound score gives a better representation of the sentiment by taking emphasis into account.
+The analysis of the data set showed that accuracy is a bad metric for evaluating the prediction performance and therefore dismissed. The addition of more features did improve the performance on the training set alot, but only slighty on the validation set. This is a sign of overfitting. Various search grid runs showed that the used classifiers and parameter were already almost optimal. These hyperparameter optimization also revealed that the prediction performance could only be slightly nudged upwards. Most metrics remain between 0.15 and 0.39. All in all, it can be concluded that the implemented features extract too little information to make good predictions about the virality of tweets. This is understandable since most features are only taking meta data of tweets into account, but not the actual content of the tweet itself.
 
-TODO RESULTS ON TEST SET TODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SETTODO RESULTS ON TEST SET
+More work is needed to create proper NLP features that analyze and extract information from the actual content of the tweet. For example this could be the extraction of names and entities with named entity recognition or the analysis of the term frequency and topic with techniques like TF-IDF and topic modelling. So finding out which topics are relevant and how often they appear in comparison to the overall distribution across all tweets in the data set could be relevant. Furthermore, it was probably a mistake to use the positive and negative score of the VADER sentiment analyser, because the compound score gives a better representation of the sentiment by taking emphasis into account.
 
-All in all the performance of the model seems to be too bad to be a useful tool in a production application. Because the prediction performance on all metrics for the validation set is way below 50% flipping a coin gives better predictions whether a tweet will go viral or not. Therfore, it makes no sense to publish the application to users. More work on creating good features would be needed to improve performance.
+| Accuracy | Kappa | F1 | Jaccard | Precision | Recall | classifier   | data set   | k | n |
+|----------|-------------|----------|---------|-----------|--------|--------------|------------|---|---|
+| 0.83    | 0.002       | 0.095     | 0.05   | 0.096      | 0.095  | stratified          | test | 1 | - |
+| 0.863     | 0.199      | 0.274     | 0.159   | 0.274     | 0.274  | knn          | test   | 1 | - |
+| 0.897     | 0.22      | 0.269     | 0.155   | 0.406     | 0.201  | random forest          | test   | - | 9 |
+
+
+The table above shows that both selected models perform pretty much the same or even slightly better on the test set in comparison to the validation set. The models outperform the stratified baseline by roughly one to three tenths in all metrics. However, all in all, the model's performance still seems too poor to be a useful tool in a production application because the prediction performance for the validation set on all metrics except accuracy is way below 50%. Flipping an unfair coin that predicts in 90% of the cases that a tweet will not go viral, will probably give similar good or bad predictions as the application. Therefore, it makes no sense to publish the application to users. More work on creating good features would be needed to improve the performance and thereby make the application viable.
 
 ## Testing
 
-Three additional tests have been implemented to ensure the intended functionality of the metrics calculations and two features extractors. The test are located in a sub-folder of the corresponding implementation they are testing so that both test and implementation lie close together.
+Four additional tests have been implemented to ensure the intended functionality of the metrics calculations and two features extractors.  The tests are located in a subfolder of the respective implementation that is being tested, so that test and implementation remain close to each other.
 
 - [metrics_test.py](..\src\classification\test\metrics_test.py)
 - [count_test.py](..\src\feature_extraction\test\count_test.py)
 - [sentiment_test.py](..\src\feature_extraction\test\sentiment_test.py)
-
-Test implemented, but corresponding implementation not entirely finished (branch `Tweetclean`):
-
-- [tweet_cleaner_test.py](..\src\preprocessing\test\tweet_cleaner_test.py)
+- [tweet_cleaner_test.py](..\src\preprocessing\test\tweet_cleaner_test.py) (branch `Tweetclean`):
 
 ---
 
