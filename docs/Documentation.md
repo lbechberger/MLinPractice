@@ -10,8 +10,8 @@ Before taking a look at the implemented metrics for judging the prediction perfo
 
 <p align="center">
     <img id="baselines" src="./imgs/baselines_2021-11-03_231550.png" alt="">
-    
-Fig. 1. Shows the performance of the sklearn DummyClassifier with the strategies 'stratified' and 'most_frequent' on a training and validation data set for all implemented metrics.</p>
+</p>
+<p align="center">Fig. 1. Shows the performance of the sklearn DummyClassifier with the strategies 'stratified' and 'most_frequent' on a training and validation data set for all implemented metrics.</p>
 
 For the baselines a `DummyClassifier` from the sklearn package was used with the `strategy` `most_frequent` and `stratified`. The former determines non-viral tweets as the most frequent class and therefore predicts every sample as non-viral. [Fig. 1](#baselines) shows that this rather dumb prediction strategy results in a high accuracy of 90.6%. This is the case, because the calculation of the accuracy metric is based on how many predictions have been correct. Since the data set contains mostly non-viral tweets, the prediction is correct most of the time with a percentage that is similar to the data set's class distribution. The slight difference in the percentage can be explained by the removal of some samples during the preprocessing step.
 
@@ -39,7 +39,9 @@ Second, `ColumnDropper` removes columns that are not needed. This is simply for 
 Further obvious preprocessing operations are the removal of hashtags, URLs and twitter usernames from the tweet, because various NLP techniques would otherwise unknown words and expressions which would decrease the performance. The implementation of this preprocessor was done in the `Tweetclean` branch, but not entirely finished.
 
 <p align="center">
-    <img id="tweets-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">Fig. 2. The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.</p>
+    <img id="tweets-language" src="./imgs/distribution_of_tweets_per_language.png" alt="">
+</p>
+<p align="center">Fig. 2. The majority of tweet records are labelled as english. The amount of non-english tweets is too small to be usefull for machine learning.</p>
 
 ## Feature Extraction
 
@@ -97,23 +99,27 @@ Initially only features for the length of the mentions and photos column as well
 
 <p align="center">
     <img id="early-results" src="./imgs/after_more_count_cropped2.png" alt="">
-
-    Fig. 3: Adding more features increases the performance on the training set a lot and slightly improves the performance on the validation set. While a decent performance on the training set is measured, for the validation set it is still quite bad which is a sign of overfitting.
 </p>
+<p align="center">Fig. 3. Adding more features increases the performance on the training set a lot and slightly improves the performance on the validation set. While a decent performance on the training set is measured, for the validation set it is still quite bad which is a sign of overfitting.</p>
 
 After adding the sentiment feature the metrics improved a lot on the training set and a bit on the validation set. For example the Cohen's Kappa is at roughly 0.60 on the trainging set and between 0.11 and 0.12 on the validation set. The performance on the validation set is still relatively poor. Without taking precision into account, the metrics have approximately a value between 0.1 and 0.2. The precision is even worse than before with 0.32. The results show that the models are able to learn something on the training set but this doesn't generalize well on the validation set. So the models could be overfitting because the parameters are chosen too high. But this is not the case for the KNN classifier. Therefore, it is assumed that the features contain to little information for proper learning to happen.
 
-Adding the reaminding count features – mentioned in the [feature extraction](#CounterFE) section – improves the metrics for training set to reasonably good scores. Most metrics are in a range between 0.71 and 0.88. Despite the fact that the performance on the validation set has improved a bit, it still has to be rated as rather poor overall. Most metrics are in the range of 0.14 and 0.27, so in summary even worse than flipping a coin. Since the model parameters are chosen relatively low, which is especially true for the KNN classifier, it can be assumed that the implemented features just don't contain enough meaningful data to predict the virality of tweets.
+Adding the reaminding count features – mentioned in the [feature extraction](#CounterFE) section – improves the metrics for training set to reasonably good scores. Most metrics are in a range between 0.71 and 0.88. Despite the fact that the performance on the validation set has improved a bit, it still has to be rated as rather poor overall. Most metrics are in the range of 0.14 and 0.27, so in summary even worse than flipping a coin. Since the model parameters are chosen relatively low, which is especially true for the KNN classifier, it can be assumed that the implemented features just don't contain enough meaningful information to predict the virality of tweets.
 
-### Hyperparameter optimization with GridSearchCV and manual GridSearch
+### Hyperparameter Optimization with GridSearchCV and Manual GridSearch
 
-... 
+To figure out whether a different configuration of parameters would improve the performance of the validation set, a grid search is implemented in two variants. One variant is implemented in `classification_hyper_param.sh` by iteratively invoking the `run_classifier.py` script with different parameter values for classifiers in each iteration. The KNN classifier is invoked with k values in a range from 1 to 10 and the RF with a range from 1 to 10 in steps of 1 as well as 10 to 100 in roughly steps of 10. The second implementation uses the `GridSearchCV` class from sklearn to explore the best values for the parameters `criterion`, `min_samples_split` and `n_estimators`. The class uses the metrics OMG I used accuracy instead of cohen \**facepalm**  `'cohen_kappa': make_scorer(accuracy_score),
+                        'rec': 'recall',
+                        'prec': 'precision'`. Now it makes sense why cohen was so good.
+
+The results of the RF can be seen in [Fig. 4](#hyper-man-rf).
+
+
 
 <p align="center">
-    <img src="./imgs/manual_hyper_param_results.png" alt="">    
+    <img id="hyper-man-rf" src="./imgs/manual_hyper_param_results.png" alt="">    
 </p>
-<p align="center">Fig. 4: TODO Without efficient, transparent bloatware, you will lack social networks. We will enlarge our ability to whiteboard without lessening our power to aggregate. We apply the proverb 'Look before you leap' not only to our content but our... TODO
-</p>
+<p align="center">Fig. 4. TODO Without efficient, transparent bloatware, you will lack social networks. We will enlarge our ability to whiteboard without lessening our power to aggregate. We apply the proverb 'Look before you leap' not only to our content but our... TODO</p>
 
 | index | param_criterion | param_min_samples_split | param_n_estimators | mean_test_cohen_kappa | rank_test_cohen_kappa | mean_test_rec | rank_test_rec | mean_test_prec | rank_test_prec | rank_sum |
 |-------|-----------------|-------------------------|--------------------|-----------------------|-----------------------|---------------|---------------|----------------|----------------|----------|
