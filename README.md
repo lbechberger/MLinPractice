@@ -28,40 +28,68 @@ In order to save some space on your local machine, you can run `conda clean -y -
 
 The installed libraries are used for machine learning (`scikit-learn`), visualizations (`matplotlib`), NLP (`nltk`), word embeddings (`gensim`), and IDE (`spyder`), and data handling (`pandas`)
 
-## Setup & Overall Pipeline & Tests
+## Setup
 
-### Setup
+First if all, the shell script `src/setup.sh` needs to be run once before the actual `src/pipeline.sh` script or any other shell scripts can be executed. The setup script downloads necessary data by executing the scripts `src/load_data.sh` and `src/load_nltk_data.sh`.  
+- The former script `src/load_data.sh` downloads the Data Science Tweets as raw csv files containing the tweets and their metadata. They are stored in the directory `data/raw/` (which will be created if it does not yet exist).
+- The latter script `src/load_nltk_data.sh` downloads necessary NLTK data sets, corpora and models (see more: [nltk.org/data.html](https://www.nltk.org/data.html))
 
-The shell script `code/setup.sh` needs to be run once before the actual `code/pipeline.sh` script or any other shell scripts can be executed. It downloads necessary data by running the scripts `code/load_data.sh` and `code/load_nltk_data.sh`.  
-- The former script `code/load_data.sh` downloads the Data Science Tweets as raw csv files containing the tweets and their metadata. They are stored in the folder `data/raw/` (which will be created if it does not yet exist).
-- The latter script `code/load_nltk_data.sh` downloads necessary NLTK data sets, corpora and models (see more: https://www.nltk.org/data.html)
+## Running Scripts and Unit Tests
 
-### Pipeline
+To run bash scripts you need to open a bash shell. On Unix systems (Linux and MacOS) such a shell comes already with the operating system. On Windows this needs to be installed manually. When you install git, the git bash shell will be installed as well. Once you open a terminal window, you can either directly write the path to the script you want to execute or preprend `bash` before it. Both of the following example commands should work:
 
-The overall pipeline can be executed with the script `code/pipeline.sh`, which executes all of the following shell scripts except `setup.py`:
-- The script `code/preprocessing.sh` executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
-- The script `code/feature_extraction.sh` takes care of feature extraction.
-- The script `code/dimensionality_reduction.sh` takes care of dimensionality reduction.
-- The script `code/classification.sh` takes care of training and evaluating a classifier.
-- The script `code/application.sh` launches the application example.
+```console
+./src/setup.sh
+```
 
-### Tests 
+```console
+bash ./src/setup.sh
+```
 
-For running unit tests use the following line of code:
+In case this throws an error like `permission denied` or sth similar, you might need to change the access level of some files. This can be done by executing the following command:
 
-```shell
+```console
+chmod -R a+x ./src
+```
+
+This gives access rights to all users for all files (recursively) in the scr directory.
+
+### Pipeline Scripts
+
+The overall pipeline can be executed with the script `src/pipeline.sh`, which executes all of the following shell scripts:
+- `src/preprocessing.sh`: Executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
+- `src/feature_extraction.sh`: Takes care of feature extraction.
+- `src/dimensionality_reduction.sh`: Takes care of dimensionality reduction.
+- `src/classification.sh`: Takes care of training and evaluating a classifier.
+
+### Additional Scripts
+- `src/application.sh`: Launches the application example.
+- `src/classification_hyper_param.sh`: Trains and evaluates two classifiers over a predefined range of parameters (grid search)
+- `src/final_classification.sh`: Trains the best two classifiers on the training .data set and afterwards evaluates the performance on the test data set in comparison to the *stratified* baseline.
+- `src/setup.sh`: As mentioned above in detail, downloads necessary data.
+
+### Unit Tests 
+
+For running unit tests use the following command:
+
+```bash
 python -m unittest discover -s src -p '*_test.py'
 ```
 
 ## Preprocessing
 
-All python scripts and classes for the preprocessing of the input data can be found in `code/preprocessing/`.
+All python scripts and classes for the preprocessing of the input data can be found in [`src/preprocessing/`](src/preprocessing/).
 
 ### Creating Labels
 
-The script `create_labels.py` assigns labels to the raw data points based on a threshold on a linear combination of the number of likes and retweets. It is executed as follows:
-```python -m src.preprocessing.create_labels path/to/input_dir path/to/output.csv```
-Here, `input_dir` is the directory containing the original raw csv files, while `output.csv` is the single csv file where the output will be written.
+The script [`create_labels.py`](src/preprocessing/create_labels.py) assigns labels to the raw data points based on a threshold on a linear combination of the number of likes and retweets. It is executed as follows:
+
+```bash
+python -m src.preprocessing.create_labels path/to/input_dir path/to/output.csv
+```
+
+Here, `input_dir` is the directory containing the original raw csv files, while `output.csv` is the single csv file where the output will be stored.
+
 The script takes the following optional parameters:
 - `-l` or `--likes_weight` determines the relative weight of the number of likes a tweet has received. Defaults to 1.
 - `-r` or `--retweet_weight` determines the relative weight of the number of retweets a tweet has received. Defaults to 1.
@@ -69,20 +97,32 @@ The script takes the following optional parameters:
 
 ### Classical Preprocessing
 
-The script `run_preprocessing.py` is used to run various preprocessing steps on the raw data, producing additional columns in the csv file. It is executed as follows:
-```python -m src.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv```
+The script [`run_preprocessing.py`](src/preprocessing/run_preprocessing.py) is used to run various preprocessing steps on the raw data, producing additional columns in the csv file. It is executed as follows:
+
+```bash
+python -m src.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv
+```
+
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
-The preprocessing steps to take can be configured with the following flags:
-- `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
-- `-t`or `--tokenize`: Tokenize the given column (can be specified by `--tokenize_input`, default = "tweet"), and create new column with suffix "_tokenized" containing tokenized tweet.
+
+The following flags configure which preprocessing steps are applied:
+
+- `-p` or `--punctuation`: A new column *"tweet_no_punctuation"* is created, where all punctuation is removed from the original tweet. (See [punctuation_remover.py](src/preprocessing/punctuation_remover.py) for more details)
+- `-t` or `--tokenize`: Tokenize the given column (can be specified by `--tokenize_input`, default = "tweet"), and create new column with suffix "_tokenized" containing tokenized tweet.
+- `-o` or `--other`: Executes all the other preprocessing steps like the removal of non english records and the removal of unnecessary columns.
 
 Moreover, the script accepts the following optional parameters:
+
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
 
 ### Splitting the Data Set
 
-The script `split_data.py` splits the overall preprocessed data into training, validation, and test set. It can be invoked as follows:
-```python -m src.preprocessing.split_data path/to/input.csv path/to/output_dir```
+The script [`split_data.py`](src/preprocessing/split_data.py) splits the overall preprocessed data into training, validation, and test set. It can be invoked as follows:
+
+```bash
+python -m src.preprocessing.split_data path/to/input.csv path/to/output_dir
+```
+
 Here, `input.csv` is the input csv file to split (containing a column "label" with the label information, i.e., `create_labels.py` needs to be run beforehand) and `output_dir` is the directory where three individual csv files `training.csv`, `validation.csv`, and `test.csv` will be stored.
 The script takes the following optional parameters:
 - `-t` or `--test_size` determines the relative size of the test set and defaults to 0.2 (i.e., 20 % of the data).
@@ -92,17 +132,21 @@ The script takes the following optional parameters:
 
 ## Feature Extraction
 
-All python scripts and classes for feature extraction can be found in `code/feature_extraction/`.
+All python scripts and classes for feature extraction can be found in [`src/feature_extraction/`](src/feature_extraction).
 
-The script `extract_features.py` takes care of the overall feature extraction process and can be invoked as follows:
-```python -m src.feature_extraction.extract_features path/to/input.csv path/to/output.pickle```
+The script [`extract_features.py`](src/feature_extraction/extract_features.py) takes care of the overall feature extraction process and can be invoked as follows:
+
+```bash
+python -m src.feature_extraction.extract_features path/to/input.csv path/to/output.pickle
+```
+
 Here, `input.csv` is the respective training, validation, or test set file created by `split_data.py`. The file `output.pickle` will be used to store the results of the feature extraction process, namely a dictionary with the following entries:
 - `"features"`: a numpy array with the raw feature values (rows are training examples, colums are features)
 - `"feature_names"`: a list of feature names for the columns of the numpy array
 - `"labels"`: a numpy array containing the target labels for the feature vectors (rows are training examples, only column is the label)
 
 The features to be extracted can be configured with the following optional parameters:
-- `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
+- `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see [src/feature_extraction/character_length.py](src/feature_extraction/character_length.py))
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
@@ -110,11 +154,14 @@ Moreover, the script support importing and exporting fitted feature extractors w
 
 ## Dimensionality Reduction
 
-All python scripts and classes for dimensionality reduction can be found in `code/dimensionality_reduction/`.
+All python scripts and classes for dimensionality reduction can be found in [`src/dimensionality_reduction/`](src/dimensionality_reduction/).
 
-The script `reduce_dimensionality.py` takes care of the overall dimensionality reduction procedure and can be invoked as follows:
+The script [`reduce_dimensionality.py`](src/dimensionality_reduction/reduce_dimensionality.py) takes care of the overall dimensionality reduction procedure and can be invoked as follows:
 
-```python -m src.dimensionality_reduction.reduce_dimensionality path/to/input.pickle path/to/output.pickle```
+```
+python -m src.dimensionality_reduction.reduce_dimensionality path/to/input.pickle path/to/output.pickle
+```
+
 Here, `input.pickle` is the respective training, validation, or test set file created by `extract_features.py`. 
 The file `output.pickle` will be used to store the results of the dimensionality reduction process, containing `"features"` (which are the selected/projected ones) and `"labels"` (same as in the input file).
 
@@ -129,33 +176,47 @@ Finally, if the flag `--verbose` is set, the script outputs some additional info
 
 ## Classification
 
-All python scripts and classes for classification can be found in `code/classification/`.
+All python scripts and classes for classification can be found in [`src/classification/`](src/classification/).
 
 ### Train and Evaluate a Single Classifier
 
-The script `run_classifier.py` can be used to train and/or evaluate a given classifier. It can be executed as follows:
-```python -m src.classification.run_classifier path/to/input.pickle```
+The script [`run_classifier.py`](src/classification/run_classifier.py) can be used to train and/or evaluate a given classifier. It can be executed as follows:
+
+```
+python -m src.classification.run_classifier path/to/input.pickle
+```
+
 Here, `input.pickle` is a pickle file of the respective data subset, produced by either `extract_features.py` or `reduce_dimensionality.py`. 
 
 By default, this data is used to train a **classifier**, which is specified by one of the following optional arguments:
-- `-c` or `--classifier` followed by either `most_frequent` or `stratified`
+- `-d` or `--dummyclassifier` followed by either `most_frequent` or `stratified`
   - `most_frequent` is a [_DummyClassifier_](https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html) which always predicts the most frequently occuring label in the training set.
   - `stratified` is a [_DummyClassifier_](https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html) that makes predictions based on the label frequency in the training data (respects the training set’s class distribution).
 
-**Evaluation metrics** are then used by the classifier. Which metrics are used evaluatioon is specified with the following optional arguments:
-- `-m` or `--metrics` followed by another option (default is `none`):
-`none`, `all`, 
+Chose one of three possible options for the classification:
+- `--knn` followed by the a interger number of k
+- `-r` or `--randomforest` followed by a integer number of trees (when `--sk_gridsearch_rf` is used the number will be ignored, see next bullet point)
+- `--sk_gridsearch_rf`: Performs a grid search on a random forest classifier. The parameter range is predifined (hardcoded).
 
+**Evaluation metrics** are then used by the classifier. Which metrics to use for evaluation can be specified with the following optional arguments:
+- `-m` or `--metrics` followed by another option (default is `kappa`):
+  - `none` no metrics will be used
+  - `all` all metrics will be used
   - `accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
   - `kappa`: Cohen's kappa (i.e., adjusting accuracy for probability of random agreement).
-  - `precision`
-  - `recall`
-  - `f1`
-  - `jaccard`
+  - `precision`: Precision (ratio tp / (tp + fp) where tp is the number of true positives and fp the number of false positives. The precision is intuitively the ability of the classifier not to label as positive a sample that is negative)
+  - `recall` Recall (the ratio tp / (tp + fn) where tp is the number of true positives and fn the number of false negatives. The recall is intuitively the ability of the classifier to find all the positive samples)
+  - `f1`: F1-score (weighted average of precision and recall)
+  - `jaccard`: Jaccard score (the size of the intersection divided by the size of the union of two label sets)
 
 For more details on the metrics used, see: https://scikit-learn.org/stable/modules/classes.html#classification-metrics
 
-Moreover, the script support **importing and exporting trained classifiers** with the following optional arguments:
+Logging with MlFlow:
+
+- `--log_folder` specifies where MlFlow will store its logging files. Default is `data/classification/mlflow`.
+- `-n` or `--run_name` specifies a name for the classification run, so that runs can be identified afterwards when looking at the results in the MlFlow user interface.
+
+Support **importing and exporting trained classifiers** with the following optional arguments:
 - `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
 - `-e` or `--export_file`: Export the trained classifier into the given pickle file.
 
@@ -164,12 +225,36 @@ Using the same seed across multiple runs ensures reproducibility of the results.
 
 ## Application
 
-All python code for the application demo can be found in `code/application/`.
+All python code for the application demo can be found in [`src/application/`](src/application/).
 
-The script `application.py` provides a simple command line interface, where the user is asked to type in their prospective tweet, which is then analyzed using the trained ML pipeline.
+The script [`application.py`](src/application/application.py) provides a simple command line interface, where the user is asked to type in their prospective tweet, which is then analyzed using the trained ML pipeline.
 The script can be invoked as follows:
-```python -m src.application.application path/to/preprocessing.pickle path/to/feature_extraction.pickle path/to/dimensionality_reduction.pickle path/to/classifier.pickle```
+
+```
+python -m src.application.application path/to/preprocessing.pickle path/to/feature_extraction.pickle path/to/dimensionality_reduction.pickle path/to/classifier.pickle
+```
+
 The four pickle files correspond to the exported versions for the different pipeline steps as created by `run_preprocessing.py`, `extract_features.py`, `reduce_dimensionality.py`, and `run_classifier.py`, respectively, with the `-e` option.
+
+
+## Running MlFlow
+
+To look at the MlFlow results run the following command. This will host a local server on [http://127.0.0.1:5000](http://127.0.0.1:5000). Opening it displays the results of all previous runs on a web page. The runs can also be exported as csv files.
+
+```
+mlflow ui --backend-store-uri data/classification/mlflow
+```
+
+Mlflow allows us to specify an SQL like search for specific data.
+For example the `params.classifier = "knn"` to search for all entries where a knn classifier was used.
+
+Here is another examples to only display runs with a randomforest classifier on a validation set:
+
+```
+params.classifier = "randomforest" AND params.dataset = "validation"
+```
+
+More information on: [mlflow.org/docs/latest/search-syntax.html#syntax](https://www.mlflow.org/docs/latest/search-syntax.html#syntax)
 
 ## Debugging in Visual Studio Code
 
@@ -198,19 +283,3 @@ python -m debugpy --wait-for-client --listen 5678 .\src\feature_extraction\test\
 ```
 
 3. Start the attach debug configuration via the VS Code UI ([F5] key or `Run`/`Run and Debug` menu)
-
-## Running MlFlow
-
-```
-mlflow ui --backend-store-uri data/classification/mlflow
-```
-
-Mlflow allows us to specify an SQL like search for specific data.
-For example the `params.classifier = "knn"` to search for all entries where a knn classifier was used.
-Other examples:
-
-```
-params.classifier = "randomforest" AND params.dataset = "validation"
-```
-
-More information on [https://www.mlflow.org/docs/latest/search-syntax.html#syntax](https://www.mlflow.org/docs/latest/search-syntax.html#syntax)

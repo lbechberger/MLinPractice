@@ -245,7 +245,7 @@ def parse_arguments():
     ap.add_argument(
         "-m", "--metrics", choices=metrics_choices, help=metric_msg,  default=METR_KAPPA)
 
-    grid_msg = "Perform grid search on RandomForectClassifier. Param range is predifined!"
+    grid_msg = "Perform grid search on RandomForestClassifier. Param range is predifined!"
     ap.add_argument(
         "--sk_gridsearch_rf", action="store_true", help=grid_msg, default=None)
 
