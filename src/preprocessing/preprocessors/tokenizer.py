@@ -4,7 +4,7 @@
 Tokenize the tweet into individual words.
 """
 
-from src.preprocessing.preprocessor import Preprocessor
+from src.preprocessing.preprocessors.preprocessor import Preprocessor
 import nltk
 
 class Tokenizer(Preprocessor):

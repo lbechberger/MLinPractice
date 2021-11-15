@@ -5,13 +5,14 @@ Runs the specified collection of feature extractors.
 """
 
 import argparse, csv, pickle
+
 import pandas as pd
 import numpy as np
-from src.feature_extraction import character_length
-from src.feature_extraction.character_length import CharacterLengthFE
-from src.feature_extraction.counter_fe import CounterFE
-from src.feature_extraction.feature_collector import FeatureCollector
-from src.feature_extraction.sentiment_fe import SentimentFE
+
+from src.feature_extraction.feature_extractors.character_length import CharacterLengthFE
+from src.feature_extraction.feature_extractors.counter_fe import CounterFE
+from src.feature_extraction.feature_extractors.feature_collector import FeatureCollector
+from src.feature_extraction.feature_extractors.sentiment_fe import SentimentFE
 from src.util import COLUMN_MENTIONS, COLUMN_PHOTOS, COLUMN_TWEET
 from src.util import COLUMN_LABEL, COLUMN_HASHTAGS , COLUMN_URLS
 from src.util import COLUMN_CASHTAGS, COLUMN_REPLY_TO, COLUMN_TWEET_TOKENIZED

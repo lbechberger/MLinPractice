@@ -5,7 +5,7 @@ Preprocessor that removes punctuation from the original tweet text.
 """
 
 import string
-from src.preprocessing.preprocessor import Preprocessor
+from src.preprocessing.preprocessors.preprocessor import Preprocessor
 from src.util import COLUMN_TWEET, COLUMN_PUNCTUATION
 
 # removes punctuation from the original tweet

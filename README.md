@@ -52,7 +52,7 @@ In case this throws an error like `permission denied` or sth similar, you might 
 chmod -R a+x ./src
 ```
 
-This gives access rights to all users for all files (recursively) in the scr directory.
+This gives access rights to all users for all files (recursively) in the src directory.
 
 ### Pipeline Scripts
 
@@ -107,7 +107,7 @@ Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), whil
 
 The following flags configure which preprocessing steps are applied:
 
-- `-p` or `--punctuation`: A new column *"tweet_no_punctuation"* is created, where all punctuation is removed from the original tweet. (See [punctuation_remover.py](src/preprocessing/punctuation_remover.py) for more details)
+- `-p` or `--punctuation`: A new column *"tweet_no_punctuation"* is created, where all punctuation is removed from the original tweet. (See [punctuation_remover.py](src/preprocessing/preprocessors/punctuation_remover.py) for more details)
 - `-t` or `--tokenize`: Tokenize the given column (can be specified by `--tokenize_input`, default = "tweet"), and create new column with suffix "_tokenized" containing tokenized tweet.
 - `-o` or `--other`: Executes all the other preprocessing steps like the removal of non english records and the removal of unnecessary columns.
 
@@ -146,7 +146,7 @@ Here, `input.csv` is the respective training, validation, or test set file creat
 - `"labels"`: a numpy array containing the target labels for the feature vectors (rows are training examples, only column is the label)
 
 The features to be extracted can be configured with the following optional parameters:
-- `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see [src/feature_extraction/character_length.py](src/feature_extraction/character_length.py))
+- `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see [`character_length.py`](src/feature_extraction/feature_extractors/character_length.py))
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
 - `-i` or `--import_file`: Load a configured and fitted feature extraction from the given pickle file. Ignore all parameters that configure the features to extract.
@@ -271,7 +271,6 @@ python -m debugpy --wait-for-client --listen 5678 .\src\feature_extraction\test\
 2. `launch.json` configuration to attach the editor to the already started debug process.
 
 ```json
-// ...
 "configurations": [
   {            
       "name": "Python: Attach",
@@ -283,7 +282,6 @@ python -m debugpy --wait-for-client --listen 5678 .\src\feature_extraction\test\
       }            
   },
 ]
-// ...
 ```
 
 3. Start the attach debug configuration via the VS Code UI ([F5] key or `Run`/`Run and Debug` menu)

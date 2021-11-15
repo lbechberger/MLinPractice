@@ -5,7 +5,7 @@ Simple feature that counts the number of characters in the given column (e.g twe
 """
 
 import numpy as np
-from src.feature_extraction.feature_extractor import FeatureExtractor
+from src.feature_extraction.feature_extractors.feature_extractor import FeatureExtractor
 
 # class for extracting the character-based length as a feature
 class CharacterLengthFE(FeatureExtractor):

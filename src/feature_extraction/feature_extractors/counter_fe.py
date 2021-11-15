@@ -6,7 +6,7 @@ Given an input column, this class counts the length of the array per record
 
 import numpy as np
 import ast
-from src.feature_extraction.feature_extractor import FeatureExtractor
+from src.feature_extraction.feature_extractors.feature_extractor import FeatureExtractor
 
 class CounterFE(FeatureExtractor):
     """

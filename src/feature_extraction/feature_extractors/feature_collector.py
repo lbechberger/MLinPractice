@@ -5,7 +5,7 @@ Collects the feature values from many different feature extractors.
 """
 
 import numpy as np
-from src.feature_extraction.feature_extractor import FeatureExtractor
+from src.feature_extraction.feature_extractors.feature_extractor import FeatureExtractor
 
 # extend FeatureExtractor for the sake of simplicity
 class FeatureCollector(FeatureExtractor):

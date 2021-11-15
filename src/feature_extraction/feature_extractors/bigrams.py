@@ -6,7 +6,7 @@ Bigram Feature
 
 import ast
 import nltk
-from src.feature_extraction.feature_extractor import FeatureExtractor
+from src.feature_extraction.feature_extractors.feature_extractor import FeatureExtractor
 
 class BigramFeature(FeatureExtractor):
     

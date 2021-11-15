@@ -4,7 +4,7 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import numpy as np
 import pandas as pd
-from src.feature_extraction.feature_extractor import FeatureExtractor
+from src.feature_extraction.feature_extractors.feature_extractor import FeatureExtractor
 
 
 class SentimentFE(FeatureExtractor):
