@@ -43,6 +43,7 @@ def main():
     if args.tokenize:
         preprocessors.append(Tokenizer(args.tokenize_input, args.tokenize_input + SUFFIX_TOKENIZED))
     if args.other:   
+        preprocessors.append(NonEnglishRemover())
         DROP_COLS = [            
             "id", "conversation_id", "created_at", "timezone", "user_id", "name", "place",
             "replies_count", "retweets_count", "likes_count", "language",
@@ -50,8 +51,7 @@ def main():
             # below columns have always the same value for all records
             "retweet", "near", "geo", "source", "user_rt_id", "user_rt", "retweet_id",
             "retweet_date", "translate", "trans_src", 'trans_dest\r']
-
-        preprocessors.append(NonEnglishRemover())
+        
         preprocessors.append(ColumnDropper(DROP_COLS))
 
     # call all preprocessing steps
