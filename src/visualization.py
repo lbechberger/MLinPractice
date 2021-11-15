@@ -9,10 +9,18 @@ To run this file you first need to run the preprocessing phase of the pipeline
 import csv
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
+def main():
 
-def main():    
-    df = pd.read_csv("data/preprocessing/labeled.csv",
+    labeled_data_path = "data/preprocessing/labeled.csv"
+
+    my_file = Path(labeled_data_path)
+    if not my_file.is_file():
+        raise Exception("You need to run preprocessing before executing this script. " + 
+        "The concatenated data set `labeled.csv` is needed!")
+
+    df = pd.read_csv(labeled_data_path,
                         quoting=csv.QUOTE_NONNUMERIC,
                         lineterminator="\n",
                         verbose=False,
