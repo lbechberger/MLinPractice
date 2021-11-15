@@ -70,7 +70,7 @@ The overall pipeline can be executed with the script `src/pipeline.sh`, which ex
 
 ### Unit Tests 
 
-For running unit tests use the following command:
+The following command runs all unit tests in the `src`directory for files that end in the file name `_test.py`:
 
 ```bash
 python -m unittest discover -s src -p '*_test.py'
@@ -188,15 +188,23 @@ python -m src.classification.run_classifier path/to/input.pickle
 
 Here, `input.pickle` is a pickle file of the respective data subset, produced by either `extract_features.py` or `reduce_dimensionality.py`. 
 
-By default, this data is used to train a **classifier**, which is specified by one of the following optional arguments:
+Support **importing and exporting trained classifiers** with the following optional arguments:
+- `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
+- `-e` or `--export_file`: Export the trained classifier into the given pickle file.
+
+
+By default, this data is used to train a **classifier**. It is possible to chose 1 of 5 different scenarios for training. Either select one of two Two dummy classifiers as a baseline or the knn or random forest classifier. For the random forest classifier it can be additionally specified to either perform a grid search or not.
+
+Dummy Classifier (baselines)
 - `-d` or `--dummyclassifier` followed by either `most_frequent` or `stratified`
   - `most_frequent` is a [_DummyClassifier_](https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html) which always predicts the most frequently occuring label in the training set.
   - `stratified` is a [_DummyClassifier_](https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html) that makes predictions based on the label frequency in the training data (respects the training set’s class distribution).
 
 Chose one of three possible options for the classification:
 - `--knn` followed by the a interger number of k
-- `-r` or `--randomforest` followed by a integer number of trees (when `--sk_gridsearch_rf` is used the number will be ignored, see next bullet point)
-- `--sk_gridsearch_rf`: Performs a grid search on a random forest classifier. The parameter range is predifined (hardcoded).
+- `-r` or `--randomforest` followed by a integer number of trees
+  - if `--sk_gridsearch_rf` is omitted a normal random forest classifier with the provided number of trees will be used for training.
+  - if `--sk_gridsearch_rf` is present, a grid search on a random forest classifier with a predefined (hardcoded) range of parameters is performed. Als the the number of trees is still expected, but will be ignored.
 
 **Evaluation metrics** are then used by the classifier. Which metrics to use for evaluation can be specified with the following optional arguments:
 - `-m` or `--metrics` followed by another option (default is `kappa`):
@@ -215,10 +223,6 @@ Logging with MlFlow:
 
 - `--log_folder` specifies where MlFlow will store its logging files. Default is `data/classification/mlflow`.
 - `-n` or `--run_name` specifies a name for the classification run, so that runs can be identified afterwards when looking at the results in the MlFlow user interface.
-
-Support **importing and exporting trained classifiers** with the following optional arguments:
-- `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
-- `-e` or `--export_file`: Export the trained classifier into the given pickle file.
 
 Finally, the optional argument `-s` or `--seed` determines the seed for intializing the random number generator (which may be important for some classifiers). 
 Using the same seed across multiple runs ensures reproducibility of the results. If no seed is set, the current system time will be used.
@@ -267,7 +271,7 @@ python -m debugpy --wait-for-client --listen 5678 .\src\feature_extraction\test\
 2. `launch.json` configuration to attach the editor to the already started debug process.
 
 ```json
-...
+// ...
 "configurations": [
   {            
       "name": "Python: Attach",
@@ -279,7 +283,7 @@ python -m debugpy --wait-for-client --listen 5678 .\src\feature_extraction\test\
       }            
   },
 ]
-...
+// ...
 ```
 
 3. Start the attach debug configuration via the VS Code UI ([F5] key or `Run`/`Run and Debug` menu)
