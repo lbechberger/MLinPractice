@@ -60,7 +60,7 @@ The overall pipeline can be executed with the script `src/pipeline.sh`, which ex
 - `src/preprocessing.sh`: Executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
 - `src/feature_extraction.sh`: Takes care of feature extraction.
 - `src/dimensionality_reduction.sh`: Takes care of dimensionality reduction.
-- `src/classification.sh`: Takes care of training and evaluating a classifier.
+- `src/classification.sh`: Takes care of training and evaluating a classifier. The scripts specifies one of 5 possible classification scenarios. 4 of them are commented out. Comment in or out the so that only one scenario will be run for training on the training set. Additionally the same classifier is used for evaluation on the validation set.
 
 ### Additional Scripts
 - `src/application.sh`: Launches the application example.
