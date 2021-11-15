@@ -85,20 +85,19 @@ def main():
                                         
                     classifier = RandomForestClassifier(
                         criterion= 'entropy',
-                        n_estimators = 101,
-                        min_samples_split=5,
+                        n_estimators = args.randomforest,
+                        min_samples_split=2,
                         random_state = args.seed)
 
                 else:
                     print("    grid search for random forest classifier")
-                    estim_range = np.arange(1, 22, 20).tolist()
+                    estim_range = np.arange(5, 130, 12).tolist()
                     parameters = {
-                        'criterion': ('entropy', 'gini'),
                         'n_estimators': estim_range,
-                        'min_samples_split': [3]
+                        'min_samples_split': [2,4,6,8]
                     }
                     scoring = {
-                        'cohen_kappa': make_scorer(accuracy_score),
+                        'cohen_kappa': make_scorer(cohen_kappa_score),
                         'rec': 'recall',
                         'prec': 'precision'
                     }
@@ -107,16 +106,9 @@ def main():
             classifier.fit(data["features"], data["labels"].ravel())
             log_param("dataset", "training")
 
-            # print and store random forest grid search results
             if args.randomforest is not None and args.sk_gridsearch_rf is not None:
-                
-                results_df = pd.DataFrame(classifier.cv_results_)
-                results_df["rank_sum"] = results_df["rank_test_cohen_kappa"] + results_df["rank_test_rec"] + results_df["rank_test_prec"]
-                results_df.sort_values(by=['rank_sum'], inplace=True)                
-                
-                print(results_df)
-                results_df.to_csv("data/gridsearch_results.csv", encoding="utf-8")
-
+                results_df = sum_ranks_of_cv_results(classifier.cv_results_)
+                save_results_as_csv(results_df)
 
         prediction = classifier.predict(data["features"])
         
@@ -128,10 +120,38 @@ def main():
         print_formatted_metrics(computed_metrics) # eg Accuracy: 0.908
         log_metrics(computed_metrics)
         # export the trained classifier if the user wants us to do so
-        if args.export_file is not None:
+        if args.export_file is not None and args.sk_gridsearch_rf is None:
             output_dict = {"classifier": classifier, "params": params}
             with open(args.export_file, 'wb') as f_out:
                 pickle.dump(output_dict, f_out)
+
+
+def sum_ranks_of_cv_results(cv_results_):
+
+    results_df = pd.DataFrame(cv_results_)
+    results_df["rank_sum"] = (
+        results_df["rank_test_cohen_kappa"] 
+        + results_df["rank_test_rec"] 
+        + results_df["rank_test_prec"])
+
+    results_df.sort_values(by=['rank_sum'], inplace=True)
+
+    return results_df
+
+
+def save_results_as_csv(results_df):
+    drop_cols = [
+        "mean_fit_time", "std_fit_time", "mean_score_time", "std_score_time", 
+        "params",
+        "split0_test_cohen_kappa", "split1_test_cohen_kappa", "split2_test_cohen_kappa", 
+        "split3_test_cohen_kappa", "split4_test_cohen_kappa", "std_test_cohen_kappa", 
+        "split0_test_rec", "split1_test_rec", "split2_test_rec", "split3_test_rec", 
+        "split4_test_rec", "std_test_rec", 
+        "split0_test_prec", "split1_test_prec", "split2_test_prec",
+        "split3_test_prec", "split4_test_prec", "std_test_prec"
+    ]
+    results_df.drop(columns=drop_cols, inplace=True)
+    results_df.to_csv("data/gridsearch_results.csv", encoding="utf-8")
 
 
 def print_input_file_name(input_file):
@@ -220,7 +240,7 @@ def parse_arguments():
         "-r", "--randomforest", type=int, help=rf_msg, default=None)
 
     metric_msg = "Choose `none`, `all` or a specific metric for evaluation"
-    metrics_choices = ["all", METR_ACC,
+    metrics_choices = ["none", "all", METR_ACC,
                        METR_KAPPA, METR_PREC, METR_REC, METR_F1, METR_JAC]
     ap.add_argument(
         "-m", "--metrics", choices=metrics_choices, help=metric_msg,  default=METR_KAPPA)

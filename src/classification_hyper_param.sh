@@ -3,7 +3,7 @@
 # perform grid search over the range of parameters
 
 # k nearest neighbour classifier
-values_of_k=("1 2") # ("1 2 3 4 5 6 7 8 9 10")
+values_of_k=("1 2 3 4 5 6 7 8 9 10")
 for k in $values_of_k
 do
     echo $k
@@ -14,7 +14,7 @@ do
 done
 
 # random forest classifier
-values_of_n=("1 2 3 4 5 6 7 8 9 10 15 20 30 40 50 75 100")
+values_of_n=("10 13 16 19 22 25 28 31 34 37 40 43 46 49 52 55 58 61 64 67 70 73 76 79 82")
 for n in $values_of_n
 do
     echo $n
